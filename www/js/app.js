@@ -1,6 +1,6 @@
 // begin view functions
 
-var api = "http://www.generalcarbide.com/api/index.php";
+var api = "http://www.generalcarbide.com/api/index.php/";
 
 $(function(){
     
@@ -23,30 +23,44 @@ $(function(){
                     }
                      $("#splash-main").load("view/"+directory+"/splash-main.htmL");
                      $("#splash-menu").load("view/"+directory+"/splash-menu.html");
+                     
        });
     }); 
 });
 
 $(function(){
+    
     $("body").on("click", ".load-view", function(){
-        $("#main-view").html("<h2><i class='fa fa-spinner spin'></i> Loading...</h2>")
+        
+        $("#main-view").html("<h2><i class='fa fa-spinner spin'></i> Loading...</h2>");
         var view = $(this).attr("href");
-        if($('.navbar-toggle').css('display') !='none'){
+        
+        if($('.navbar-toggle').css('display') !== 'none'){
+            
             $(".navbar-toggle").trigger( "click" );
+            
         }
+        
         $("#main-view").load("view/"+view);
+        
         var data =  {"action":"get", "request":view}
         processAction(data);
+        
         return false;
+        
     });
 });
 
 $(function(){
+    
     $("body").on("click", ".ui-element", function(){
+        
        var data = $(this).data();
        processAction(data);
+       
        return false;
     });
+    
 });
 
 
@@ -56,12 +70,13 @@ $(function(){
 
 function processAction(data)
 {
+    
     switch(data.action)
     {
         case("post") :
             var form = data.form;
-            var formData = $("#" + form).serialize();
-            $.get(api + "gcusers/user/");
+            var formData = $("#" + form).serialize() + "&action=" + form;
+            postData(formData);
             break;
         
         case("get") :
@@ -73,6 +88,20 @@ function processAction(data)
             break;
     }
     
+}
+
+function postData(formData)
+{
+  
+    $.post(api + "prepare/index",  formData )
+    
+        .done(function(data) {
+            alert( "success" + data );
+        })
+        
+        .fail(function(xhr, textStatus, errorThrown) {
+            alert(xhr.responseText);
+        });
 }
 
 // end controller functions
