@@ -1,8 +1,8 @@
 @import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700);
 
 body {
-    background: #fff;
-    padding: 5px;
+    background: url(../img/repeat.jpg) repeat;
+    padding: 0 5px;
 }
 
 h1 {
@@ -22,7 +22,16 @@ h3 {
 
 .navbar-default {
     background: #000;
+    padding-top: 20px;
     color: #fff;
+}
+
+.white {
+    color: #fff !important;
+}
+
+a.red {
+    color: #b92c28 !important;
 }
 
 .navbar-btn {
@@ -45,26 +54,40 @@ input {
     margin-bottom: 3px;
 }
 
+.navbar-collapse {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
 ul.list-inline {
     width: 100% !important;
-    background: #b92c28 !important;
+    background: rgb(169,3,41); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(169,3,41,1) 0%, rgba(143,2,34,1) 44%, rgba(109,0,25,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(169,3,41,1)), color-stop(44%,rgba(143,2,34,1)), color-stop(100%,rgba(109,0,25,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left,  rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left,  rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left,  rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%); /* IE10+ */
+    background: linear-gradient(to right,  rgba(169,3,41,1) 0%,rgba(143,2,34,1) 44%,rgba(109,0,25,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=1 ); /* IE6-9 */
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 ul.list-inline li {
     border-right: 1px solid #fff;
-    padding: 10px 25px 10px 25px;
-    background: #b92c28;
+    padding: 5px 15px 0px 15px;
+
 }
 
 ul.list-inline li:first-child {
-    padding-right: 10px !important;
-    padding-left: 2px !important;
+    padding-right: 15px !important;
+    padding-left: 5px !important;
 }
 
 ul.list-inline li:last-child {
     border-right: none;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 15px !important;
+    padding-right: 5px !important;
 }
 
 .navbar-collapse {

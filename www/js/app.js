@@ -22,7 +22,6 @@ $(function(){
 
                     }
                      $("#splash-main").load("view/"+directory+"/splash-main.htmL");
-                     $("#splash-menu").load("view/"+directory+"/splash-menu.html");
                      
        });
     }); 
@@ -93,14 +92,15 @@ function processAction(data)
 function postData(formData)
 {
     
-    $.post(api + "prepare/index",  {'formData': formData} )
+    $.post(api + "prepare/index",  formData )
     
         .done(function(data) {
-            alert( "success" + data );
+            alert(data);
         })
         
-        .fail(function(xhr, textStatus, errorThrown) {
-            alert(xhr.responseText);
+        .fail(function(qXHR, textStatus, errorThrown ) {
+            alert(errorThrown);
+            alert(textStatus);
         });
         
 }
