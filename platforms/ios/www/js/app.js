@@ -32,7 +32,7 @@ $(function(){
     
     $("body").on("click", ".load-view", function(){
         
-        $("#main-view").html("<h2><i class='fa fa-spinner spin'></i> Loading...</h2>");
+        $("#main-view").html("<div class='col-xs-12 text-center'><p><i class='fa fa-spinner fa-spin'></i><br /> Loading...</p></div>");
         var view = $(this).attr("href");
         
         if($('.navbar-toggle').css('display') !== 'none'){
@@ -92,8 +92,8 @@ function processAction(data)
 
 function postData(formData)
 {
-  
-    $.post(api + "prepare/index",  formData )
+    
+    $.post(api + "prepare/index",  {'formData': formData} )
     
         .done(function(data) {
             alert( "success" + data );
@@ -102,6 +102,7 @@ function postData(formData)
         .fail(function(xhr, textStatus, errorThrown) {
             alert(xhr.responseText);
         });
+        
 }
 
 // end controller functions

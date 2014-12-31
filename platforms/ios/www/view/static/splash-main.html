@@ -2,7 +2,7 @@
     <form id="login-form" method="POST" action="users/authenticate" novalidate="novalidate">
         <div class="form-group">
             <label for="username" class="control-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" required title="Please enter you username" placeholder="example@email.com">
+            <input type="email" class="form-control" id="username" name="username" required title="Please enter you username" placeholder="example@email.com">
             <span class="help-block"></span>
         </div>
         <div class="form-group">
@@ -16,6 +16,6 @@
                 <input type="checkbox" name="remember" id="remember"> Remember login
             </label>
         </div>
-        <button type="submit" class="btn btn-primary btn-block ui-element" data-action="post" data-form="login-form">Login</button>
+        <button type="submit" class="btn btn-danger btn-block ui-element" data-action="post" data-form="login-form">Login</button>
     </form>
 </div>
