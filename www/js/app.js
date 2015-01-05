@@ -1,15 +1,42 @@
-// begin view functions
+// globals
 
 var api = "http://www.generalcarbide.com/api/index.php/";
+
+// hacks
+
+$(function(){
+   
+    // iOS, toggle static and fixed navbar on focus field scrolling
+    
+    $("input").on('focus', function(){
+        
+        $(".navbar-nav").css({position:'absolute!important'});
+        
+        $(window).scrollTop(0);
+        
+    });
+    
+    $("input").on('blur', function(){
+        
+        $(".navbar-nv").css({position:'fixed!important'});
+        
+    });
+
+});
+
+//
+// dom functions
+//
 
 $(function(){
     
     $(window).on("load", function(){
         
-        
         $("#main-view").load("view/splash.html", function(data){
             
             var user_id = localStorage.getItem("user_id");
+            
+            sessionStorage.clear();
             
                     if(!user_id)
                     {
@@ -105,12 +132,101 @@ $(function () {
   
 });
 
+$(function() {
+   
+    $('#notification').on('hidden.bs.modal', function () {
+        
+        $("#notification").html("");
+        
+         var request = sessionStorage.getItem("request");
+       
+        if(request)
+        {
+            
+            var action = sessionStorage.getItem("action");
+            
+            var formData = sessionStorage.getItem("formData");
+            
+            var callback = sessionStorage.getItem("callback");
+           
+            var frontend = sessionStorage.getItem("frontend");
+            
+            var callbackData = {action:"get", request: "user", formData: formData};
+            
+            processAction(callbackData);
+            
+        }
+                
+    });
+    
+});
 
-// end view functions
+$(function(){
+   
+    
+    $('#notification').on('show.bs.modal', function (data) {
+            
+            var data = null;
+            
+            $(this).find("form").each(function() {
+                
+               var data = this.name;
+               
+               if(data)
+               {
+                   
+                   switch(data)
+                   {
+                       
+                        case "edit-profile" :
+                            
+                            var action = "get";
+                            
+                            var request = "user";
+                            
+                            var formData = localStorage.getItem("user_id");
+                            
+                            var data = {action : action, request : request, formData : formData };
+                            
+                            processAction(data);
+                            
+                            break;
+                       
+                   }
+                   
+               }
+               
+            });
+            
+    });
+    
+});
+
+$(function(){
+   
+    $("body").on("click", ".dismiss", function(){
+        
+        $(this).parents("li").remove();
+        
+        var resource_id = $(this).data('resource_id');
+        
+        //var type = $(this).data('type');
+        
+        var formData = { resource_id : resource_id };
+        
+        $.post(api + "/gcnotifications/notifications/", formData )
+        
+        return false;
+        
+    });
+    
+});
+
+// end dom functions
 //
 // begin controller functions
 
-function processAction(data, callback)
+function processAction(data)
 {
     
     switch(data.action)
@@ -134,24 +250,13 @@ function processAction(data, callback)
             
             var id = data.formData;
             
-            getData(request, id, callback);
-            
-            break;
-        
-        case("put") :
-            
-            var form = data.form;
-            
-            var formData = $("#" + form).serialize() + "&action=" + form;
-            
-            putData(formData, data.form);
+            getData(request, id);
             
             break;
         
         case("delete") :
             
             var request = data.request;
-            
             
             break;
             
@@ -199,10 +304,26 @@ function postData(formData, form)
             authenticateUser(request, formData);
             
             break;
+            
+        case "edit-profile" :
+            
+            var user_id = localStorage.getItem("user_id");
+            
+            var request = "gcusers/user/user_id/" + user_id + "/format/json";
+            
+            updateUser(request, formData);
+            
+            break;
+            
+        case "edit-password" :
+            
+            var request = "gcusers/user/format/json";
+            
+            break;
     }
 }
 
-function getData(request, formData, callback)
+function getData(request, formData)
 {
     
     switch(request)
@@ -220,7 +341,9 @@ function getData(request, formData, callback)
             break;
     }
     
+    
     $.get( uri, {"resource_id" : formData, "format": "json", "callback" : "displayData" } )
+            
         
             .done(function( data ) {
                 
@@ -239,35 +362,10 @@ function getData(request, formData, callback)
             });
     
 }
-
-function putData(formData)
-{
-    
-    var user_id = localStorage.getItem("user_id");
-    
-    var request = "gcusers/user/id/"+user_id+"/format/json";
-    
-    $.ajax({
-        
-            url: api + request,
-            
-            data: formData,
-            
-            type: 'PUT',
-            
-            complete: function(data) {
-                
-                alert(JSON.stringify(data));
-                
-            }
-            
-    }); 
-    
-}
     
 function createUser(request, formData)
 {
-    $.post(api + request + "/",  formData )
+    $.post(api + request + "/",  formData)
     
         .done(function(data, textStatus, xhr) {
             
@@ -303,6 +401,39 @@ function createUser(request, formData)
             $(".error-messages").html(error);
             
         });
+}
+
+function updateUser(request, formData)
+{
+    
+    $.post(api + request + "/",  formData)
+    
+        .done(function(data, textStatus, xhr) {
+            
+            sessionStorage.setItem("action", "get");
+    
+            sessionStorage.setItem("request", "user");
+            
+            sessionStorage.setItem("formData", data.user_id);
+            
+            sessionStorage.setItem("callback", data.callback);
+            
+            sessionStorage.setItem("frontend", data.frontend);
+            
+            $("#notification").modal("hide");
+                
+        })
+        
+        .fail(function(jqXHR, textStatus, xhr ) {
+           
+          var data = JSON.parse(jqXHR.responseText);
+    
+            var error = data.message;
+            
+            $(".error-messages").html(error);
+            
+        })
+        
 }
     
         
@@ -353,20 +484,72 @@ function displayData(data)
     
    $.each(data, function(i, val) {
        
-      if(!val)
-      {
-          
-          val = "(None)";
-          
-      }
+       if(i == "user_id")
+       {
+           
+            $.get( api + "/gcnotifications/notifications/", { "user_id" : val, "format": "json" } )
+            
+        
+                .done(function(jqXHR, textResponse, xhr ) {
+                    
+                    $("#account-notifications").find("ul").html("");
+            
+                    $("#account-notifications").removeClass("hide").addClass("show");
+                   
+                    $.each(jqXHR.notifications, function(key, value) {
+                        
+                        $("#account-notifications").find("ul").append("<li class='list-group-item list-group-item-info'><small><strong>" + value.title + "</strong></small><span class='badge'><a href='#' class='dismiss' data-type='notification' data-resource_id='" + value.resource_id + "'><i class='fa fa-times'></i></a></span></li>");
+                        
+                        $("body").find(".level-up").removeAttr("title");
+                        
+                        $("body").find(".level-up").attr("title", value.next);
+                        
+                    });
+                    
+                    
+                    
+                });
+           
+       }
        
-        $("." + i).html(val);
+       if($("." + i).parent("span").hasClass("badge"))
+       {
+           
+            if(!val)
+            {
+
+                val = "&mdash;";
+
+            }
+           
+            $("." + i).parent("span").addClass("badge-"+data.usage_level);
+            
+            $("." + i).html(val);
+           
+       }
+       
+       if($("." + i).hasClass("form-control"))
+       {
+           
+           if(val !== "&mdash;")
+           {
+           
+                $("." + i).val(val);
+            
+           }
+            
+       }
+       
+       else
+       {
+           
+            $("." + i).html(val);
+           
+       }
     
   });
     
 }
-
-    
 
 // end controller functions
 

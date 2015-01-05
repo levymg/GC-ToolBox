@@ -1,0 +1,70 @@
+@import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700);
+
+body {
+    background: #fff;
+    padding: 5px;
+}
+
+h1 {
+    color: #fff;
+    font-size: 4.3vw;
+}
+
+h2 {
+    color: #fff;
+    font-size: 3.2vw;
+}
+
+h3 {
+    color: #000;
+    font-size: 2.9vw;
+}
+
+.navbar-default {
+    background: #000;
+    color: #fff;
+}
+
+.navbar-btn {
+    background: #b92c28;
+    color: #fff;
+}
+
+a {
+    color: #fff !important;
+}
+
+a.brand {
+    font-family: 'PT Sans Narrow', sans-serif !important;
+    color: #fff !important;
+    font-size: 8.3vw;
+    text-decoration: underline;
+}
+
+input {
+    margin-bottom: 3px;
+}
+
+ul.list-inline {
+    width: 100% !important;
+}
+
+ul.list-inline li {
+    border-right: 1px solid #fff;
+    padding: 10px 25px 10px 25px;
+}
+
+ul.list-inline li:first-child {
+    padding-right: 10px !important;
+    padding-left: 2px !important;
+}
+
+ul.list-inline li:last-child {
+    border-right: none;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+.navbar-collapse {
+    padding: 0px !important;
+}

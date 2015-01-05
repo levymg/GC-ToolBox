@@ -251,7 +251,7 @@ function putData(formData)
         
             url: api + request,
             
-            data: formData,
+            data: {"first_name" : "Greg", "last_name" : "", "company": "Levy MG", "phone" : "phone"},
             
             type: 'PUT',
             
