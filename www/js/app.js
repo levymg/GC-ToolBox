@@ -18,7 +18,7 @@ $(function(){
     
     $("input").on('blur', function(){
         
-        $(".navbar-nv").css({position:'fixed!important'});
+        $(".navbar-nav").css({position:'fixed!important'});
         
     });
 
@@ -286,6 +286,8 @@ function processAction(data)
 function postData(formData, form)
 {
     
+    var user_id = localStorage.getItem("user_id");
+    
     switch(form)
     {
         
@@ -307,7 +309,13 @@ function postData(formData, form)
             
         case "edit-profile" :
             
-            var user_id = localStorage.getItem("user_id");
+            var request = "gcusers/user/user_id/" + user_id + "/format/json";
+            
+            updateUser(request, formData);
+            
+            break;
+            
+        case "change-password" :
             
             var request = "gcusers/user/user_id/" + user_id + "/format/json";
             
@@ -315,11 +323,12 @@ function postData(formData, form)
             
             break;
             
-        case "edit-password" :
+        case "forgot-form" :
             
             var request = "gcusers/user/format/json";
             
-            break;
+            createUser(request, formData);
+            
     }
 }
 
@@ -365,6 +374,7 @@ function getData(request, formData)
     
 function createUser(request, formData)
 {
+    
     $.post(api + request + "/",  formData)
     
         .done(function(data, textStatus, xhr) {
@@ -426,7 +436,7 @@ function updateUser(request, formData)
         
         .fail(function(jqXHR, textStatus, xhr ) {
            
-          var data = JSON.parse(jqXHR.responseText);
+            var data = JSON.parse(jqXHR.responseText);
     
             var error = data.message;
             
@@ -488,7 +498,6 @@ function displayData(data)
        {
            
             $.get( api + "/gcnotifications/notifications/", { "user_id" : val, "format": "json" } )
-            
         
                 .done(function(jqXHR, textResponse, xhr ) {
                     
