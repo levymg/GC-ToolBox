@@ -4,7 +4,18 @@
         "uninstalled": []
     },
     "config_munge": {
-        "files": {}
+        "files": {
+            "config.xml": {
+                "parents": {
+                    "/*": []
+                }
+            },
+            "framework": {
+                "parents": {
+                    "CoreLocation.framework": []
+                }
+            }
+        }
     },
     "installed_plugins": {},
     "dependent_plugins": {}

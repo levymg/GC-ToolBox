@@ -33,8 +33,10 @@ $(function(){
     $(window).on("load", function(){
         
         $("#main-view").load("view/splash.html", function(data){
-            
+       
             var user_id = localStorage.getItem("user_id");
+            
+            
             
             sessionStorage.clear();
             
@@ -85,6 +87,7 @@ $(function(){
     
 });
 
+
 $(function(){
     
     $("body").on("click", ".load-view", function(){
@@ -111,7 +114,7 @@ $(function(){
     $("body").on("click", ".ui-element", function(){
         
         var data = $(this).data();
-
+        
         processAction(data);
 
         return false;
@@ -206,15 +209,24 @@ $(function(){
    
     $("body").on("click", ".dismiss", function(){
         
+        var parent =  $(this).closest('div').attr('id');
+        
         $(this).parents("li").remove();
+        
+        hideParent(parent);
         
         var resource_id = $(this).data('resource_id');
         
-        //var type = $(this).data('type');
-        
         var formData = { resource_id : resource_id };
         
-        $.post(api + "/gcnotifications/notifications/", formData )
+         $.ajax({
+        
+            url: api + "/gcnotifications/notifications/",
+            type: "POST",
+            data: formData,
+            dataType: "json"
+        
+        });
         
         return false;
         
@@ -222,6 +234,20 @@ $(function(){
     
 });
 
+function hideParent(parent)
+{
+    
+   var size = $("#" + parent).find("ul").children().length;
+  
+   if(!size)
+   {
+       
+       $("#" + parent).removeClass("show").addClass("hide");
+       
+   }
+   
+   
+}
 // end dom functions
 //
 // begin controller functions
@@ -288,6 +314,8 @@ function postData(formData, form)
     
     var user_id = localStorage.getItem("user_id");
     
+    var token = localStorage.getItem("token");
+    
     switch(form)
     {
         
@@ -310,6 +338,8 @@ function postData(formData, form)
         case "edit-profile" :
             
             var request = "gcusers/user/user_id/" + user_id + "/format/json";
+            
+            formData = append(formData, token);
             
             updateUser(request, formData);
             
@@ -375,7 +405,14 @@ function getData(request, formData)
 function createUser(request, formData)
 {
     
-    $.post(api + request + "/",  formData)
+    $.ajax({
+        
+        url: api + request + "/",
+        type: "POST",
+        data: formData,
+        dataType: "json"
+        
+    })
     
         .done(function(data, textStatus, xhr) {
             
@@ -399,6 +436,11 @@ function createUser(request, formData)
                 });
 
             }
+            else {
+                
+                alert(xhr.status);
+                
+            }
                     
         })
         
@@ -411,12 +453,20 @@ function createUser(request, formData)
             $(".error-messages").html(error);
             
         });
+       
 }
 
 function updateUser(request, formData)
 {
     
-    $.post(api + request + "/",  formData)
+    $.ajax({
+        
+        url: api + request + "/",
+        type: "POST",
+        data: formData,
+        dataType: "json"
+        
+    })
     
         .done(function(data, textStatus, xhr) {
             
@@ -435,28 +485,35 @@ function updateUser(request, formData)
         })
         
         .fail(function(jqXHR, textStatus, xhr ) {
-           
+            
             var data = JSON.parse(jqXHR.responseText);
     
             var error = data.message;
             
             $(".error-messages").html(error);
             
-        })
+        });
         
 }
     
-        
-
-
 function authenticateUser(request, formData)
 {
     
-     $.post(api + request + "/",  formData )
+     $.ajax({
+        
+        url: api + request + "/",
+        type: "POST",
+        data: formData,
+        dataType: "json"
+        
+    })
     
         .done(function(data, textStatus, xhr) {
             
+            
             localStorage.setItem("user_id", data.user_id);
+    
+            localStorage.setItem("token", data.token);
     
             location.reload();
                     
@@ -483,40 +540,94 @@ function authenticateUser(request, formData)
 function logout()
 {
     
-    localStorage.removeItem("user_id");
+    var token = localStorage.getItem('token');
     
-    location.reload();
+    var user_id = localStorage.getItem('user_id');
+    
+    var request = "gcusers/user/user_id/" + user_id + "/format/json";
+    
+    alert(request);
+    
+    var formData = {token : token, action : "logout"};
+    
+    alert(JSON.stringify(formData));
+    
+    alert(api + request);
+    
+      $.ajax({
+        
+        url: api + request,
+        type: "POST",
+        data: formData,
+        dataType: "json"
+        
+    })
+    
+        .done(function(data, textStatus, xhr) {
+            
+            localStorage.removeItem("user_id", data.user_id);
+    
+            localStorage.removeItem("token", data.token);
+    
+            location.reload();
+                    
+        })
+        
+        .fail(function(jqXHR, textStatus, xhr ) {
+            
+            alert(JSON.stringify(jqXHR));
+            
+        });
     
 }
 
 function displayData(data)
 {
     
+   
    $.each(data, function(i, val) {
        
        if(i == "user_id")
        {
-           
-            $.get( api + "/gcnotifications/notifications/", { "user_id" : val, "format": "json" } )
+           $.ajax({
         
+                url: api + "/gcnotifications/notifications/",
+                type: "GET",
+                data: { "user_id" : val, "format": "json" },
+                dataType: "json"
+        
+            })
+            
                 .done(function(jqXHR, textResponse, xhr ) {
                     
                     $("#account-notifications").find("ul").html("");
             
                     $("#account-notifications").removeClass("hide").addClass("show");
-                   
+                    
                     $.each(jqXHR.notifications, function(key, value) {
                         
                         $("#account-notifications").find("ul").append("<li class='list-group-item list-group-item-info'><small><strong>" + value.title + "</strong></small><span class='badge'><a href='#' class='dismiss' data-type='notification' data-resource_id='" + value.resource_id + "'><i class='fa fa-times'></i></a></span></li>");
+                      
+                        $('.level-up').tooltip('destroy');
                         
-                        $("body").find(".level-up").removeAttr("title");
+                        $(".level-up").data("tooltip-placement", "top");
                         
-                        $("body").find(".level-up").attr("title", value.next);
-                        
+                        $(".level-up").attr("title", value.next);
+                       
                     });
                     
+                })
+                
+                
+                .fail(function(jqXHR, textResponse, xhr) {
                     
-                    
+                       var data = JSON.parse(jqXHR.responseText);
+               
+                       $("body").find(".level-up").removeAttr("title");
+                       
+                       $("body").find(".level-up").attr("title", data.next[0].next);
+                       
+                       
                 });
            
        }
@@ -559,6 +670,13 @@ function displayData(data)
   });
     
 }
-
 // end controller functions
 
+// Private functions
+
+function append(formData, token)
+{
+    
+    return formData = formData + "&token=" + token;
+    
+}
