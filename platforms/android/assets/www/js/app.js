@@ -36,8 +36,6 @@ $(function(){
        
             var user_id = localStorage.getItem("user_id");
             
-            
-            
             sessionStorage.clear();
             
                     if(!user_id)
@@ -546,15 +544,7 @@ function logout()
     
     var request = "gcusers/user/user_id/" + user_id + "/format/json";
     
-    alert(request);
-    
-    alert(token);
-    
     var formData = {token : token, action : "logout"};
-    
-    alert(formData);
-    
-    alert(api + request);
     
       $.ajax({
         
@@ -577,7 +567,12 @@ function logout()
         
         .fail(function(jqXHR, textStatus, xhr ) {
             
-            alert(JSON.stringify(jqXHR));
+            alert("Your session is invalid");
+    
+            localStorage.clear();
+    
+            location.reload();
+    
             
         });
     

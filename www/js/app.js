@@ -33,10 +33,8 @@ $(function(){
     $(window).on("load", function(){
         
         $("#main-view").load("view/splash.html", function(data){
-       
+            
             var user_id = localStorage.getItem("user_id");
-            
-            
             
             sessionStorage.clear();
             
@@ -248,6 +246,7 @@ function hideParent(parent)
    
    
 }
+
 // end dom functions
 //
 // begin controller functions
@@ -348,6 +347,8 @@ function postData(formData, form)
         case "change-password" :
             
             var request = "gcusers/user/user_id/" + user_id + "/format/json";
+            
+            formData = append(formData, token);
             
             updateUser(request, formData);
             
@@ -546,15 +547,9 @@ function logout()
     
     var request = "gcusers/user/user_id/" + user_id + "/format/json";
     
-    alert(request);
-    
     var formData = {token : token, action : "logout"};
     
-    alert(JSON.stringify(formData));
-    
-    alert(api + request);
-    
-      $.ajax({
+    $.ajax({
         
         url: api + request,
         type: "POST",
@@ -565,9 +560,7 @@ function logout()
     
         .done(function(data, textStatus, xhr) {
             
-            localStorage.removeItem("user_id", data.user_id);
-    
-            localStorage.removeItem("token", data.token);
+            localStorage.clear();
     
             location.reload();
                     
@@ -680,3 +673,5 @@ function append(formData, token)
     return formData = formData + "&token=" + token;
     
 }
+
+//device functions
