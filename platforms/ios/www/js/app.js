@@ -35,7 +35,7 @@ $(function(){
         $("#main-view").load("view/splash.html", function(data){
             
             var user_id = localStorage.getItem("user_id");
-            
+           
             sessionStorage.clear();
             
                     if(!user_id)
@@ -348,7 +348,7 @@ function postData(formData, form)
             
             var request = "gcusers/user/user_id/" + user_id + "/format/json";
             
-            formData = append(formData, token);
+            append(formData, token);
             
             updateUser(request, formData);
             
