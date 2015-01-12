@@ -56,6 +56,10 @@ a.red {
     color: #b92c28 !important;
 }
 
+.red {
+    color: #b92c28 !important;
+}
+
 .navbar-btn {
     background: #b92c28;
     color: #fff;
@@ -131,6 +135,10 @@ ul.list-inline li a {
     display: block !important;
 }
 
+ul.list-group li.list-group-item h1 {
+    font-size: 2.25rem !important;
+}
+
 .navbar-collapse {
     padding: 0px !important;
     background: #b92c28 !important;
@@ -182,4 +190,46 @@ ul.list-inline li a {
 .badge-7 {
     background-color: #0e90d2 !important;
     color: #fff !important;
+}
+
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all .25s ease-out;
+         -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+  }
+
+  .row-offcanvas-right {
+    right: 0;
+  }
+
+  .row-offcanvas-left {
+    left: 0;
+  }
+
+  .row-offcanvas-right
+  .sidebar-offcanvas {
+    right: -125%; /* 6 columns */
+  }
+
+  .row-offcanvas-left
+  .sidebar-offcanvas {
+    left: -138%; /* 6 columns */
+  }
+
+  .row-offcanvas-right.active {
+    right: 135%; /* 6 columns */
+  }
+
+  .row-offcanvas-left.active {
+    left: 155%; /* 6 columns */
+  }
+
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 100%; /* 6 columns */
+    background: #transparent;
+  }
 }

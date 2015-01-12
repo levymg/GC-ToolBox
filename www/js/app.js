@@ -1,5 +1,5 @@
 // globals
-
+// will eventually truncate index.php with htaccess, but for now just leave the index file for easier routing
 var api = "http://www.generalcarbide.com/api/index.php/";
 
 // hacks
@@ -7,6 +7,7 @@ var api = "http://www.generalcarbide.com/api/index.php/";
 $(function(){
    
     // iOS, toggle static and fixed navbar on focus field scrolling
+    // not really a hack it doesn't seem to be working right on the simulator, will have to test on live device (1.9.15)
     
     $("input").on('focus', function(){
         
@@ -33,14 +34,14 @@ $(function(){
     $(window).on("load", function(){
         
         $("#main-view").load("view/splash.html", function(data){
-            
+            // grab the user id for now
             var user_id = localStorage.getItem("user_id");
-           
+            // clear any hanging session variables from REST calls for a clean slate
             sessionStorage.clear();
             
                     if(!user_id)
                     {
-
+                        // only for homepage and build of q&a for now
                         var directory = "static";
 
                     }
@@ -63,14 +64,18 @@ $(function(){
                           
                           
                           $("#splash-main").load("view/"+directory+"/splash-main.html", function(){
-                             
+                             // grab the user id if the user is logged in
+                             // if they don't authenticate, they'll get logged out
                               var data = {action:"get", request:"user", formData:user_id};
-                          
+                              
+                              // our not so dry proessAction() function accepts and parses 
+                              // the data variables associated with the click handler's element
+                              
                               processAction(data);
                               
                           });
                     }
-                     
+               //netbeans misformats everything      
        });
     }); 
 });
@@ -78,7 +83,8 @@ $(function(){
 $(function(){
    
     $("body").on("click", ".animated", function(){
-        
+         // gotta implement with all REST calls
+         // just on a few elements for now
          $(this).find(".animated-element").addClass("fa-spin").delay(200).removeClass('fa-spin', 100);
         
     });
@@ -89,23 +95,70 @@ $(function(){
 $(function(){
     
     $("body").on("click", ".load-view", function(){
-        
+        // this dreaded pasta bowl loads up any view with an attr .html inside of the views directory
+        // for timesake i had to quickly implement a dirty clientside routing system, easily breakable
+        // does the trick for what it's worth, and functions cross-device
+        // angularJS is a much better alternative
         $("#main-view").html("<div class='col-xs-12 text-center'><p class='white'><i class='fa fa-spinner fa-spin'></i><br /> Loading...</p></div>");
         
         var view = $(this).attr("href");
-        
+        // if this is a navbar element, we're gonna close the navbar since it'll be open
         if($('.navbar-collapse').css('display') !== 'none'){
             
             $(".navbar-toggle").trigger( "click" );
             
         }
         
-        $("#main-view").load("view/"+view);
+        $("#main-view").load("view/"+view, function() {
+               
+              
+                if(view === "gradeselector.html")
+                {
+                   // grab our data for the gradeselector
+                   displayData(view);
+                     
+                }
+              
+        });
+        
         
         return false;
         
     });
 });
+
+$(function(){
+    
+    $('body').on('click', '.toggle-canvas', function () {
+        
+        if($('.row-offcanvas').hasClass("active"))
+        {
+            // clear our tables and options
+            $("div.option").removeClass("show").addClass("hide");
+            
+            $("table").html("");
+            
+        }
+        
+        $('.row-offcanvas').toggleClass('active');
+        
+        
+        return false;
+        
+  });
+    
+});
+
+$(function(){
+    
+    $("body").on("click", ".toggle-select", function(){
+        //simple select on/off
+        $(this).find("i").toggleClass("fa-toggle-off fa-toggle-on");
+        
+        return false;
+        
+    });
+})
 
 $(function(){
     
@@ -188,6 +241,25 @@ $(function(){
                             var formData = localStorage.getItem("user_id");
                             
                             var data = {action : action, request : request, formData : formData };
+                            
+                            processAction(data);
+                            
+                            break;
+                            
+                         case "gcgs-form" :
+                             
+                             if(localStorage.getItem("user_id"))
+                             {
+                                 
+                                    var action = "get";
+                            
+                                    var request = "user";
+
+                                    var formData = localStorage.getItem("user_id");
+
+                                    var data = {action : action, request : request, formData : formData };
+                                 
+                             }
                             
                             processAction(data);
                             
@@ -278,18 +350,39 @@ function processAction(data)
             getData(request, id);
             
             break;
-        
-        case("delete") :
-            
-            var request = data.request;
-            
-            break;
-            
         //
         //UI Actions
         //
             
          case("modify") :
+             
+            if(data.form == "gcgs")
+            {
+                
+                var ln = $("table.gradesheet").find("i.fa-toggle-on").length;
+                
+                if(ln === 0)
+                {
+                    alert("Please select a gradesheet to download.");
+                    
+                    return false;
+                    
+                }
+                
+                else
+                {
+                           
+                   var gradesheets = $.map($('table.gradesheet').find("i.fa-toggle-on"), function(el) {
+                       
+                                            return {"gradesheet": $(el).data('formdata')};
+                                            
+                                        });
+                    
+                    sessionStorage.setItem("gradesheets", gradesheets);
+                    
+                }
+
+            }
           
            $("#notification").load("view/static/"+ data.form +".html", function(){
                
@@ -372,30 +465,33 @@ function getData(request, formData)
             
             var resource = "gcusers/";
             
-            var resource_id = "user_id";
-            
             var callback = request;
             
             var uri =  api + resource + request;
             
             break;
+            
+        case("industry") :
+            
+            var resource = "gcgs/industry/";
+            
+             var callback = request;
+            
+            var uri = api + resource;
+            
+            break;
+            
     }
     
     
     $.get( uri, {"resource_id" : formData, "format": "json", "callback" : "displayData" } )
             
-        
-            .done(function( data ) {
-                
-                callback(data);
-        
-            })
             
-            .fail(function( data) {
+            .fail(function(data, responseText, xhr) {
                 
-                alert("There was an error logging into your account.  Please contact General Carbide.");
+                alert("There was an error retrieving the data you requested.");
         
-                localStorage.deleteItem("user_id");
+                localStorage.clear();
                 
                 location.reload();
         
@@ -426,7 +522,7 @@ function createUser(request, formData)
                         
                         $('html,body').animate({
                             
-                            scrollTop: $(data.focus).offset().top
+                            scrollTop: $(data.focus).offset().topscroll
                             
                          });
                             
@@ -577,9 +673,76 @@ function logout()
 function displayData(data)
 {
     
+    if(data === "gradeselector.html")
+    {
+        
+                     $.ajax({
+                         type: "get",
+                         url: api + "gcgs/industries/format/json",
+                         format: 'json'
+                     })
+                     
+                        .done(function(jqXHR, responseText, xhr){
+                           
+                                    $.each(jqXHR, function(i, val) {
+                                        
+                                        $("ul#industries").append("<li class='list-group-item'><a href='#' class='red ui-element toggle-canvas' data-action='get' data-request='industry'><i class='fa fa-chevron-right'></i> " + val.industry_name + "</a></li>");
+                                        
+                                    });
+                                    
+                                    var i = 1;
+                                    
+                                    $('ul#industries > li').each(function () {
+                                        
+                                            $(this).find('a').data('formData', i++);
+                                            
+                                    });
+                                   
+               
+                        })
+                        
+                        .fail(function(jqXHR, responseText, xhr){
+                           
+                                    alert(xhr);
+                            
+                        });
+    }
+    
+    else
+    {
+        
    
    $.each(data, function(i, val) {
        
+       if(i == "selections")
+       {
+           
+            val.forEach(function(selection) {
+                
+                $("div.selection-" + selection).removeClass("hide").addClass("show");
+                
+                $("select.selection-" + selection).attr("name", selection);
+                
+            });
+         
+       }
+       
+      if(i == "gradesheets")
+      {
+              
+              $("table.gradesheet").append("<tr><th>Gradesheet</th><th><span class='pull-right'>Select</span><span class='clearfix'></span></th></tr>");
+              
+               $.each(val, function(grade, gs) {
+                   
+                   $("table.gradesheet").append("<tr><td><strong>" + gs + "</strong></td><td><a class='red toggle-select' href='#'><i class='pull-right fa fa-2x fa-toggle-off' data-formData='" + gs + "'></i></a><span class='clearfix'></td></tr>");
+               
+               });
+               
+               $("table.gradesheet").append("<tr><td class='text-center' colspan='2'><button class='ui-element btn btn-danger btn-expand' data-action='modify' data-form='gcgs'>Download Gradesheets</button>")
+         
+      } 
+       
+     
        if(i == "user_id")
        {
            $.ajax({
@@ -653,6 +816,7 @@ function displayData(data)
             
        }
        
+       
        else
        {
            
@@ -660,9 +824,10 @@ function displayData(data)
            
        }
     
-  });
-    
+    });
+    }
 }
+
 // end controller functions
 
 // Private functions
