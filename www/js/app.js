@@ -111,7 +111,7 @@ $(function(){
         
         $("#main-view").load("view/"+view, function() {
                
-              
+                // Ugly hack to load up the gcgs
                 if(view === "gradeselector.html")
                 {
                    // grab our data for the gradeselector
@@ -120,7 +120,6 @@ $(function(){
                 }
               
         });
-        
         
         return false;
         
@@ -161,7 +160,10 @@ $(function(){
 })
 
 $(function(){
-    
+    // UI elements should have data attributes
+    // to define what action that processData will take into account
+    // Pass a data-form to serialize form data
+    // Pass data-action to call a specific function from the API
     $("body").on("click", ".ui-element", function(){
         
         var data = $(this).data();
@@ -177,7 +179,7 @@ $(function(){
 $(function () {
     
     $("body").on('click', '[data-toggle="tooltip"]', function(){
-
+        //easy tooltip toggle
         $(this).tooltip('toggle');
 
         return false;
@@ -189,27 +191,36 @@ $(function () {
 $(function() {
    
     $('#notification').on('hidden.bs.modal', function () {
-        
+        // session data is primarily for the user
+        // profile diting, but ended up using it on the
+        // grade selector submission form as well
+        // ...
+        // this function is for calling back the user profile
+        // after they have edited it
         $("#notification").html("");
         
          var request = sessionStorage.getItem("request");
        
-        if(request)
-        {
-            
-            var action = sessionStorage.getItem("action");
-            
-            var formData = sessionStorage.getItem("formData");
-            
-            var callback = sessionStorage.getItem("callback");
-           
-            var frontend = sessionStorage.getItem("frontend");
-            
-            var callbackData = {action:"get", request: "user", formData: formData};
-            
-            processAction(callbackData);
-            
-        }
+            if(request)
+            {
+
+                var action = sessionStorage.getItem("action");
+
+                var formData = sessionStorage.getItem("formData");
+
+                var callback = sessionStorage.getItem("callback");
+
+                var frontend = sessionStorage.getItem("frontend");
+
+                var callbackData = {action:"get", request: "user", formData: formData};
+
+                sessionStorage.clear();
+
+                processAction(callbackData);
+
+            }
+        
+        sessionStorage.clear();
                 
     });
     
@@ -218,8 +229,12 @@ $(function() {
 $(function(){
    
     
-    $('#notification').on('show.bs.modal', function (data) {
-            
+    $('#notification').on('show.bs.modal',function (data) {
+          //build our modal based on the request
+          //submitted
+          //either a user profile, a password change form, or the GCGS submission form
+          //handlers for each instance exist within this function
+          //TODO:  question form
             var data = null;
             
             $(this).find("form").each(function() {
@@ -231,7 +246,8 @@ $(function(){
                    
                    switch(data)
                    {
-                       
+                       // lets fill out the user's information first
+                       // append these each to form fields
                         case "edit-profile" :
                             
                             var action = "get";
@@ -245,9 +261,22 @@ $(function(){
                             processAction(data);
                             
                             break;
-                            
+                        // lets grab the gradesheets our user has selected
+                        // and display them in a table
                          case "gcgs-form" :
                              
+                             if(sessionStorage.length > 0)
+                             {
+                                 
+                                for (var i = 0; i < sessionStorage.length; i++){
+                                    
+                                    $("table.gradesheets").append("<tr><td class='text-center'><span class='dl-gradesheet' data-gs='"+ sessionStorage.getItem(sessionStorage.key(i)) +"'>" + sessionStorage.getItem(sessionStorage.key(i)) + "</td></tr>")
+                                    
+                                }
+
+                             }
+                             // is the user set?
+                             // if so, help them out by filling out their form
                              if(localStorage.getItem("user_id"))
                              {
                                  
@@ -260,7 +289,7 @@ $(function(){
                                     var data = {action : action, request : request, formData : formData };
                                  
                              }
-                            
+                             
                             processAction(data);
                             
                             break;
@@ -278,15 +307,17 @@ $(function(){
 $(function(){
    
     $("body").on("click", ".dismiss", function(){
-        
+        // notification dismissal
+        // this is kinda buggy but it works
+        // on simulator and device
         var parent =  $(this).closest('div').attr('id');
-        
+        // first we need to remove the notification
         $(this).parents("li").remove();
-        
+        // hide the parent li of the notification
         hideParent(parent);
-        
+        // get the id of the notification
         var resource_id = $(this).data('resource_id');
-        
+        // expire the notification
         var formData = { resource_id : resource_id };
         
          $.ajax({
@@ -306,7 +337,7 @@ $(function(){
 
 function hideParent(parent)
 {
-    
+   //basic hide parent dry function for ul's
    var size = $("#" + parent).find("ul").children().length;
   
    if(!size)
@@ -315,7 +346,6 @@ function hideParent(parent)
        $("#" + parent).removeClass("show").addClass("hide");
        
    }
-   
    
 }
 
@@ -332,68 +362,81 @@ function processAction(data)
         //REST Actions
         
         case("post") :
-            
+            // grab the form name
             var form = data.form;
-            
+            // serialize the form name
             var formData = $("#" + form).serialize() + "&action=" + form;
-            
+            // pass the form name for an action
+            // and the form data for our response
             postData(formData, data.form);
             
             break;
         
         case("get") :
-            
+            // get the request
             var request = data.request;
-            
+            // get the resource id, which we pass
+            // as formData in a get call
             var id = data.formData;
-            
+            //fire the request
             getData(request, id);
             
             break;
+            
         //
         //UI Actions
         //
             
          case("modify") :
-             
-            if(data.form == "gcgs")
-            {
-                
-                var ln = $("table.gradesheet").find("i.fa-toggle-on").length;
-                
-                if(ln === 0)
+              // modify a profile or modify a form
+              // entry
+              // in this case, we're entering a new
+              // grade selection entry
+                if(data.form == "gcgs")
                 {
-                    alert("Please select a gradesheet to download.");
-                    
-                    return false;
-                    
-                }
-                
-                else
-                {
-                           
-                   var gradesheets = $.map($('table.gradesheet').find("i.fa-toggle-on"), function(el) {
-                       
-                                            return {"gradesheet": $(el).data('formdata')};
-                                            
-                                        });
-                    
-                    sessionStorage.setItem("gradesheets", gradesheets);
-                    
-                }
+                    // find whate gradesheets the user has chosen
+                    var ln = $("table.gradesheet").find("i.fa-toggle-on").length;
 
-            }
-          
-           $("#notification").load("view/static/"+ data.form +".html", function(){
-               
-                $("#notification").modal("show");
-               
-           });
+                    if(ln === 0)
+                    {
+                        // if none, throw this error message
+                        alert("Please select a gradesheet to download.");
+
+                        return false;
+
+                    }
+
+                    else
+                    {
+                        
+                        // we're going to store each of the gradesheets
+                        // in a session storage variable and pass these
+                        // to the form modal
+                        $(".fa-toggle-on").each(function(index) {
+                            
+                            // iterate through selections and set each as it's own independent
+                            // entry
+                           sessionStorage.setItem(index, $(this).data("formdata"));
+                           
+                           
+                        });
+                        
+                                
+                    }
+
+                }
+                // load up our modal
+                $("#notification").load("view/static/"+ data.form +".html", function(){
+
+                     $("#notification").modal("show");
+
+                 });
             
             break;
             
         case("logout") :
-            
+            // hit the logout function
+            // all data should be in localStorage
             logout();
             
             break;
@@ -403,7 +446,11 @@ function processAction(data)
 
 function postData(formData, form)
 {
-    
+    // posting data?
+    // to edit a profile we'll need the user id and token
+    // to authenticate that it's actually the user
+    // making this request from the app
+    // this will reference a users hashed token, as well as their active session ID
     var user_id = localStorage.getItem("user_id");
     
     var token = localStorage.getItem("token");
@@ -412,7 +459,8 @@ function postData(formData, form)
     {
         
         case "register-form" :
-            
+            // register form action requires
+            // email and two passwords of equal value
             var request = "gcusers/user/format/json";
             
             createUser(request, formData);
@@ -420,7 +468,8 @@ function postData(formData, form)
             break;
             
         case "login-form" :
-            
+            // login form action requires
+            // email and password values
             var request = "gcusers/user/format/json";
             
             authenticateUser(request, formData);
@@ -428,7 +477,9 @@ function postData(formData, form)
             break;
             
         case "edit-profile" :
-            
+            // edit profile requires first name
+            // last name, company and phone
+            // values
             var request = "gcusers/user/user_id/" + user_id + "/format/json";
             
             formData = append(formData, token);
@@ -438,7 +489,8 @@ function postData(formData, form)
             break;
             
         case "change-password" :
-            
+            // change password requres the old password
+            // and two passwords of equal values
             var request = "gcusers/user/user_id/" + user_id + "/format/json";
             
             append(formData, token);
@@ -448,11 +500,40 @@ function postData(formData, form)
             break;
             
         case "forgot-form" :
-            
+            // forgot just requires a valid e-mail address
             var request = "gcusers/user/format/json";
             
             createUser(request, formData);
             
+            break;
+            
+        case "gcgs-form" :
+            // gcgs requires first, last names
+            // company and a valid email address
+            if(user_id !== null)
+            {
+                // is this a user submitted gradesheet?
+                // if so, alter the request to include the user id
+                var request = "gcgs/submission/user_id/"+user_id+"/format/json";
+                // append dat
+                append(formData, token);
+                
+            }
+            else
+            {
+                // otherwise, create a new submission entry
+                // without a user id and we will register
+                // this person's information
+                var request = "gcgs/submission/format/json";
+                
+            }
+            
+            alert(request);
+            
+            submitGcgs(request, formData);
+            
+            break;
+                
     }
 }
 
@@ -485,7 +566,6 @@ function getData(request, formData)
     
     
     $.get( uri, {"resource_id" : formData, "format": "json", "callback" : "displayData" } )
-            
             
             .fail(function(data, responseText, xhr) {
                 
@@ -670,9 +750,60 @@ function logout()
     
 }
 
-function displayData(data)
+function submitGcgs(request, formData)
 {
     
+    var gradesheets = "&gradesheets=";
+    
+    var total = $('.dl-gradesheet').length;
+    
+    $(".dl-gradesheet").each(function(index) {
+        
+            if (index === total - 1) {
+
+                gradesheets +=  $(this).data("gs");
+
+            }
+            else {
+
+                gradesheets +=  $(this).data("gs") + ",";
+
+            }
+
+      });
+
+      formData = formData + gradesheets;
+      
+        $.ajax({
+
+            url: api + request,
+            type: "POST",
+            data: formData,
+            dataType: "json"
+
+        })
+    
+        .done(function(jqXHR, textStatus, xhr){
+
+                    alert(JSON.stringify(jqXHR));
+
+        })
+
+        .fail(function(jqXHR, textStatus, xhr){
+
+                    var data = JSON.parse(jqXHR.responseText);
+    
+                    var error = data.message;
+                    
+                    alert(JSON.stringify(jqXHR.responseText));
+                    
+                    $(".error-messages").html(error);
+        });
+    
+}
+function displayData(data)
+{
+   
     if(data === "gradeselector.html")
     {
         
@@ -825,6 +956,7 @@ function displayData(data)
        }
     
     });
+    
     }
 }
 
