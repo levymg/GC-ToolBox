@@ -2,9 +2,6 @@
     <div class="well">
         <h4>Grade Selector</h4>
         <p>To identify the correct grade for your application, please choose from the industries listed below.
-        <br /><br />
-            Plan on referencing grades often?  <a href="register.html" class="red load-view"><strong>Sign Up</strong></a> for an account,
-               answer a few quick questions, and access your industry grades directly.
         </p>
     </div>
 </div>
@@ -16,10 +13,10 @@
                 <h1 class="white"><i class="fa fa-list"></i> Select An Industry</h1>
             </div>
         </div>
-        <div class="row" id="select-industry">
+        <div class="row container" id="select-industry">
             <div class="col-xs-12">
-            <ul id="industries" class="list-group">
-            </ul>
+                <ul id="industries" class="list-group">
+                </ul>
             </div>
         </div>
         <div class="sidebar-offcanvas" id="sidebar">
@@ -30,56 +27,63 @@
             </div>
             <div class="row col-xs-12">
                 <ul class="list-group">
-                <li class="list-group-item"><h1 class="industry_name red"></h1></li>
-                <li class="list-group-item">
-                    <p>Since superior wear resistance is the key characteristic of tungsten carbide, 
-                        the grades below are typically used in this industry.
-                    </p>
-                </li>
-                <li class="list-group-item">
-                    <div class="table-responsive">
-                       <table class="table table-striped gradesheet"></table>
+                <li class="list-group-item"><h1 data-resource-id="" class="resource_name industry_name red"></h1></li>
+                <li class="list-group-item wire"></li>
+                <li class="list-group-item filters">
+                    <p><a class="red filter-toggle" href="#"><i class="filter-icon fa fa-minus-circle"></i> Filter By Resistance Level</a></p>
+                    <div class="filter">
+                        <form name="gcgs-filter" id="gcgs-filter" action="">
+                        <p>In some applications, atypical operating conditions may dictate a different selection of grades. If your application requires special performance characteristics, please rate them below:</p>
+
+                        <div class="option selection-1 col-xs-12 hide">
+                            <label class="selection">Impact Resistance</label> 
+                            <select name="ir" class="selection ir form-control">
+                                <option value="3">Very Important</option>
+                                <option value="2">Somewhat Important</option>
+                                <option value="1">Not Important</option>
+                            </select>
+                        </div>
+                        <div class="option selection-2 col-xs-12 hide">
+                            <label class="selection">Corrossion Resistance</label> 
+                            <select name="cr" class="selection cr form-control">
+                                <option value="3">Very Important</option>
+                                <option value="2">Somewhat Important</option>
+                                <option value="1">Not Important</option>
+                            </select>
+                        </div>
+                        <div class="option selection-3 col-xs-12 hide">
+                            <label class="selection">Galling/Adheisve Resistance</label> 
+                            <select name="gr" class="selection gr form-control">
+                                <option value="3">Very Important</option>
+                                <option value="2">Somewhat Important</option>
+                                <option value="1">Not Important</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-12 text-center">
+                             <input type="hidden" name="resource_id" value="" id="resource_id" class="form-control resource_id" />
+                            <button class="ui-element btn btn-danger" style="margin-top:5px!important;" data-action="post" data-form="gcgs-filter"><i class="fa fa-search"></i> Filter By Resistance</button>
+                        </div>
+                        <div class="clearfix">&nbsp;<!--h4ck3d by epoc--></div>
+                        </form>
                     </div>
                 </li>
-                <li class="list-group-item">To determine which of these grades best fits your specific application contact<p class="rep"></p>
-                                                   <p>Email:<span class="rep_email"></span></p>
-                                                   <p>Phone:<span class="rep_phone"></span> &bull; <span class="rep_alt_phone"></span></p>
+                <li class="list-group-item gradesheet-selector">
+                            <div class="table-responsive">
+                               <table id="gradesheets" class="table table-striped gradesheet"></table>
+                            </div>
                 </li>
-                <li class="list-group-item"><h1 class="red">Grade Selection</h1></li>
+                <li class="list-group-item">To determine which of these grades best fits your specific application contact</li>
+                <li class="list-group-item"><p class="red"><strong class="rep"></strong></p></li>
                 <li class="list-group-item">
-                    <p>In some applications, atypical operating conditions may dictate a different selection of grades. If your application requires special performance characteristics, please rate them below:</p>
-                    <div class="option selection-1 col-xs-12 hide">
-                        <label class="selection-1">Impact Resistance</label> 
-                    <select class="selection-1 ir form-control">
-                        <option value="0">Not Important</option>
-                        <option value="0">Somewhat Important</option>
-                        <option value="1">Somewhat Important</option>
-                    </select>
-                </div>
-                <div class="option selection-2 col-xs-12 hide">
-                    <label class="selection-2">Corrossion Resistance</label> 
-                    <select class="selection-2 cr form-control">
-                        <option value="0">Not Important</option>
-                        <option value="0">Somewhat Important</option>
-                        <option value="1">Somewhat Important</option>
-                    </select>
-                </div>
-                <div class="option selection-3 col-xs-12 hide">
-                    <label class="selection-3">Galling/Adheisve Resistance</label> 
-                    <select class="selection-3 gr form-control">
-                        <option value="0">Not Important</option>
-                        <option value="0">Somewhat Important</option>
-                        <option value="1">Somewhat Important</option>
-                    </select>
-                </div>
-                <div class="clearfix">&nbsp;<!--h4ck3d by epoc--></div>
+                    <p><strong>Email:</strong></p>
+                    <p><span class="rep_email"></span></p>
                 </li>
                 <li class="list-group-item">
-                    <button class="ui-element get-grades btn btn-danger">Get Gradesheets</button>
+                    <p><strong>Phone:</strong></p>
+                    <p><span class="rep_phone"></span> &bull; <span class="rep_alt_phone"></span></p>
                 </li>
             </ul>
             </div>
-            
         </div>
         <div class="clearfix"></div>
     </div>

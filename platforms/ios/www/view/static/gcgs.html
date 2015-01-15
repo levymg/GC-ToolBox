@@ -1,13 +1,18 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <a class="white pull-right" data-dismiss="modal" href="#" aria-label="Close"><i class="fa fa-times"></i></a>
             <h4 class="modal-title" id="notificationHeader"><i class="fa fa-2x fa-download"></i> Gradesheet Download</h4>
+            <span class="clearfix"></span>
         </div>
         <div class="modal-body">
-            <p>You have selected the following gradesheets:</p>
+            <p>You have selected the following:</p>
+            <div class="table-responsive">
+                <table class="table table-striped selections"></table>
+            </div>
+            <p class="selections red"></p>
             <div class="table responsive">
-                <table class="table table-striped gradesheets"><tr><th>Gradesheets Selected</th></tr></table>
+                <table class="table table-striped gradesheets"><tr><th class="text-left"><i class="fa fa-paperclip"></i> Gradesheets Selected</th></tr></table>
             </div>
             <form id="gcgs-form" action="" name="gcgs-form">
                 <div class="col-lg-12">
@@ -32,7 +37,7 @@
                     <label>Email Address <em>(Your gradesheet(s) will be e-mailed to)</em></label>
                         <input type="email" name="email" class="email form-control" id="email" placeholder="Email@example.com">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6"> 
                     <button class="ui-element btn btn-primary" data-form="gcgs-form" data-action="post">Submit</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>

@@ -192,6 +192,25 @@ ul.list-group li.list-group-item h1 {
     color: #fff !important;
 }
 
+.table-striped th {
+    font-weight: 800 !important;
+    background-color: #000;
+    color: #fff !important;
+    
+}
+
+.modal-header {
+    background: #000;
+    color: #fff !important;
+}
+
+.table-striped td.alt {
+    background: #e01e26;
+    color: #fff;
+    font-weight: 800;
+    font-family: "Helvetica Neue", "Helvetica", sans-serif;
+}
+
 @media screen and (max-width: 767px) {
   .row-offcanvas {
     position: relative;

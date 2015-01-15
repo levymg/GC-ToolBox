@@ -1,0 +1,28 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a class="white pull-right" data-dismiss="modal" href="#" aria-label="Close"><i class="fa fa-times"></i></a>
+            <h4 class="modal-title" id="notificationHeader"><i class="fa fa-2x fa-question-circle"></i> Wire/EDM</h4>
+            <span class="clearfix"></span>
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive">
+                <table class="table selections"></table>
+            </div>
+            <h3>Will Wire/WEDM (electrical discharge machining) be used to fabricate this part?</h3>
+            <form id="wire" class="wire" name="wire">
+                <div class="clearfix">
+                    <div class="col-xs-6">
+                        <p><input type="radio" name="wire" value="4" /> Yes</p>
+                    </div>
+                    <div class="col-xs-6">
+                        <p><input type="radio" name="wire" value="0" checked /> No</p>
+                    </div>
+                    <div class="col-xs-12 text-center">
+                        <button class="ui-element btn btn-primary" data-form="wire" data-action="post">Continue</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
