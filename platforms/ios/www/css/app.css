@@ -17,6 +17,7 @@ body {
     background: url(../img/repeat.jpg) repeat;
     padding: 0 5px;
     overflow-x: hidden !important;
+    font-family: "Helvetica Neue", "Helvetica", sans-serif;
 }
 
 #header {
@@ -238,7 +239,7 @@ ul.list-group li.list-group-item h1 {
   }
 
   .row-offcanvas-right.active {
-    right: 135%; /* 6 columns */
+    right: 133%; /* 6 columns */
   }
 
   .row-offcanvas-left.active {

@@ -230,7 +230,9 @@ $(function() {
         $("#notification").html("");
         
          var request = sessionStorage.getItem("request");
-       
+         
+         var protect = sessionStorage.getItem("protect");
+         
             if(request)
             {
 
@@ -249,9 +251,16 @@ $(function() {
                 processAction(callbackData);
 
             }
-        
-        sessionStorage.clear();
+            
+            sessionStorage.clear();
+            
+            if(protect)
+            {
                 
+                sessionStorage.setItem("gatekeeper", "1");
+                
+            }
+            
     });
     
 });
@@ -299,6 +308,8 @@ $(function(){
 
                                     var resource_id = sessionStorage.getItem("resource_id");
                                     
+                                    sessionStorage.setItem("protect", "true");
+                                    
                                     if($("form#wire .resource_id").length > 0) {
                                         
                                         $("form#wire").remove(".resource_id");
@@ -336,6 +347,7 @@ $(function(){
                              
                              if(sessionStorage.length > 0)
                              {
+                                 
                                  // ugly session handling for gradesheet selection
                                  // we pass a session variable telling us that the user
                                  // is using the gs filters
@@ -348,6 +360,7 @@ $(function(){
                                 {
                                                     
                                         var resource_id = sessionStorage.getItem("resource_id");
+                                        
                                         // remove this real quick as to not append it to the table
                                         // since it has a numerical value like the other nan's
                                         sessionStorage.removeItem("resource_id");
@@ -381,6 +394,7 @@ $(function(){
 
                                     for (var i = 0; i < sessionStorage.length; i++)
                                     {
+                                        
                                         // lets grab our text variables first
                                         // should be the ir,cir,gr,resource_id
                                         // vars
@@ -413,6 +427,13 @@ $(function(){
                                                     
                                                     break;
                                                     
+                                                case "edm" :
+                                                    
+                                                    var key = "EDM/WEDM:";
+                                                    
+                                                    var rest = "edm";
+                                                    
+                                                    break;
                                             }
                                             
                                             switch(sessionStorage.getItem(sessionStorage.key(i))){
@@ -430,6 +451,7 @@ $(function(){
                                                     var value = "<span class='pull-right red'><i class='fa fa-star'></i><i class='fa fa-star-half'></i></span><span class='pull-left'>Somewhat Important</span><span class='clearfix'></span>";
                                                     
                                                     var int = 2;
+                                                    
                                                     break;
                                                 
                                                 case "3":
@@ -439,7 +461,22 @@ $(function(){
                                                     var int = 3;
                                                    
                                                     break;
+                                                    
+                                                case "4":
+                                                    
+                                                    var value = "<span class='pull-right red'><i class='fa fa-check'></i></span><span class='pull-left'>Yes</span><span class='clearfix'></span>"
+                                                 
+                                                    var int = 4;
+                                                    
+                                                    break;
+                                                    
+                                                case "5":
+                                                    
+                                                    var value = "<span class='pull-right red'><i class='fa fa-remove'></i></span><span class='pull-left'>No</span><span class='clearfix'></span>"
                                             
+                                                    var int = 5;
+                                                    
+                                                    break;
                                             }
                                             // let's append to our display tables
                                             // ANGUALRJS AND DATABINDING PLZ
@@ -577,6 +614,14 @@ function processAction(data)
               // grade selection entry form with the gradeselections in a table
                 if(data.form == "gcgs")
                 {
+                    
+                    if(sessionStorage.getItem("gatekeeper"))
+                    {
+                        
+                        var set = true;
+                        
+                    }
+                    
                     sessionStorage.clear();
                     
                     if($(".filters").hasClass("show"))
@@ -592,8 +637,21 @@ function processAction(data)
                             sessionStorage.setItem("gr", $(".gr").val());
 
                         }
+                        
+                        if(set === true)
+                        {
+                        
+                            sessionStorage.setItem("edm", "5");
+                        
+                        }
                     
                     } 
+                    else
+                    {
+                        
+                        sessionStorage.setItem("edm", "4");
+                        
+                    }
                     
                     sessionStorage.setItem("resource_id", $(".resource_name").data("resource-id"));
                     
@@ -778,6 +836,8 @@ function getData(request, formData)
             var callback = request;
             
             var uri = api + resource;
+            
+            sessionStorage.clear();
             
             sessionStorage.setItem("resource_id", formData);
             
@@ -1067,17 +1127,18 @@ function submitGcgs(request, formData)
     
         .done(function(jqXHR, textStatus, xhr){
 
-                    alert(JSON.stringify(jqXHR));
+                   $("#notification").modal("hide");
+                   
+                   $(".append-message").html(jqXHR);
 
         })
 
         .fail(function(jqXHR, textStatus, xhr){
 
-                 
+                    var error = jqXHR.responseText;
                     
-                    alert(JSON.stringify(jqXHR.responseText));
+                    $(".error-messages").html(error);
                     
-                    //$(".error-messages").html(error);
         });
     
 }
@@ -1088,7 +1149,8 @@ function wireEdm(request, formData)
     // from the database
     // this is only used if the gatekeeper
     // is set to 1 (true)
-    alert(formData);
+    
+    sessionStorage.setItem("protect", "true");
     
     $.ajax({
         
@@ -1099,12 +1161,18 @@ function wireEdm(request, formData)
     })
     
             .done(function(jqXHR, textResponse, xhr){
+                
                 // set a request for the industries page
                 // display the new data available
                 
-                $("#notification").modal("hide");
+                $("#notification").modal("hide", function(){
+                    
+                    displayData(jqXHR);
+                    
+                });
                 
-                displayData(jqXHR);
+                $('html, body').animate({ scrollTop: $('#sidebar').offset().top - 25 }, 'fast');
+                
         
             })
             
@@ -1179,10 +1247,39 @@ function displayData(data)
        // to disable the filters
        if(i == "resource_id")
         {
+            $('html, body').animate({ scrollTop: $('#sidebar').offset().top - 25 }, 'fast');
             // append a resource id to the data value
             $(".resource_name").data("resource-id", val);
 
         }
+        
+       if(i === "gatekeeper")
+       {
+           
+           switch(val)
+           {
+               
+               case "1":
+                   
+                   sessionStorage.setItem("gatekeeper", "1");
+                   
+                   if(!sessionStorage.getItem("edm"))
+                   {
+                       
+                       sessionStorage.setItem("protect", "true");
+                       
+                        $("#notification").load("view/static/wire.html", function(){
+
+                            $("#notification").modal("show");
+
+                        });
+                    
+                   }
+                    
+                   break;
+           }
+           
+       }
       
        if(i === "show_filter")
        {
@@ -1195,6 +1292,9 @@ function displayData(data)
           }
           else
           {
+              // set a session identifer for EDM
+              // for extra data in the user column
+              sessionStorage.setItem("edm", "5");
               
               $(".filters").removeClass("hide").addClass("show");
               
@@ -1202,24 +1302,6 @@ function displayData(data)
                
        }
        
-       if(i === "gatekeeper")
-       {
-           
-           switch(val)
-           {
-               
-               case "1":
-                   
-                    $("#notification").load("view/static/wire.html", function(){
-
-                        $("#notification").modal("show");
-
-                    });
-                    
-                   break;
-           }
-           
-       }
        // get the selections a user has made
        if(i == "selections")
        {
