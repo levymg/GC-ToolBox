@@ -1,0 +1,385 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page32</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,32,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load32();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_32{left:43px;top:898px;}
+#t2_32{left:125px;top:19px;letter-spacing:12px;}
+#t3_32{left:224px;top:901px;letter-spacing:4px;}
+#t4_32{left:41px;top:71px;}
+#t5_32{left:41px;top:96px;}
+#t6_32{left:256px;top:96px;}
+#t7_32{left:41px;top:111px;}
+#t8_32{left:41px;top:126px;}
+#t9_32{left:119px;top:126px;}
+#ta_32{left:331px;top:126px;}
+#tb_32{left:41px;top:142px;}
+#tc_32{left:41px;top:157px;}
+#td_32{left:172px;top:157px;}
+#te_32{left:415px;top:157px;}
+#tf_32{left:41px;top:172px;}
+#tg_32{left:41px;top:188px;}
+#th_32{left:166px;top:188px;}
+#ti_32{left:41px;top:203px;}
+#tj_32{left:41px;top:218px;}
+#tk_32{left:41px;top:233px;}
+#tl_32{left:41px;top:264px;}
+#tm_32{left:409px;top:264px;}
+#tn_32{left:41px;top:279px;}
+#to_32{left:41px;top:294px;}
+#tp_32{left:268px;top:294px;}
+#tq_32{left:41px;top:310px;}
+#tr_32{left:41px;top:340px;}
+#ts_32{left:41px;top:356px;}
+#tt_32{left:41px;top:371px;}
+#tu_32{left:263px;top:371px;}
+#tv_32{left:41px;top:386px;}
+#tw_32{left:41px;top:414px;}
+#tx_32{left:41px;top:438px;}
+#ty_32{left:432px;top:438px;}
+#tz_32{left:41px;top:453px;}
+#t10_32{left:41px;top:469px;}
+#t11_32{left:41px;top:484px;}
+#t12_32{left:227px;top:484px;}
+#t13_32{left:41px;top:499px;}
+#t14_32{left:41px;top:514px;}
+#t15_32{left:41px;top:545px;}
+#t16_32{left:41px;top:560px;}
+#t17_32{left:284px;top:560px;}
+#t18_32{left:41px;top:576px;}
+#t19_32{left:41px;top:591px;}
+#t1a_32{left:103px;top:591px;}
+#t1b_32{left:387px;top:591px;}
+#t1c_32{left:41px;top:606px;}
+#t1d_32{left:41px;top:621px;}
+#t1e_32{left:41px;top:637px;}
+#t1f_32{left:41px;top:667px;}
+#t1g_32{left:41px;top:683px;}
+#t1h_32{left:41px;top:698px;}
+#t1i_32{left:41px;top:728px;}
+#t1j_32{left:41px;top:744px;}
+#t1k_32{left:113px;top:744px;}
+
+#t4_32,#tw_32 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s1_32{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold32;
+	color: rgb(255,255,255);
+}
+
+.s2_32{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold32;
+	color: rgb(255,255,255);
+}
+
+.s3_32{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_232;
+	color: rgb(219,0,60);
+}
+
+.s4_32{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular32;
+	color: rgb(0,0,0);
+}
+
+.v1_32{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold32;
+	src :url("32/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular32;
+	src :url("32/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_232;
+	src :url("32/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_32" class="t s1_32">32</div>
+<div id="t2_32" class="t s2_32">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_32" class="t s2_32">www. generalcarbide.com</div>
+<div id="t4_32" class="t v1_32 s3_32">Thickness of Braze Joints</div>
+<div id="t5_32" class="t s4_32">The thickness of a braze joint is critical. </div>
+<div id="t6_32" class="t s4_32">A thick braze layer can more readily absorb</div>
+<div id="t7_32" class="t s4_32">strain but it can fail due to wash out by abrasive action or fail due to peening out by</div>
+<div id="t8_32" class="t s4_32">impact loads. </div>
+<div id="t9_32" class="t s4_32">It can “mush” due to a lack of strength. </div>
+<div id="ta_32" class="t s4_32">For this reason, a thinner braze</div>
+<div id="tb_32" class="t s4_32">layer is better because when a braze ﬁller metal compound is stressed, it tends to</div>
+<div id="tc_32" class="t s4_32">elongate before failure. </div>
+<div id="td_32" class="t s4_32">This elongation requires a reduction in area. </div>
+<div id="te_32" class="t s4_32">This, in turn, is</div>
+<div id="tf_32" class="t s4_32">restrained in the joint by the proximity of the steel and carbide to which the brazing</div>
+<div id="tg_32" class="t s4_32">compound is bonded. </div>
+<div id="th_32" class="t s4_32">Thus, the braze compound resists elongation, not only by the</div>
+<div id="ti_32" class="t s4_32">shear strength or tensile strength, but by resistance to ﬂow in several directions at once.</div>
+<div id="tj_32" class="t s4_32">The result is that the tensile strength of the thin braze can have several times the tensile</div>
+<div id="tk_32" class="t s4_32">strength of the braze ﬁller metal used.</div>
+<div id="tl_32" class="t s4_32">A word of caution is needed regarding a braze joint that is too thin. </div>
+<div id="tm_32" class="t s4_32">Various tests have</div>
+<div id="tn_32" class="t s4_32">shown that going too thin can bond the two materials too tightly and cause cracks in</div>
+<div id="to_32" class="t s4_32">otherwise well-proportioned assemblies. </div>
+<div id="tp_32" class="t s4_32">An ideal braze thickness is between .003”  </div>
+<div id="tq_32" class="t s4_32">and .005”.</div>
+<div id="tr_32" class="t s4_32">To assist operators that are unfamiliar with brazing work, it is often helpful to use a prick</div>
+<div id="ts_32" class="t s4_32">punch that can be employed to raise an embossed area on the bonding surface of the</div>
+<div id="tt_32" class="t s4_32">steel part to approximately .004” height. </div>
+<div id="tu_32" class="t s4_32">Three such punch marks will prevent the joint</div>
+<div id="tv_32" class="t s4_32">from being squeezed too tightly during brazing and will frequently eliminate braze strain.</div>
+<div id="tw_32" class="t v1_32 s3_32">Shape of the Braze Joint</div>
+<div id="tx_32" class="t s4_32">For maximum reduction of braze strains, a single brazed surface is best. </div>
+<div id="ty_32" class="t s4_32">Some</div>
+<div id="tz_32" class="t s4_32">assemblies may not permit this so when more than one surface is to be brazed</div>
+<div id="t10_32" class="t s4_32">simultaneously, the design should be such that the carbide will slide along one surface</div>
+<div id="t11_32" class="t s4_32">until it engages a second surface. </div>
+<div id="t12_32" class="t s4_32">For the situation where three surfaces are involved,</div>
+<div id="t13_32" class="t s4_32">the carbide should slide along one surface until it contacts against a second, then move</div>
+<div id="t14_32" class="t s4_32">along the two surfaces until it rests against the third surface.</div>
+<div id="t15_32" class="t s4_32">The shape of a brazed joint should be designed so that it will best resist the expected</div>
+<div id="t16_32" class="t s4_32">loading when the part is put into operation. </div>
+<div id="t17_32" class="t s4_32">For example, a carbide punch in a metalforming</div>
+<div id="t18_32" class="t s4_32">application would tend only to encounter axial forces and compressive loading in</div>
+<div id="t19_32" class="t s4_32">operation. </div>
+<div id="t1a_32" class="t s4_32">In this case, a simple butt braze would be suﬃcient. </div>
+<div id="t1b_32" class="t s4_32">However, that same</div>
+<div id="t1c_32" class="t s4_32">carbide tip brazed to steel and used as core rod in a powder compacting application</div>
+<div id="t1d_32" class="t s4_32">would be subjected to longitudinal forces and lateral thrust, so a conical braze joint</div>
+<div id="t1e_32" class="t s4_32">would be better in that instance.</div>
+<div id="t1f_32" class="t s4_32">Note that conical brazed joints should incorporate a vent-hole to permit exit of gas</div>
+<div id="t1g_32" class="t s4_32">pockets, ﬂux, or excess braze material which might otherwise become trapped and</div>
+<div id="t1h_32" class="t s4_32">prevent proper control of braze thickness.</div>
+<div id="t1i_32" class="t s4_32">With any of these designs, as the diameters or surface areas increase, so does the</div>
+<div id="t1j_32" class="t s4_32">braze strain. </div>
+<div id="t1k_32" class="t s4_32">Keeping the areas to be brazed as small as possible is essential.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg32Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg32"><object width="605" height="935" data="32/32.svg" type="image/svg+xml" id="pdf32" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f32 = [['t2_32',1419],['t3_32',626],['t4_32',681],['t5_32',837],['t6_32',930],['t7_32',1808],['t8_32',289],['t9_32',824],['ta_32',666],['tb_32',1753],['tc_32',504],['td_32',950],['te_32',308],['tf_32',1815],['tg_32',478],['th_32',1326],['ti_32',1899],['tj_32',1896],['tk_32',823],['tl_32',1449],['tm_32',388],['tn_32',1840],['to_32',886],['tp_32',898],['tq_32',207],['tr_32',1900],['ts_32',1859],['tt_32',866],['tu_32',990],['tv_32',1938],['tw_32',662],['tx_32',1540],['tz_32',1699],['t10_32',1875],['t11_32',720],['t12_32',1105],['t13_32',1896],['t14_32',1304],['t15_32',1839],['t16_32',949],['t17_32',1038],['t18_32',1762],['t1a_32',1113],['t1b_32',428],['t1c_32',1821],['t1d_32',1800],['t1e_32',704],['t1f_32',1789],['t1g_32',1794],['t1h_32',906],['t1i_32',1745],['t1j_32',263],['t1k_32',1358]];
+function load32(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f32);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 57;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_32");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

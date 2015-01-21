@@ -1,0 +1,388 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page41</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,41,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load41();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_41{left:545px;top:897px;}
+#t2_41{left:224px;top:901px;letter-spacing:4px;}
+#t3_41{left:125px;top:19px;letter-spacing:12px;}
+#t4_41{left:41px;top:72px;}
+#t5_41{left:41px;top:87px;}
+#t6_41{left:41px;top:117px;}
+#t7_41{left:41px;top:132px;}
+#t8_41{left:229px;top:132px;}
+#t9_41{left:41px;top:147px;}
+#ta_41{left:41px;top:162px;}
+#tb_41{left:41px;top:192px;}
+#tc_41{left:41px;top:222px;}
+#td_41{left:41px;top:237px;}
+#te_41{left:318px;top:237px;}
+#tf_41{left:41px;top:252px;}
+#tg_41{left:177px;top:252px;}
+#th_41{left:41px;top:267px;}
+#ti_41{left:425px;top:267px;}
+#tj_41{left:41px;top:282px;}
+#tk_41{left:151px;top:282px;}
+#tl_41{left:41px;top:297px;}
+#tm_41{left:175px;top:297px;}
+#tn_41{left:335px;top:297px;}
+#to_41{left:41px;top:312px;}
+#tp_41{left:41px;top:327px;}
+#tq_41{left:41px;top:357px;}
+#tr_41{left:41px;top:372px;}
+#ts_41{left:353px;top:372px;}
+#tt_41{left:41px;top:387px;}
+#tu_41{left:41px;top:417px;}
+#tv_41{left:104px;top:417px;}
+#tw_41{left:530px;top:417px;}
+#tx_41{left:41px;top:432px;}
+#ty_41{left:520px;top:432px;}
+#tz_41{left:41px;top:446px;}
+#t10_41{left:509px;top:446px;}
+#t11_41{left:41px;top:461px;}
+#t12_41{left:41px;top:476px;}
+#t13_41{left:253px;top:476px;}
+#t14_41{left:41px;top:491px;}
+#t15_41{left:118px;top:491px;}
+#t16_41{left:333px;top:491px;}
+#t17_41{left:41px;top:506px;}
+#t18_41{left:252px;top:658px;}
+#t19_41{left:41px;top:682px;}
+#t1a_41{left:41px;top:697px;}
+#t1b_41{left:41px;top:712px;}
+#t1c_41{left:196px;top:712px;}
+#t1d_41{left:41px;top:727px;}
+#t1e_41{left:41px;top:742px;}
+#t1f_41{left:75px;top:742px;}
+#t1g_41{left:41px;top:757px;}
+#t1h_41{left:119px;top:757px;}
+#t1i_41{left:41px;top:772px;}
+#t1j_41{left:79px;top:772px;}
+#t1k_41{left:41px;top:787px;}
+#t1l_41{left:156px;top:787px;}
+#t1m_41{left:41px;top:802px;}
+#t1n_41{left:41px;top:817px;}
+
+.s1_41{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold41;
+	color: rgb(255,255,255);
+}
+
+.s3_41{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular41;
+	color: rgb(0,0,0);
+}
+
+.s4_41{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-It41;
+	color: rgb(0,0,0);
+}
+
+.s5_41{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold41;
+	color: rgb(0,0,0);
+}
+
+.s2_41{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_241;
+	color: rgb(255,255,255);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold41;
+	src :url("41/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-It41;
+	src :url("41/fonts/YJUJYE-MyriadPro-It.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular41;
+	src :url("41/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_241;
+	src :url("41/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_41" class="t s1_41">41</div>
+<div id="t2_41" class="t s2_41">www. generalcarbide.com</div>
+<div id="t3_41" class="t s2_41">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_41" class="t s3_41">For carbide liners with oval or complex geometry, it is a good idea to contact your supplier for </div>
+<div id="t5_41" class="t s3_41">the thermal expansion rate of your speciﬁc grade of carbide.</div>
+<div id="t6_41" class="t s3_41">In addition, another important consideration is the scope of the properties of the steel case to </div>
+<div id="t7_41" class="t s3_41">be used in the shrink ﬁt assembly. </div>
+<div id="t8_41" class="t s3_41">The steel case should have a pre-heat treatment that will  </div>
+<div id="t9_41" class="t s3_41">retain the mechanical properties of the material, despite any self-tempering and/or self-stress </div>
+<div id="ta_41" class="t s3_41">relief that occurs during the shrink assembly procedure.</div>
+<div id="tb_41" class="t s4_41">Shrink Guidelines - Carbide Cylinder Mounted Outside of a Steel Ring:</div>
+<div id="tc_41" class="t s3_41">Normally, tungsten carbide should not be subjected to tensile stress, thus a carbide sleeve </div>
+<div id="td_41" class="t s3_41">shrunk over a steel shaft seems doomed to failure. </div>
+<div id="te_41" class="t s3_41">However, sometimes it is necessary to do so </div>
+<div id="tf_41" class="t s3_41">and it can be successful. </div>
+<div id="tg_41" class="t s3_41">A complete set of stress calculations must be performed in these cases. </div>
+<div id="th_41" class="t s3_41">Lamè’s equations may be used if the subscripts “c” and “s” are reversed. </div>
+<div id="ti_41" class="t s3_41">Additional stresses must </div>
+<div id="tj_41" class="t s3_41">also be considered. </div>
+<div id="tk_41" class="t s3_41">Any operation above room temperature will rapidly increase the tensile </div>
+<div id="tl_41" class="t s3_41">stress at the carbide I.D. </div>
+<div id="tm_41" class="t s3_41">leading to premature failure. </div>
+<div id="tn_41" class="t s3_41">When the carbide is shrunk on the outside</div>
+<div id="to_41" class="t s3_41">of the steel, the designer should use extreme caution and use only the minimum</div>
+<div id="tp_41" class="t s3_41">interference necessary.</div>
+<div id="tq_41" class="t s5_41">In summary, if it is necessary to shrink-Ft a carbide sleeve onto the outside of a steel shaft, all </div>
+<div id="tr_41" class="t s5_41">operating conditions and stresses must be considered. </div>
+<div id="ts_41" class="t s5_41">General Carbide’s Engineering </div>
+<div id="tt_41" class="t s5_41">Department should be consulted when this type of design is desired.</div>
+<div id="tu_41" class="t s5_41">Press ±its –</div>
+<div id="tv_41" class="t s3_41">This mounting technique is an interference ﬁt but no temperature is involved. </div>
+<div id="tw_41" class="t s3_41">The </div>
+<div id="tx_41" class="t s3_41">carbide part is merely forced into the mating steel part by mechanical pressure or force. </div>
+<div id="ty_41" class="t s3_41">Light </div>
+<div id="tz_41" class="t s3_41">interferences are generally used to permit assembly without biting into the steel wall. </div>
+<div id="t10_41" class="t s3_41">Steel </div>
+<div id="t11_41" class="t s3_41">requirements are much the same as far as elongation and yield strength are concerned, but the </div>
+<div id="t12_41" class="t s3_41">draw temperature is no longer critical. </div>
+<div id="t13_41" class="t s3_41">Most tapered dies or pins can be assembled at room  </div>
+<div id="t14_41" class="t s3_41">temperature. </div>
+<div id="t15_41" class="t s3_41">Pressing a pin into the steel recess (Fig. </div>
+<div id="t16_41" class="t s3_41">IV-9A and IV-9B) requires a chamfer to  </div>
+<div id="t17_41" class="t s3_41">properly lead the pin into the hole</div>
+<div id="t18_41" class="t s5_41">±igure IV-9</div>
+<div id="t19_41" class="t s3_41">In cases where maximum interference is desired and the high temperature required for shrink </div>
+<div id="t1a_41" class="t s3_41">ﬁtting would adversely aﬀect the hardness of the steel, there is no alternative than to use a </div>
+<div id="t1b_41" class="t s3_41">heavy interference press ﬁt. </div>
+<div id="t1c_41" class="t s3_41">In this method, a taper in the range of 1° to 2° included angle, is </div>
+<div id="t1d_41" class="t s3_41">ground on mating parts so that they can be forced together to give the required radial interfer-</div>
+<div id="t1e_41" class="t s3_41">ence. </div>
+<div id="t1f_41" class="t s3_41">This technique is used in the multiple ring approach of assembling ultra high-pressure </div>
+<div id="t1g_41" class="t s3_41">anvils or dies. </div>
+<div id="t1h_41" class="t s3_41">The tangential stress in each steel ring of the multiple ring anvil design, illustrated </div>
+<div id="t1i_41" class="t s3_41">in Fig. </div>
+<div id="t1j_41" class="t s3_41">IV-10, is calculated to approach the yield point of the steel in order to provide maximum </div>
+<div id="t1k_41" class="t s3_41">support to the anvil. </div>
+<div id="t1l_41" class="t s3_41">This technique provides greater tensile strength than one large steel ring. </div>
+<div id="t1m_41" class="t s3_41">The assembly of the part should be accomplished by lubricating all surfaces with a lubricious </div>
+<div id="t1n_41" class="t s3_41">coating such as molybdenum disulﬁde or a suitable lubricant.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg41Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg41"><object width="605" height="935" data="41/41.svg" type="image/svg+xml" id="pdf41" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f41 = [['t2_41',626],['t3_41',1419],['t4_41',2025],['t5_41',1302],['t6_41',2030],['t7_41',730],['t8_41',1237],['t9_41',2021],['ta_41',1206],['tb_41',1423],['tc_41',1948],['td_41',1085],['te_41',948],['tf_41',520],['tg_41',1536],['th_41',1514],['ti_41',528],['tj_41',416],['tk_41',1544],['tl_41',511],['tm_41',619],['tn_41',917],['to_41',1744],['tp_41',498],['tq_41',2081],['tr_41',1224],['ts_41',679],['tt_41',1544],['tu_41',243],['tv_41',1680],['tx_41',1892],['tz_41',1849],['t11_41',2058],['t12_41',824],['t13_41',1143],['t15_41',840],['t16_41',830],['t17_41',743],['t18_41',243],['t19_41',2025],['t1a_41',1959],['t1b_41',597],['t1c_41',1373],['t1d_41',2054],['t1f_41',1865],['t1g_41',290],['t1h_41',1769],['t1i_41',127],['t1j_41',1903],['t1k_41',438],['t1l_41',1587],['t1m_41',2009],['t1n_41',1332]];
+function load41(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f41);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 60;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_41");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

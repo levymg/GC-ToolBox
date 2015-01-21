@@ -1,0 +1,447 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page10</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,10,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load10();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_10{left:43px;top:898px;}
+#t2_10{left:125px;top:19px;letter-spacing:12px;}
+#t3_10{left:224px;top:901px;letter-spacing:4px;}
+#t4_10{left:41px;top:71px;}
+#t5_10{left:41px;top:95px;}
+#t6_10{left:41px;top:140px;}
+#t7_10{left:41px;top:155px;}
+#t8_10{left:403px;top:155px;}
+#t9_10{left:41px;top:170px;}
+#ta_10{left:41px;top:186px;}
+#tb_10{left:41px;top:201px;}
+#tc_10{left:111px;top:201px;}
+#td_10{left:41px;top:216px;}
+#te_10{left:187px;top:216px;}
+#tf_10{left:41px;top:231px;}
+#tg_10{left:325px;top:231px;}
+#th_10{left:41px;top:247px;}
+#ti_10{left:320px;top:247px;}
+#tj_10{left:41px;top:262px;}
+#tk_10{left:221px;top:262px;}
+#tl_10{left:41px;top:277px;}
+#tm_10{left:41px;top:293px;}
+#tn_10{left:41px;top:666px;}
+#to_10{left:41px;top:690px;}
+#tp_10{left:376px;top:690px;}
+#tq_10{left:41px;top:705px;}
+#tr_10{left:41px;top:721px;}
+#ts_10{left:361px;top:721px;}
+#tt_10{left:369px;top:721px;}
+#tu_10{left:41px;top:736px;}
+#tv_10{left:41px;top:751px;}
+#tw_10{left:146px;top:751px;}
+#tx_10{left:497px;top:751px;}
+#ty_10{left:41px;top:767px;}
+#tz_10{left:41px;top:782px;}
+#t10_10{left:141px;top:377px;}
+#t11_10{left:343px;top:377px;}
+#t12_10{left:151px;top:392px;}
+#t13_10{left:353px;top:392px;}
+#t14_10{left:151px;top:407px;}
+#t15_10{left:353px;top:407px;}
+#t16_10{left:151px;top:422px;}
+#t17_10{left:353px;top:422px;}
+#t18_10{left:151px;top:438px;}
+#t19_10{left:353px;top:438px;}
+#t1a_10{left:151px;top:453px;}
+#t1b_10{left:353px;top:453px;}
+#t1c_10{left:151px;top:468px;}
+#t1d_10{left:353px;top:468px;}
+#t1e_10{left:151px;top:484px;}
+#t1f_10{left:353px;top:484px;}
+#t1g_10{left:151px;top:499px;}
+#t1h_10{left:353px;top:499px;}
+#t1i_10{left:151px;top:514px;}
+#t1j_10{left:353px;top:514px;}
+#t1k_10{left:151px;top:529px;}
+#t1l_10{left:353px;top:529px;}
+#t1m_10{left:151px;top:545px;}
+#t1n_10{left:353px;top:545px;}
+#t1o_10{left:151px;top:560px;}
+#t1p_10{left:353px;top:560px;}
+#t1q_10{left:151px;top:575px;}
+#t1r_10{left:353px;top:575px;}
+#t1s_10{left:175px;top:343px;}
+#t1t_10{left:351px;top:349px;}
+#t1u_10{left:356px;top:343px;}
+#t1v_10{left:376px;top:349px;}
+#t1w_10{left:381px;top:343px;}
+#t1x_10{left:253px;top:604px;}
+
+#t4_10,#t5_10,#tn_10 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s1_10{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold10;
+	color: rgb(255,255,255);
+}
+
+.s5_10{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_210;
+	color: rgb(0,0,0);
+}
+
+.s9_10{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold10;
+	color: rgb(219,0,60);
+}
+
+.s3_10{
+	FONT-SIZE: 69px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold10;
+	color: rgb(0,0,0);
+}
+
+.s4_10{
+	FONT-SIZE: 69px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold10;
+	color: rgb(219,0,60);
+}
+
+.s10_10{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_210;
+	color: rgb(219,0,60);
+}
+
+.s7_10{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold10;
+	color: rgb(0,0,0);
+}
+
+.s8_10{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_210;
+	color: rgb(219,0,60);
+}
+
+.s6_10{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular10;
+	color: rgb(0,0,0);
+}
+
+.s2_10{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_210;
+	color: rgb(255,255,255);
+}
+
+.v1_10{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold10;
+	src :url("10/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular10;
+	src :url("10/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_210;
+	src :url("10/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_10" class="t s1_10">10</div>
+<div id="t2_10" class="t s2_10">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_10" class="t s2_10">www. generalcarbide.com</div>
+<div id="t4_10" class="t v1_10 s3_10">Chapter II - Unique Properties</div>
+<div id="t5_10" class="t v1_10 s4_10">Mechanical</div>
+<div id="t6_10" class="t s5_10">Hardness</div>
+<div id="t7_10" class="t s6_10">This is one of the most important properties of cemented carbide. </div>
+<div id="t8_10" class="t s7_10">It is the one physical</div>
+<div id="t9_10" class="t s7_10">property that is thought to be the most important when it comes to abrasion resistance,</div>
+<div id="ta_10" class="t s6_10">although this property alone does not dictate the success of a carbide grade in a wear</div>
+<div id="tb_10" class="t s6_10">application. </div>
+<div id="tc_10" class="t s6_10">Hardness is determined by indenting a sample with a diamond penetrator</div>
+<div id="td_10" class="t s6_10">per ASTM standard B-294. </div>
+<div id="te_10" class="t s6_10">Hardness values for cemented carbide are usually</div>
+<div id="tf_10" class="t s6_10">expressed in terms of Rockwell “A” or Vickers values. </div>
+<div id="tg_10" class="t s6_10">Steels are measured in a similar</div>
+<div id="th_10" class="t s6_10">fashion and are expressed in terms of Rockwell ”C”. </div>
+<div id="ti_10" class="t s6_10">Figure II-1 depicts the approximate</div>
+<div id="tj_10" class="t s6_10">conversion of Rockwell “A” to “C”. </div>
+<div id="tk_10" class="t s6_10">It can be seen that a D2 tool steel heat treated and</div>
+<div id="tl_10" class="t s6_10">hardened to a Rockwell C value of 62 is still quite soft when compared to a 6% cobalt</div>
+<div id="tm_10" class="t s6_10">binder grade of carbide with a value of 92 Rockwell ”A”.</div>
+<div id="tn_10" class="t v1_10 s8_10">Density</div>
+<div id="to_10" class="t s6_10">Density is determined according to the ASTM standard B311. </div>
+<div id="tp_10" class="t s6_10">Since cemented carbide</div>
+<div id="tq_10" class="t s6_10">is a composite material, and its constituent ingredients have varying individual densities,</div>
+<div id="tr_10" class="t s7_10">the density of cemented carbide varies with composition</div>
+<div id="ts_10" class="t s6_10">. </div>
+<div id="tt_10" class="t s6_10">Combining these materials in</div>
+<div id="tu_10" class="t s6_10">various proportions creates variation in the density of the cemented carbides in line with</div>
+<div id="tv_10" class="t s6_10">their composition. </div>
+<div id="tw_10" class="t s6_10">A density of 14.5 g/cc is typical for a 10% cobalt binder material. </div>
+<div id="tx_10" class="t s6_10">This</div>
+<div id="ty_10" class="t s6_10">value is twice the density of a 1040 carbon steel, which is an important consideration</div>
+<div id="tz_10" class="t s6_10">when weight is a factor in design.</div>
+<div id="t10_10" class="t s5_10">Rockwell “A”  </div>
+<div id="t11_10" class="t s5_10">Rockwell “C” </div>
+<div id="t12_10" class="t s6_10">91.8-92.8  </div>
+<div id="t13_10" class="t s6_10">79.5-81.5 </div>
+<div id="t14_10" class="t s6_10">91.5-92.5  </div>
+<div id="t15_10" class="t s6_10">79.0-81.0 </div>
+<div id="t16_10" class="t s6_10">90.5-91.5  </div>
+<div id="t17_10" class="t s6_10">77.0-79.0 </div>
+<div id="t18_10" class="t s6_10">90.2-91.2  </div>
+<div id="t19_10" class="t s6_10">76.5-79.5 </div>
+<div id="t1a_10" class="t s6_10">89.8-90.8  </div>
+<div id="t1b_10" class="t s6_10">75.6-77.6 </div>
+<div id="t1c_10" class="t s6_10">89.0-90.0  </div>
+<div id="t1d_10" class="t s6_10">74.0-76.0 </div>
+<div id="t1e_10" class="t s6_10">88.5-89.5  </div>
+<div id="t1f_10" class="t s6_10">73.0-75.0 </div>
+<div id="t1g_10" class="t s6_10">88.0-89.0  </div>
+<div id="t1h_10" class="t s6_10">72.0-74.0 </div>
+<div id="t1i_10" class="t s6_10">87.5-88.5  </div>
+<div id="t1j_10" class="t s6_10">71.0-73.0 </div>
+<div id="t1k_10" class="t s6_10">87.0-88.0  </div>
+<div id="t1l_10" class="t s6_10">71.0-72.0 </div>
+<div id="t1m_10" class="t s6_10">86.0-87.0  </div>
+<div id="t1n_10" class="t s6_10">69.0-71.0 </div>
+<div id="t1o_10" class="t s6_10">83.0-84.5  </div>
+<div id="t1p_10" class="t s6_10">63.0-66.0 </div>
+<div id="t1q_10" class="t s6_10">81.5-83.0  </div>
+<div id="t1r_10" class="t s6_10">61.0-63.0 </div>
+<div id="t1s_10" class="t s9_10">Hardness Conversion Chart (HR</div>
+<div id="t1t_10" class="t s10_10">A</div>
+<div id="t1u_10" class="t s9_10">-HR</div>
+<div id="t1v_10" class="t s10_10">C</div>
+<div id="t1w_10" class="t s9_10">)</div>
+<div id="t1x_10" class="t s7_10">Figure II-1</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg10Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg10"><object width="605" height="935" data="10/10.svg" type="image/svg+xml" id="pdf10" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f10 = [['t2_10',1419],['t3_10',626],['t4_10',890],['t7_10',1426],['t8_10',456],['t9_10',1974],['ta_10',1856],['tc_10',1605],['td_10',560],['te_10',1071],['tf_10',1111],['tg_10',677],['th_10',1094],['ti_10',758],['tj_10',697],['tk_10',1091],['tl_10',1834],['tm_10',1184],['to_10',1316],['tp_10',522],['tq_10',1917],['tr_10',1277],['tt_10',636],['tu_10',1920],['tv_10',397],['tw_10',1381],['ty_10',1836],['tz_10',724],['t10_10',284],['t11_10',277],['t12_10',209],['t14_10',209],['t16_10',209],['t18_10',209],['t1a_10',209],['t1c_10',209],['t1e_10',209],['t1g_10',209],['t1i_10',209],['t1k_10',209],['t1m_10',209],['t1o_10',209],['t1q_10',209],['t1s_10',703],['t1x_10',226]];
+function load10(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f10);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 70;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_10");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

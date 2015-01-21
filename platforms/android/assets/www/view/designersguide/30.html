@@ -1,0 +1,351 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page30</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,30,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load30();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_30{left:43px;top:898px;}
+#t2_30{left:125px;top:19px;letter-spacing:12px;}
+#t3_30{left:224px;top:901px;letter-spacing:4px;}
+#t4_30{left:41px;top:72px;}
+#t5_30{left:154px;top:72px;}
+#t6_30{left:41px;top:87px;}
+#t7_30{left:41px;top:103px;}
+#t8_30{left:403px;top:103px;}
+#t9_30{left:41px;top:118px;}
+#ta_30{left:41px;top:133px;}
+#tb_30{left:189px;top:133px;}
+#tc_30{left:41px;top:149px;}
+#td_30{left:129px;top:149px;}
+#te_30{left:401px;top:149px;}
+#tf_30{left:426px;top:149px;}
+#tg_30{left:41px;top:164px;}
+#th_30{left:41px;top:647px;}
+#ti_30{left:41px;top:662px;}
+#tj_30{left:458px;top:662px;}
+#tk_30{left:41px;top:677px;}
+#tl_30{left:41px;top:692px;}
+#tm_30{left:41px;top:723px;}
+#tn_30{left:41px;top:738px;}
+#to_30{left:260px;top:738px;}
+#tp_30{left:41px;top:754px;}
+#tq_30{left:41px;top:769px;}
+#tr_30{left:193px;top:769px;}
+#ts_30{left:41px;top:784px;}
+#tt_30{left:41px;top:799px;}
+#tu_30{left:249px;top:621px;}
+#tv_30{left:41px;top:368px;}
+#tw_30{left:443px;top:368px;}
+#tx_30{left:41px;top:383px;}
+#ty_30{left:41px;top:398px;}
+#tz_30{left:217px;top:398px;}
+#t10_30{left:41px;top:414px;}
+#t11_30{left:226px;top:414px;}
+#t12_30{left:41px;top:444px;}
+#t13_30{left:153px;top:444px;}
+#t14_30{left:41px;top:459px;}
+#t15_30{left:257px;top:459px;}
+#t16_30{left:41px;top:475px;}
+#t17_30{left:418px;top:475px;}
+#t18_30{left:446px;top:475px;}
+#t19_30{left:158px;top:334px;}
+#t1a_30{left:353px;top:336px;}
+
+.s1_30{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold30;
+	color: rgb(255,255,255);
+}
+
+.s4_30{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular30;
+	color: rgb(0,0,0);
+}
+
+.s3_30{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold30;
+	color: rgb(0,0,0);
+}
+
+.s2_30{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_230;
+	color: rgb(255,255,255);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold30;
+	src :url("30/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular30;
+	src :url("30/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_230;
+	src :url("30/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_30" class="t s1_30">30</div>
+<div id="t2_30" class="t s2_30">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_30" class="t s2_30">www. generalcarbide.com</div>
+<div id="t4_30" class="t s3_30">b) Counterstraining</div>
+<div id="t5_30" class="t s4_30">– This technique utilizes the principle of force and counterforce.</div>
+<div id="t6_30" class="t s4_30">By pre-stressing the assembly beyond normal, it is often possible to have the part come</div>
+<div id="t7_30" class="t s4_30">out nearly straight when the clamp is removed and the part cools. </div>
+<div id="t8_30" class="t s4_30">This pre-stress</div>
+<div id="t9_30" class="t s4_30">reduces the tensile stress in the outer edge of a carbide strip by forcibly overcoming the</div>
+<div id="ta_30" class="t s4_30">curvature of the assembly. </div>
+<div id="tb_30" class="t s4_30">One way of doing this is to clamp the assembly in a jig</div>
+<div id="tc_30" class="t s4_30">during cooling. </div>
+<div id="td_30" class="t s4_30">Most of the curvature can be eliminated this way. </div>
+<div id="te_30" class="t s4_30">Fig. </div>
+<div id="tf_30" class="t s4_30">IV-3 shows how</div>
+<div id="tg_30" class="t s4_30">this principle has been applied to a wear insert.</div>
+<div id="th_30" class="t s4_30">With all of these strain-relieving methods, the assembly should be allowed to stand for a</div>
+<div id="ti_30" class="t s4_30">few hours (or even days) to allow any residual stresses to relieve themselves. </div>
+<div id="tj_30" class="t s4_30">Since the</div>
+<div id="tk_30" class="t s4_30">strains may still be locked in, some creep could take place and that must be taken into</div>
+<div id="tl_30" class="t s4_30">account before any ﬁnal grinding of the assembly should occur.</div>
+<div id="tm_30" class="t s4_30">Heat soaking is the process of bringing the assembly to temperatures in the 400°F range</div>
+<div id="tn_30" class="t s4_30">and is useful for minor stress relief only. </div>
+<div id="to_30" class="t s4_30">It is not as eﬀective for major stresses that</div>
+<div id="tp_30" class="t s4_30">occur in larger joints of 1” or longer because the temperature needed to remove such</div>
+<div id="tq_30" class="t s4_30">stresses is 1000°F or above. </div>
+<div id="tr_30" class="t s4_30">Since this is just below the temperature at which silver</div>
+<div id="ts_30" class="t s4_30">based braze compounds solidify, the cooled assembly would again be strained to about</div>
+<div id="tt_30" class="t s4_30">the same temperature after cooling.</div>
+<div id="tu_30" class="t s3_30">Figure IV-5</div>
+<div id="tv_30" class="t s4_30">Peening is another method of counterstraining and relieving braze stress. </div>
+<div id="tw_30" class="t s4_30">This</div>
+<div id="tx_30" class="t s4_30">technique is accomplished by using a ball peen hammer peen the steel surface on the</div>
+<div id="ty_30" class="t s4_30">opposite side of the braze joint. </div>
+<div id="tz_30" class="t s4_30">This will expand it and set up a counterstrain to restore</div>
+<div id="t10_30" class="t s4_30">straightness of the assembly (Fig. </div>
+<div id="t11_30" class="t s4_30">4-4).</div>
+<div id="t12_30" class="t s3_30">c) Opposing braze -</div>
+<div id="t13_30" class="t s4_30">Another solution to relieve strain is to braze a carbide blade to</div>
+<div id="t14_30" class="t s4_30">opposite faces of the steel component. </div>
+<div id="t15_30" class="t s4_30">This sets up balanced opposing stresses and an</div>
+<div id="t16_30" class="t s4_30">added beneﬁt is that two working surfaces are now available for use. </div>
+<div id="t17_30" class="t s4_30">(Fig. </div>
+<div id="t18_30" class="t s4_30">4-5).</div>
+<div id="t19_30" class="t s3_30">Figure IV-3</div>
+<div id="t1a_30" class="t s3_30">Figure IV-4</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg30Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg30"><object width="605" height="935" data="30/30.svg" type="image/svg+xml" id="pdf30" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f30 = [['t2_30',1419],['t3_30',626],['t4_30',440],['t5_30',1375],['t6_30',1893],['t7_30',1426],['t8_30',310],['t9_30',1897],['ta_30',570],['tb_30',1172],['tc_30',330],['td_30',1065],['tf_30',338],['tg_30',1022],['th_30',1906],['ti_30',1644],['tj_30',199],['tk_30',1860],['tl_30',1373],['tm_30',1908],['tn_30',851],['to_30',904],['tp_30',1842],['tq_30',585],['tr_30',1175],['ts_30',1900],['tt_30',780],['tu_30',243],['tv_30',1587],['tx_30',1860],['ty_30',683],['tz_30',1186],['t10_30',718],['t12_30',435],['t13_30',1345],['t14_30',843],['t15_30',1023],['t16_30',1484],['t19_30',243],['t1a_30',243]];
+function load30(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f30);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 47;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_30");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

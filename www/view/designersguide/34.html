@@ -1,0 +1,397 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page34</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,34,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load34();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_34{left:43px;top:898px;}
+#t2_34{left:125px;top:19px;letter-spacing:12px;}
+#t3_34{left:224px;top:901px;letter-spacing:4px;}
+#t4_34{left:41px;top:71px;}
+#t5_34{left:41px;top:96px;}
+#t6_34{left:41px;top:111px;}
+#t7_34{left:393px;top:111px;}
+#t8_34{left:41px;top:126px;}
+#t9_34{left:480px;top:126px;}
+#ta_34{left:41px;top:142px;}
+#tb_34{left:424px;top:142px;}
+#tc_34{left:41px;top:157px;}
+#td_34{left:41px;top:172px;}
+#te_34{left:464px;top:172px;}
+#tf_34{left:41px;top:188px;}
+#tg_34{left:41px;top:203px;}
+#th_34{left:41px;top:218px;}
+#ti_34{left:204px;top:218px;}
+#tj_34{left:41px;top:233px;}
+#tk_34{left:41px;top:264px;}
+#tl_34{left:41px;top:279px;}
+#tm_34{left:41px;top:294px;}
+#tn_34{left:41px;top:310px;}
+#to_34{left:266px;top:310px;}
+#tp_34{left:41px;top:325px;}
+#tq_34{left:41px;top:340px;}
+#tr_34{left:41px;top:371px;}
+#ts_34{left:41px;top:386px;}
+#tt_34{left:389px;top:386px;}
+#tu_34{left:41px;top:401px;}
+#tv_34{left:375px;top:401px;}
+#tw_34{left:41px;top:417px;}
+#tx_34{left:41px;top:444px;}
+#ty_34{left:41px;top:469px;}
+#tz_34{left:41px;top:484px;}
+#t10_34{left:340px;top:484px;}
+#t11_34{left:41px;top:499px;}
+#t12_34{left:41px;top:530px;}
+#t13_34{left:41px;top:560px;}
+#t14_34{left:57px;top:576px;}
+#t15_34{left:72px;top:576px;}
+#t16_34{left:57px;top:591px;}
+#t17_34{left:72px;top:591px;}
+#t18_34{left:72px;top:606px;}
+#t19_34{left:57px;top:621px;}
+#t1a_34{left:72px;top:621px;}
+#t1b_34{left:72px;top:637px;}
+#t1c_34{left:157px;top:637px;}
+#t1d_34{left:72px;top:652px;}
+#t1e_34{left:57px;top:667px;}
+#t1f_34{left:72px;top:667px;}
+#t1g_34{left:72px;top:683px;}
+#t1h_34{left:238px;top:683px;}
+#t1i_34{left:57px;top:698px;}
+#t1j_34{left:72px;top:698px;}
+#t1k_34{left:72px;top:713px;}
+
+#t4_34,#tx_34 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s5_34{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_234;
+	color: rgb(0,0,0);
+}
+
+.s1_34{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold34;
+	color: rgb(255,255,255);
+}
+
+.s6_34{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold34;
+	color: rgb(0,0,0);
+}
+
+.s2_34{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold34;
+	color: rgb(255,255,255);
+}
+
+.s3_34{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_234;
+	color: rgb(219,0,60);
+}
+
+.s4_34{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular34;
+	color: rgb(0,0,0);
+}
+
+.v1_34{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold34;
+	src :url("34/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular34;
+	src :url("34/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_234;
+	src :url("34/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_34" class="t s1_34">34</div>
+<div id="t2_34" class="t s2_34">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_34" class="t s2_34">www. generalcarbide.com</div>
+<div id="t4_34" class="t v1_34 s3_34">Brazing to Hardened Steel</div>
+<div id="t5_34" class="t s4_34">Brazing to hardened steel presents it own unique issues since cemented carbide will not</div>
+<div id="t6_34" class="t s4_34">withstand a liquid quench, typically required for hardened steel. </div>
+<div id="t7_34" class="t s4_34">Thus, a brazed</div>
+<div id="t8_34" class="t s4_34">assembly cannot be subjected to rapid cooling without causing severe cracking. </div>
+<div id="t9_34" class="t s4_34">If a</div>
+<div id="ta_34" class="t s4_34">very high-hardness steel is desired, an air-hardened steel can be used. </div>
+<div id="tb_34" class="t s4_34">It should be</div>
+<div id="tc_34" class="t s4_34">brought to recommended hardening temperature and soaked long enough for proper</div>
+<div id="td_34" class="t s4_34">hardening, then air-cooled to obtain hardness prior to any brazing operation. </div>
+<div id="te_34" class="t s4_34">With the</div>
+<div id="tf_34" class="t s4_34">steel microstructure properly established, it can be reheated to hardening temperature</div>
+<div id="tg_34" class="t s4_34">for a short time, brazed with a suitable brazing alloy for the particular temperature</div>
+<div id="th_34" class="t s4_34">involved and then air cooled. </div>
+<div id="ti_34" class="t s4_34">The assembly can then be drawn to the required hardness</div>
+<div id="tj_34" class="t s4_34">of the steel without damage.</div>
+<div id="tk_34" class="t s4_34">It is suggested that a nickel base air hardening steel, rather than a chromium base steel,</div>
+<div id="tl_34" class="t s4_34">be used because the oxide of chromium that forms on the steel is diﬃcult to ﬂux away.</div>
+<div id="tm_34" class="t s4_34">Moreover, nickel steel has higher toughness and, thereby, can better relax stresses</div>
+<div id="tn_34" class="t s4_34">generated during the brazing operation. </div>
+<div id="to_34" class="t s4_34">If an intermediate hardness of the steel part is</div>
+<div id="tp_34" class="t s4_34">satisfactory, an oil hardening steel can be used, but it must be air quenched to obtain a</div>
+<div id="tq_34" class="t s4_34">moderate hardness reading.</div>
+<div id="tr_34" class="t s4_34">High-speed steel can be used for components if hardened, then brazed with a low</div>
+<div id="ts_34" class="t s4_34">temperature silver solder at a maximum temperature of 1200°F. </div>
+<div id="tt_34" class="t s4_34">The high-speed steel</div>
+<div id="tu_34" class="t s4_34">member will retain most of the hardness at this temperature. </div>
+<div id="tv_34" class="t s4_34">The resulting combination</div>
+<div id="tw_34" class="t s4_34">is suitable for many uses.</div>
+<div id="tx_34" class="t v1_34 s3_34">Brazing Procedures for Cemented Carbide</div>
+<div id="ty_34" class="t s5_34">Brazing of cemented carbide can be accomplished in any one of several ways, high frequency </div>
+<div id="tz_34" class="t s5_34">induction brazing, furnace heating, or torch brazing.</div>
+<div id="t10_34" class="t s4_34">Torch brazing of INVAR plugs is described </div>
+<div id="t11_34" class="t s4_34">below but in all cases cleanliness of the mating parts is of utmost importance.</div>
+<div id="t12_34" class="t s5_34">Procedure for brazing INVAR plugs in Cemented Carbide for tapped holes:</div>
+<div id="t13_34" class="t s6_34">Turning Plugs:</div>
+<div id="t14_34" class="t s4_34">1. </div>
+<div id="t15_34" class="t s4_34">Inspect the hole diameter and the depth/length of the hole.</div>
+<div id="t16_34" class="t s4_34">2. </div>
+<div id="t17_34" class="t s4_34">Turn an INVAR plug to .014” - .020” under the hole diameter, or .007” -  </div>
+<div id="t18_34" class="t s4_34">.010” per side.</div>
+<div id="t19_34" class="t s4_34">3. </div>
+<div id="t1a_34" class="t s4_34">Cut the plug length .010” over size for counterbored holes, and .025” over for</div>
+<div id="t1b_34" class="t s4_34">through holes. </div>
+<div id="t1c_34" class="t s4_34">(You may want to leave more on the length depending on the job</div>
+<div id="t1d_34" class="t s4_34">and the experience of the operator).</div>
+<div id="t1e_34" class="t s4_34">4. </div>
+<div id="t1f_34" class="t s4_34">If the preformed hole has a radius in the bottom of the counterbore, you will need</div>
+<div id="t1g_34" class="t s4_34">to radius the base of the plug. </div>
+<div id="t1h_34" class="t s4_34">You can usually use a ﬁle to do this.</div>
+<div id="t1i_34" class="t s4_34">5. </div>
+<div id="t1j_34" class="t s4_34">If the part has through holes, turn the plugs to .020” - .025” under the diameter </div>
+<div id="t1k_34" class="t s4_34">of the hole.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg34Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg34"><object width="605" height="935" data="34/34.svg" type="image/svg+xml" id="pdf34" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f34 = [['t2_34',1419],['t3_34',626],['t4_34',718],['t5_34',1906],['t6_34',1385],['t7_34',311],['t8_34',1734],['t9_34',64],['ta_34',1509],['tb_34',257],['tc_34',1873],['td_34',1670],['te_34',185],['tf_34',1882],['tg_34',1779],['th_34',629],['ti_34',1257],['tj_34',623],['tk_34',1890],['tl_34',1872],['tm_34',1772],['tn_34',876],['to_34',991],['tp_34',1880],['tq_34',609],['tr_34',1775],['ts_34',1370],['tt_34',453],['tu_34',1316],['tv_34',573],['tw_34',538],['tx_34',1151],['ty_34',2088],['tz_34',1174],['t10_34',895],['t11_34',1679],['t12_34',1656],['t13_34',323],['t15_34',1296],['t17_34',1495],['t18_34',299],['t1a_34',1651],['t1b_34',316],['t1c_34',1423],['t1d_34',782],['t1f_34',1772],['t1g_34',646],['t1h_34',760],['t1j_34',1695],['t1k_34',244]];
+function load34(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f34);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 57;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_34");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

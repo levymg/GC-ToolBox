@@ -1,0 +1,822 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page56</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,56,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load56();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_56{left:43px;top:898px;}
+#t2_56{left:125px;top:19px;letter-spacing:12px;}
+#t3_56{left:224px;top:901px;letter-spacing:4px;}
+#t4_56{left:117px;top:719px;}
+#t5_56{left:41px;top:766px;}
+#t6_56{left:364px;top:766px;}
+#t7_56{left:191px;top:72px;}
+#t8_56{left:348px;top:76px;}
+#t9_56{left:144px;top:123px;}
+#ta_56{left:157px;top:132px;}
+#tb_56{left:277px;top:127px;}
+#tc_56{left:273px;top:137px;}
+#td_56{left:277px;top:147px;}
+#te_56{left:342px;top:132px;}
+#tf_56{left:352px;top:141px;}
+#tg_56{left:419px;top:132px;}
+#th_56{left:422px;top:142px;}
+#ti_56{left:442px;top:142px;}
+#tj_56{left:444px;top:142px;}
+#tk_56{left:477px;top:128px;}
+#tl_56{left:513px;top:128px;}
+#tm_56{left:482px;top:137px;}
+#tn_56{left:511px;top:146px;}
+#to_56{left:128px;top:150px;}
+#tp_56{left:159px;top:150px;}
+#tq_56{left:184px;top:150px;letter-spacing:-1px;}
+#tr_56{left:211px;top:150px;}
+#ts_56{left:233px;top:150px;}
+#tt_56{left:46px;top:164px;}
+#tu_56{left:46px;top:179px;}
+#tv_56{left:127px;top:179px;}
+#tw_56{left:160px;top:179px;}
+#tx_56{left:187px;top:179px;}
+#ty_56{left:240px;top:179px;}
+#tz_56{left:275px;top:179px;}
+#t10_56{left:336px;top:179px;}
+#t11_56{left:403px;top:179px;}
+#t12_56{left:498px;top:179px;}
+#t13_56{left:46px;top:193px;}
+#t14_56{left:127px;top:193px;}
+#t15_56{left:157px;top:193px;}
+#t16_56{left:240px;top:193px;}
+#t17_56{left:265px;top:193px;}
+#t18_56{left:336px;top:193px;}
+#t19_56{left:403px;top:193px;}
+#t1a_56{left:498px;top:193px;}
+#t1b_56{left:46px;top:208px;}
+#t1c_56{left:123px;top:208px;}
+#t1d_56{left:153px;top:208px;}
+#t1e_56{left:187px;top:208px;}
+#t1f_56{left:240px;top:208px;}
+#t1g_56{left:277px;top:208px;}
+#t1h_56{left:336px;top:208px;}
+#t1i_56{left:403px;top:208px;}
+#t1j_56{left:498px;top:208px;}
+#t1k_56{left:46px;top:223px;}
+#t1l_56{left:127px;top:223px;}
+#t1m_56{left:157px;top:223px;}
+#t1n_56{left:187px;top:223px;}
+#t1o_56{left:240px;top:223px;}
+#t1p_56{left:275px;top:223px;}
+#t1q_56{left:336px;top:223px;}
+#t1r_56{left:403px;top:223px;}
+#t1s_56{left:498px;top:223px;}
+#t1t_56{left:46px;top:239px;}
+#t1u_56{left:127px;top:239px;}
+#t1v_56{left:157px;top:239px;}
+#t1w_56{left:240px;top:239px;}
+#t1x_56{left:275px;top:239px;}
+#t1y_56{left:336px;top:239px;}
+#t1z_56{left:403px;top:239px;}
+#t20_56{left:498px;top:239px;}
+#t21_56{left:46px;top:254px;}
+#t22_56{left:127px;top:254px;}
+#t23_56{left:157px;top:254px;}
+#t24_56{left:187px;top:254px;}
+#t25_56{left:240px;top:254px;}
+#t26_56{left:275px;top:254px;}
+#t27_56{left:336px;top:254px;}
+#t28_56{left:403px;top:254px;}
+#t29_56{left:498px;top:254px;}
+#t2a_56{left:46px;top:269px;}
+#t2b_56{left:127px;top:269px;}
+#t2c_56{left:157px;top:269px;}
+#t2d_56{left:240px;top:269px;}
+#t2e_56{left:265px;top:269px;}
+#t2f_56{left:336px;top:269px;}
+#t2g_56{left:403px;top:269px;}
+#t2h_56{left:498px;top:269px;}
+#t2i_56{left:46px;top:284px;}
+#t2j_56{left:127px;top:284px;}
+#t2k_56{left:157px;top:284px;}
+#t2l_56{left:187px;top:284px;}
+#t2m_56{left:240px;top:284px;}
+#t2n_56{left:275px;top:284px;}
+#t2o_56{left:336px;top:284px;}
+#t2p_56{left:403px;top:284px;}
+#t2q_56{left:498px;top:284px;}
+#t2r_56{left:46px;top:299px;}
+#t2s_56{left:127px;top:299px;}
+#t2t_56{left:157px;top:299px;}
+#t2u_56{left:187px;top:299px;}
+#t2v_56{left:240px;top:299px;}
+#t2w_56{left:275px;top:299px;}
+#t2x_56{left:336px;top:299px;}
+#t2y_56{left:403px;top:299px;}
+#t2z_56{left:498px;top:299px;}
+#t30_56{left:46px;top:314px;}
+#t31_56{left:127px;top:314px;}
+#t32_56{left:157px;top:314px;}
+#t33_56{left:187px;top:314px;}
+#t34_56{left:240px;top:314px;}
+#t35_56{left:275px;top:314px;}
+#t36_56{left:336px;top:314px;}
+#t37_56{left:403px;top:314px;}
+#t38_56{left:498px;top:314px;}
+#t39_56{left:46px;top:329px;}
+#t3a_56{left:46px;top:344px;}
+#t3b_56{left:127px;top:344px;}
+#t3c_56{left:160px;top:344px;}
+#t3d_56{left:187px;top:344px;}
+#t3e_56{left:282px;top:344px;}
+#t3f_56{left:336px;top:344px;}
+#t3g_56{left:403px;top:344px;}
+#t3h_56{left:498px;top:344px;}
+#t3i_56{left:46px;top:359px;}
+#t3j_56{left:127px;top:359px;}
+#t3k_56{left:160px;top:359px;}
+#t3l_56{left:187px;top:359px;}
+#t3m_56{left:240px;top:359px;}
+#t3n_56{left:275px;top:359px;}
+#t3o_56{left:336px;top:359px;}
+#t3p_56{left:403px;top:359px;}
+#t3q_56{left:498px;top:359px;}
+#t3r_56{left:46px;top:374px;}
+#t3s_56{left:123px;top:374px;}
+#t3t_56{left:153px;top:374px;}
+#t3u_56{left:187px;top:374px;}
+#t3v_56{left:240px;top:374px;}
+#t3w_56{left:277px;top:374px;}
+#t3x_56{left:336px;top:374px;}
+#t3y_56{left:403px;top:374px;}
+#t3z_56{left:498px;top:374px;}
+#t40_56{left:46px;top:388px;}
+#t41_56{left:127px;top:388px;}
+#t42_56{left:157px;top:388px;}
+#t43_56{left:187px;top:388px;}
+#t44_56{left:240px;top:388px;}
+#t45_56{left:275px;top:388px;}
+#t46_56{left:336px;top:388px;}
+#t47_56{left:403px;top:388px;}
+#t48_56{left:498px;top:388px;}
+#t49_56{left:46px;top:403px;}
+#t4a_56{left:127px;top:403px;}
+#t4b_56{left:157px;top:403px;}
+#t4c_56{left:187px;top:403px;}
+#t4d_56{left:271px;top:403px;}
+#t4e_56{left:336px;top:403px;}
+#t4f_56{left:403px;top:403px;}
+#t4g_56{left:498px;top:403px;}
+#t4h_56{left:46px;top:418px;}
+#t4i_56{left:127px;top:418px;}
+#t4j_56{left:157px;top:418px;}
+#t4k_56{left:187px;top:418px;}
+#t4l_56{left:240px;top:418px;}
+#t4m_56{left:275px;top:418px;}
+#t4n_56{left:336px;top:418px;}
+#t4o_56{left:403px;top:418px;}
+#t4p_56{left:498px;top:418px;}
+#t4q_56{left:46px;top:433px;}
+#t4r_56{left:127px;top:433px;}
+#t4s_56{left:157px;top:433px;}
+#t4t_56{left:187px;top:433px;}
+#t4u_56{left:271px;top:433px;}
+#t4v_56{left:336px;top:433px;}
+#t4w_56{left:403px;top:433px;}
+#t4x_56{left:498px;top:433px;}
+#t4y_56{left:46px;top:448px;}
+#t4z_56{left:127px;top:448px;}
+#t50_56{left:157px;top:448px;}
+#t51_56{left:187px;top:448px;}
+#t52_56{left:240px;top:448px;}
+#t53_56{left:275px;top:448px;}
+#t54_56{left:336px;top:448px;}
+#t55_56{left:403px;top:448px;}
+#t56_56{left:498px;top:448px;}
+#t57_56{left:46px;top:463px;}
+#t58_56{left:127px;top:463px;}
+#t59_56{left:157px;top:463px;}
+#t5a_56{left:187px;top:463px;}
+#t5b_56{left:240px;top:463px;}
+#t5c_56{left:275px;top:463px;}
+#t5d_56{left:336px;top:463px;}
+#t5e_56{left:403px;top:463px;}
+#t5f_56{left:498px;top:463px;}
+#t5g_56{left:46px;top:478px;}
+#t5h_56{left:127px;top:478px;}
+#t5i_56{left:157px;top:478px;}
+#t5j_56{left:187px;top:478px;}
+#t5k_56{left:271px;top:478px;}
+#t5l_56{left:336px;top:478px;}
+#t5m_56{left:403px;top:478px;}
+#t5n_56{left:498px;top:478px;}
+#t5o_56{left:46px;top:493px;}
+#t5p_56{left:127px;top:493px;}
+#t5q_56{left:157px;top:493px;}
+#t5r_56{left:187px;top:493px;}
+#t5s_56{left:271px;top:493px;}
+#t5t_56{left:336px;top:493px;}
+#t5u_56{left:403px;top:493px;}
+#t5v_56{left:498px;top:493px;}
+#t5w_56{left:46px;top:508px;}
+#t5x_56{left:127px;top:508px;}
+#t5y_56{left:157px;top:508px;}
+#t5z_56{left:187px;top:508px;}
+#t60_56{left:240px;top:508px;}
+#t61_56{left:275px;top:508px;}
+#t62_56{left:336px;top:508px;}
+#t63_56{left:403px;top:508px;}
+#t64_56{left:498px;top:508px;}
+#t65_56{left:46px;top:523px;}
+#t66_56{left:47px;top:539px;}
+#t67_56{left:127px;top:539px;}
+#t68_56{left:212px;top:539px;}
+#t69_56{left:282px;top:539px;}
+#t6a_56{left:336px;top:539px;}
+#t6b_56{left:403px;top:539px;}
+#t6c_56{left:498px;top:539px;}
+#t6d_56{left:47px;top:556px;}
+#t6e_56{left:127px;top:556px;}
+#t6f_56{left:209px;top:556px;}
+#t6g_56{left:282px;top:556px;}
+#t6h_56{left:336px;top:556px;}
+#t6i_56{left:403px;top:556px;}
+#t6j_56{left:498px;top:556px;}
+#t6k_56{left:47px;top:573px;}
+#t6l_56{left:127px;top:573px;}
+#t6m_56{left:209px;top:573px;}
+#t6n_56{left:282px;top:573px;}
+#t6o_56{left:336px;top:573px;}
+#t6p_56{left:403px;top:573px;}
+#t6q_56{left:498px;top:573px;}
+#t6r_56{left:515px;top:593px;}
+
+#t7_56 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s5_56{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: YJUJYE-MyriadPro-BoldIt56;
+	color: rgb(0,0,0);
+}
+
+.s1_56{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold56;
+	color: rgb(255,255,255);
+}
+
+.s9_56{
+	FONT-SIZE: 17px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold56;
+	color: rgb(255,255,255);
+}
+
+.s7_56{
+	FONT-SIZE: 58px;
+	FONT-FAMILY: YJUJYE-MyriadPro-It56;
+	color: rgb(219,0,60);
+}
+
+.s2_56{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold56;
+	color: rgb(255,255,255);
+}
+
+.s11_56{
+	FONT-SIZE: 48px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular56;
+	color: rgb(0,0,0);
+}
+
+.s10_56{
+	FONT-SIZE: 48px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold56;
+	color: rgb(0,0,0);
+}
+
+.s8_56{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold56;
+	color: rgb(255,255,255);
+}
+
+.s12_56{
+	FONT-SIZE: 42px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular56;
+	color: rgb(0,0,0);
+}
+
+.s4_56{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular56;
+	color: rgb(0,0,0);
+}
+
+.s3_56{
+	FONT-SIZE: 48px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold56;
+	color: rgb(225,44,49);
+}
+
+.s6_56{
+	FONT-SIZE: 69px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_256;
+	color: rgb(219,0,60);
+}
+
+.v1_56{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold56;
+	src :url("56/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-BoldIt56;
+	src :url("56/fonts/YJUJYE-MyriadPro-BoldIt.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-It56;
+	src :url("56/fonts/YJUJYE-MyriadPro-It.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular56;
+	src :url("56/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Bold56;
+	src :url("56/fonts/YJUJYE-MyriadPro-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_256;
+	src :url("56/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_56" class="t s1_56">56</div>
+<div id="t2_56" class="t s2_56">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_56" class="t s2_56">www. generalcarbide.com</div>
+<div id="t4_56" class="t s3_56">Please visit our website for the latest grade specification information.</div>
+<div id="t5_56" class="t s4_56">* AVAILABLE IN WIRE EDM GRADE</div>
+<div id="t6_56" class="t s5_56">Sinter-HIP process guaranteed</div>
+<div id="t7_56" class="t v1_56 s6_56">Grade Specifcations </div>
+<div id="t8_56" class="t s7_56">(continued)</div>
+<div id="t9_56" class="t s8_56">CHEMICAL COMPOSITION </div>
+<div id="ta_56" class="t s8_56">WEIGHT PERCENT</div>
+<div id="tb_56" class="t s8_56">NOMINAL  </div>
+<div id="tc_56" class="t s8_56">GRAIN SIZE </div>
+<div id="td_56" class="t s8_56">(microns)</div>
+<div id="te_56" class="t s8_56">HARDNESS</div>
+<div id="tf_56" class="t s8_56">±HRA²</div>
+<div id="tg_56" class="t s8_56">DENSITY</div>
+<div id="th_56" class="t s8_56">(g/cm</div>
+<div id="ti_56" class="t s9_56">3</div>
+<div id="tj_56" class="t s8_56">)</div>
+<div id="tk_56" class="t s8_56">AVERAGE </div>
+<div id="tl_56" class="t s8_56">TRANSVERSE </div>
+<div id="tm_56" class="t s8_56">RUPTURE STRENGTH</div>
+<div id="tn_56" class="t s8_56">(psi)</div>
+<div id="to_56" class="t s8_56">WC</div>
+<div id="tp_56" class="t s8_56">Co</div>
+<div id="tq_56" class="t s8_56">TaC</div>
+<div id="tr_56" class="t s8_56">Ni</div>
+<div id="ts_56" class="t s8_56">Other</div>
+<div id="tt_56" class="t s10_56">Corrosion Resistant Specialty Grades</div>
+<div id="tu_56" class="t s11_56">GC-409CT* </div>
+<div id="tv_56" class="t s11_56">88 </div>
+<div id="tw_56" class="t s11_56">9 </div>
+<div id="tx_56" class="t s11_56">2 </div>
+<div id="ty_56" class="t s11_56">1 </div>
+<div id="tz_56" class="t s11_56">Coarse </div>
+<div id="t10_56" class="t s11_56">90.0 - 91.5</div>
+<div id="t11_56" class="t s11_56">14.32 - 14.52</div>
+<div id="t12_56" class="t s11_56">470,000</div>
+<div id="t13_56" class="t s11_56">GC-010CR* </div>
+<div id="t14_56" class="t s11_56">89 </div>
+<div id="t15_56" class="t s11_56">10</div>
+<div id="t16_56" class="t s11_56">1 </div>
+<div id="t17_56" class="t s11_56">Submicron </div>
+<div id="t18_56" class="t s11_56">91.9 - 93.4</div>
+<div id="t19_56" class="t s11_56">14.12 - 14.38</div>
+<div id="t1a_56" class="t s11_56">530,000</div>
+<div id="t1b_56" class="t s11_56">GC-813CT*</div>
+<div id="t1c_56" class="t s11_56">86.5</div>
+<div id="t1d_56" class="t s11_56">10.5</div>
+<div id="t1e_56" class="t s11_56">2</div>
+<div id="t1f_56" class="t s11_56">1</div>
+<div id="t1g_56" class="t s11_56">Mixed</div>
+<div id="t1h_56" class="t s11_56">90.0 - 91.5</div>
+<div id="t1i_56" class="t s11_56">14.17 - 14.37</div>
+<div id="t1j_56" class="t s11_56">460,000</div>
+<div id="t1k_56" class="t s11_56">GC-411CT* </div>
+<div id="t1l_56" class="t s11_56">86 </div>
+<div id="t1m_56" class="t s11_56">11 </div>
+<div id="t1n_56" class="t s11_56">2 </div>
+<div id="t1o_56" class="t s11_56">1 </div>
+<div id="t1p_56" class="t s11_56">Coarse </div>
+<div id="t1q_56" class="t s11_56">89.1 - 90.6</div>
+<div id="t1r_56" class="t s11_56">14.11 - 14.32</div>
+<div id="t1s_56" class="t s11_56">490,000</div>
+<div id="t1t_56" class="t s11_56">GC-712C* </div>
+<div id="t1u_56" class="t s11_56">86 </div>
+<div id="t1v_56" class="t s11_56">13 </div>
+<div id="t1w_56" class="t s11_56">1 </div>
+<div id="t1x_56" class="t s11_56">Coarse </div>
+<div id="t1y_56" class="t s11_56">87.8 - 89.3</div>
+<div id="t1z_56" class="t s11_56">13.92 - 14.14</div>
+<div id="t20_56" class="t s11_56">480,000</div>
+<div id="t21_56" class="t s11_56">GC-613CT* </div>
+<div id="t22_56" class="t s11_56">83 </div>
+<div id="t23_56" class="t s11_56">13 </div>
+<div id="t24_56" class="t s11_56">3 </div>
+<div id="t25_56" class="t s11_56">1 </div>
+<div id="t26_56" class="t s11_56">Coarse </div>
+<div id="t27_56" class="t s11_56">87.8 - 89.3</div>
+<div id="t28_56" class="t s11_56">13.92 - 14.11</div>
+<div id="t29_56" class="t s11_56">465,000</div>
+<div id="t2a_56" class="t s11_56">GC-015CR* </div>
+<div id="t2b_56" class="t s11_56">84 </div>
+<div id="t2c_56" class="t s11_56">15 </div>
+<div id="t2d_56" class="t s11_56">1 </div>
+<div id="t2e_56" class="t s11_56">Submicron </div>
+<div id="t2f_56" class="t s11_56">90.5 - 92.2</div>
+<div id="t2g_56" class="t s11_56">13.73 - 13.88</div>
+<div id="t2h_56" class="t s11_56">550,000</div>
+<div id="t2i_56" class="t s11_56">GC-415CT* </div>
+<div id="t2j_56" class="t s11_56">81 </div>
+<div id="t2k_56" class="t s11_56">16 </div>
+<div id="t2l_56" class="t s11_56">2 </div>
+<div id="t2m_56" class="t s11_56">1 </div>
+<div id="t2n_56" class="t s11_56">Coarse </div>
+<div id="t2o_56" class="t s11_56">87.5 - 89.0</div>
+<div id="t2p_56" class="t s11_56">13.70 - 13.93</div>
+<div id="t2q_56" class="t s11_56">450,000</div>
+<div id="t2r_56" class="t s11_56">GC-618CT* </div>
+<div id="t2s_56" class="t s11_56">78 </div>
+<div id="t2t_56" class="t s11_56">18 </div>
+<div id="t2u_56" class="t s11_56">3 </div>
+<div id="t2v_56" class="t s11_56">1 </div>
+<div id="t2w_56" class="t s11_56">Coarse </div>
+<div id="t2x_56" class="t s11_56">86.5 - 88.0</div>
+<div id="t2y_56" class="t s11_56">13.46 - 13.65</div>
+<div id="t2z_56" class="t s11_56">450,000</div>
+<div id="t30_56" class="t s11_56">GC-425CT* </div>
+<div id="t31_56" class="t s11_56">70 </div>
+<div id="t32_56" class="t s11_56">25 </div>
+<div id="t33_56" class="t s11_56">4 </div>
+<div id="t34_56" class="t s11_56">1 </div>
+<div id="t35_56" class="t s11_56">Coarse </div>
+<div id="t36_56" class="t s11_56">84.4 - 85.9</div>
+<div id="t37_56" class="t s11_56">12.87 - 13.11</div>
+<div id="t38_56" class="t s11_56">470,000</div>
+<div id="t39_56" class="t s10_56">Tungsten Carbide/Cobalt Grades with Tantalum Carbide</div>
+<div id="t3a_56" class="t s11_56">GC-0004*  </div>
+<div id="t3b_56" class="t s11_56">89 </div>
+<div id="t3c_56" class="t s11_56">7 </div>
+<div id="t3d_56" class="t s11_56">4 </div>
+<div id="t3e_56" class="t s11_56">Fine </div>
+<div id="t3f_56" class="t s11_56">91.7 - 93.2</div>
+<div id="t3g_56" class="t s11_56">14.65 - 14.87</div>
+<div id="t3h_56" class="t s11_56">465,000</div>
+<div id="t3i_56" class="t s11_56">GC-409CT*</div>
+<div id="t3j_56" class="t s11_56">88 </div>
+<div id="t3k_56" class="t s11_56">9 </div>
+<div id="t3l_56" class="t s11_56">2 </div>
+<div id="t3m_56" class="t s11_56">1 </div>
+<div id="t3n_56" class="t s11_56">Coarse </div>
+<div id="t3o_56" class="t s11_56">90.0 - 91.5</div>
+<div id="t3p_56" class="t s11_56">14.32 - 14.52</div>
+<div id="t3q_56" class="t s11_56">470,000</div>
+<div id="t3r_56" class="t s11_56">GC-813CT*</div>
+<div id="t3s_56" class="t s11_56">86.5</div>
+<div id="t3t_56" class="t s11_56">10.5</div>
+<div id="t3u_56" class="t s11_56">2</div>
+<div id="t3v_56" class="t s11_56">1</div>
+<div id="t3w_56" class="t s11_56">Mixed</div>
+<div id="t3x_56" class="t s11_56">90.0 - 91.5</div>
+<div id="t3y_56" class="t s11_56">14.17 - 14.37</div>
+<div id="t3z_56" class="t s11_56">460,000</div>
+<div id="t40_56" class="t s11_56">GC-411CT* </div>
+<div id="t41_56" class="t s11_56">86  </div>
+<div id="t42_56" class="t s11_56">11 </div>
+<div id="t43_56" class="t s11_56">2 </div>
+<div id="t44_56" class="t s11_56">1 </div>
+<div id="t45_56" class="t s11_56">Coarse </div>
+<div id="t46_56" class="t s11_56">89.1 - 90.6</div>
+<div id="t47_56" class="t s11_56">14.11 - 14.32</div>
+<div id="t48_56" class="t s11_56">490,000</div>
+<div id="t49_56" class="t s11_56">GC-313T* </div>
+<div id="t4a_56" class="t s11_56">85 </div>
+<div id="t4b_56" class="t s11_56">13 </div>
+<div id="t4c_56" class="t s11_56">2 </div>
+<div id="t4d_56" class="t s11_56">Medium </div>
+<div id="t4e_56" class="t s11_56">88.5 - 91.0</div>
+<div id="t4f_56" class="t s11_56">13.95 - 14.25</div>
+<div id="t4g_56" class="t s11_56">490,000</div>
+<div id="t4h_56" class="t s11_56">GC-613CT* </div>
+<div id="t4i_56" class="t s11_56">83 </div>
+<div id="t4j_56" class="t s11_56">13 </div>
+<div id="t4k_56" class="t s11_56">3 </div>
+<div id="t4l_56" class="t s11_56">1 </div>
+<div id="t4m_56" class="t s11_56">Coarse </div>
+<div id="t4n_56" class="t s11_56">87.8 - 89.3</div>
+<div id="t4o_56" class="t s11_56">13.92 - 14.11</div>
+<div id="t4p_56" class="t s11_56">465,000</div>
+<div id="t4q_56" class="t s11_56">GC-315T* </div>
+<div id="t4r_56" class="t s11_56">83 </div>
+<div id="t4s_56" class="t s11_56">15  </div>
+<div id="t4t_56" class="t s11_56">2 </div>
+<div id="t4u_56" class="t s11_56">Medium </div>
+<div id="t4v_56" class="t s11_56">88.0 - 90.5</div>
+<div id="t4w_56" class="t s11_56">13.85 - 14.15</div>
+<div id="t4x_56" class="t s11_56">495,000</div>
+<div id="t4y_56" class="t s11_56">GC-415CT* </div>
+<div id="t4z_56" class="t s11_56">81 </div>
+<div id="t50_56" class="t s11_56">16 </div>
+<div id="t51_56" class="t s11_56">2 </div>
+<div id="t52_56" class="t s11_56">1 </div>
+<div id="t53_56" class="t s11_56">Coarse </div>
+<div id="t54_56" class="t s11_56">87.5 - 89.0</div>
+<div id="t55_56" class="t s11_56">13.70 - 13.93</div>
+<div id="t56_56" class="t s11_56">450,000</div>
+<div id="t57_56" class="t s11_56">GC-618CT* </div>
+<div id="t58_56" class="t s11_56">78 </div>
+<div id="t59_56" class="t s11_56">18 </div>
+<div id="t5a_56" class="t s11_56">3 </div>
+<div id="t5b_56" class="t s11_56">1 </div>
+<div id="t5c_56" class="t s11_56">Coarse </div>
+<div id="t5d_56" class="t s11_56">86.5 - 88.0</div>
+<div id="t5e_56" class="t s11_56">13.46 - 13.65</div>
+<div id="t5f_56" class="t s11_56">450,000</div>
+<div id="t5g_56" class="t s11_56">GC-320T* </div>
+<div id="t5h_56" class="t s11_56">77 </div>
+<div id="t5i_56" class="t s11_56">20 </div>
+<div id="t5j_56" class="t s11_56">3 </div>
+<div id="t5k_56" class="t s11_56">Medium </div>
+<div id="t5l_56" class="t s11_56">85.0 - 86.8</div>
+<div id="t5m_56" class="t s11_56">13.44 - 13.62</div>
+<div id="t5n_56" class="t s11_56">450,000</div>
+<div id="t5o_56" class="t s11_56">GC-325T* </div>
+<div id="t5p_56" class="t s11_56">72 </div>
+<div id="t5q_56" class="t s11_56">25 </div>
+<div id="t5r_56" class="t s11_56">3 </div>
+<div id="t5s_56" class="t s11_56">Medium </div>
+<div id="t5t_56" class="t s11_56">83.0 - 84.9</div>
+<div id="t5u_56" class="t s11_56">13.01 - 13.21</div>
+<div id="t5v_56" class="t s11_56">430,000</div>
+<div id="t5w_56" class="t s11_56">GC-425CT* </div>
+<div id="t5x_56" class="t s11_56">70 </div>
+<div id="t5y_56" class="t s11_56">25 </div>
+<div id="t5z_56" class="t s11_56">4 </div>
+<div id="t60_56" class="t s11_56">1 </div>
+<div id="t61_56" class="t s11_56">Coarse </div>
+<div id="t62_56" class="t s11_56">84.4 - 85.9</div>
+<div id="t63_56" class="t s11_56">12.87 - 13.11</div>
+<div id="t64_56" class="t s11_56">470,000</div>
+<div id="t65_56" class="t s10_56">Tungsten Carbide Grades with Nickel Binder</div>
+<div id="t66_56" class="t s11_56">GC-N061 </div>
+<div id="t67_56" class="t s11_56">94 </div>
+<div id="t68_56" class="t s11_56">6 </div>
+<div id="t69_56" class="t s11_56">Fine </div>
+<div id="t6a_56" class="t s11_56">90.6 - 92.1</div>
+<div id="t6b_56" class="t s11_56">14.64 - 14.86</div>
+<div id="t6c_56" class="t s11_56">400,000</div>
+<div id="t6d_56" class="t s11_56">GC-N101</div>
+<div id="t6e_56" class="t s11_56">90</div>
+<div id="t6f_56" class="t s11_56">10</div>
+<div id="t6g_56" class="t s11_56">Fine</div>
+<div id="t6h_56" class="t s11_56">89.0 - 91.0</div>
+<div id="t6i_56" class="t s11_56">14.39 - 14.59</div>
+<div id="t6j_56" class="t s11_56">425,000</div>
+<div id="t6k_56" class="t s11_56">GC-N121</div>
+<div id="t6l_56" class="t s11_56">88</div>
+<div id="t6m_56" class="t s11_56">12</div>
+<div id="t6n_56" class="t s11_56">Fine</div>
+<div id="t6o_56" class="t s11_56">87.5 - 89.5</div>
+<div id="t6p_56" class="t s11_56">14.25 - 14.45</div>
+<div id="t6q_56" class="t s11_56">410,000</div>
+<div id="t6r_56" class="t s12_56">REV. 9/1/13</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg56Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg56"><object width="605" height="935" data="56/56.svg" type="image/svg+xml" id="pdf56" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f56 = [['t2_56',1419],['t3_56',626],['t4_56',1501],['t5_56',763],['t6_56',797],['t7_56',614],['t9_56',355],['ta_56',246],['tb_56',142],['tc_56',158],['tm_56',288],['tt_56',793],['t10_56',204],['t11_56',254],['t18_56',204],['t19_56',254],['t1h_56',204],['t1i_56',254],['t1q_56',204],['t1r_56',254],['t1y_56',204],['t1z_56',254],['t27_56',204],['t28_56',254],['t2f_56',204],['t2g_56',254],['t2o_56',204],['t2p_56',254],['t2x_56',204],['t2y_56',254],['t36_56',204],['t37_56',254],['t39_56',1199],['t3a_56',204],['t3f_56',204],['t3g_56',254],['t3o_56',204],['t3p_56',254],['t3x_56',204],['t3y_56',254],['t41_56',60],['t46_56',204],['t47_56',254],['t4e_56',204],['t4f_56',254],['t4n_56',204],['t4o_56',254],['t4s_56',60],['t4v_56',204],['t4w_56',254],['t54_56',204],['t55_56',254],['t5d_56',204],['t5e_56',254],['t5l_56',204],['t5m_56',254],['t5t_56',204],['t5u_56',254],['t62_56',204],['t63_56',254],['t65_56',945],['t6a_56',204],['t6b_56',254],['t6h_56',204],['t6i_56',254],['t6o_56',204],['t6p_56',254],['t6r_56',201]];
+function load56(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f56);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 244;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_56");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

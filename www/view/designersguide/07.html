@@ -1,0 +1,382 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page7</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,7,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load7();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_7{left:553px;top:897px;}
+#t2_7{left:224px;top:901px;letter-spacing:4px;}
+#t3_7{left:125px;top:19px;letter-spacing:12px;}
+#t4_7{left:41px;top:72px;}
+#t5_7{left:41px;top:87px;}
+#t6_7{left:293px;top:87px;}
+#t7_7{left:41px;top:103px;}
+#t8_7{left:482px;top:103px;}
+#t9_7{left:41px;top:118px;}
+#ta_7{left:528px;top:118px;}
+#tb_7{left:41px;top:133px;}
+#tc_7{left:324px;top:133px;}
+#td_7{left:41px;top:149px;}
+#te_7{left:41px;top:164px;}
+#tf_7{left:522px;top:164px;}
+#tg_7{left:41px;top:179px;}
+#th_7{left:41px;top:194px;}
+#ti_7{left:184px;top:194px;}
+#tj_7{left:41px;top:210px;}
+#tk_7{left:41px;top:225px;}
+#tl_7{left:41px;top:256px;}
+#tm_7{left:371px;top:256px;}
+#tn_7{left:41px;top:271px;}
+#to_7{left:294px;top:271px;}
+#tp_7{left:41px;top:286px;}
+#tq_7{left:41px;top:301px;}
+#tr_7{left:41px;top:317px;}
+#ts_7{left:219px;top:317px;}
+#tt_7{left:41px;top:332px;}
+#tu_7{left:41px;top:347px;}
+#tv_7{left:326px;top:347px;}
+#tw_7{left:41px;top:362px;}
+#tx_7{left:188px;top:362px;}
+#ty_7{left:41px;top:378px;}
+#tz_7{left:336px;top:378px;}
+#t10_7{left:41px;top:393px;}
+#t11_7{left:41px;top:408px;}
+#t12_7{left:41px;top:424px;}
+#t13_7{left:41px;top:439px;}
+#t14_7{left:153px;top:439px;}
+#t15_7{left:41px;top:454px;}
+#t16_7{left:312px;top:454px;}
+#t17_7{left:41px;top:469px;}
+#t18_7{left:41px;top:485px;}
+#t19_7{left:486px;top:485px;}
+#t1a_7{left:41px;top:500px;}
+#t1b_7{left:41px;top:515px;}
+#t1c_7{left:312px;top:515px;}
+#t1d_7{left:41px;top:531px;}
+#t1e_7{left:41px;top:546px;}
+#t1f_7{left:41px;top:576px;}
+#t1g_7{left:41px;top:592px;}
+#t1h_7{left:41px;top:607px;}
+#t1i_7{left:41px;top:622px;}
+#t1j_7{left:184px;top:622px;}
+#t1k_7{left:41px;top:653px;}
+#t1l_7{left:41px;top:668px;}
+#t1m_7{left:430px;top:668px;}
+#t1n_7{left:41px;top:683px;}
+#t1o_7{left:396px;top:683px;}
+#t1p_7{left:41px;top:699px;}
+#t1q_7{left:41px;top:714px;}
+#t1r_7{left:140px;top:714px;}
+#t1s_7{left:41px;top:729px;}
+#t1t_7{left:291px;top:729px;}
+#t1u_7{left:41px;top:744px;}
+#t1v_7{left:41px;top:760px;}
+
+.s1_7{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold7;
+	color: rgb(255,255,255);
+}
+
+.s2_7{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold7;
+	color: rgb(255,255,255);
+}
+
+.s3_7{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular7;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold7;
+	src :url("07/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular7;
+	src :url("07/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_7" class="t s1_7">7</div>
+<div id="t2_7" class="t s2_7">www. generalcarbide.com</div>
+<div id="t3_7" class="t s2_7">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_7" class="t s3_7">In negotiations with Krupp, all American rights accrued to General Electric, with Krupp retaining </div>
+<div id="t5_7" class="t s3_7">the right to export Widia to the United States. </div>
+<div id="t6_7" class="t s3_7">General Electric formed the Carboloy Company, </div>
+<div id="t7_7" class="t s3_7">which sublicensed Firth-Sterling Steel Company and the Ludlum Steel Company. </div>
+<div id="t8_7" class="t s3_7">At that time </div>
+<div id="t9_7" class="t s3_7">the American equivalents of Widia were known as Carboloy, Dimondite, and Strass Metal. </div>
+<div id="ta_7" class="t s3_7">Later, </div>
+<div id="tb_7" class="t s3_7">the trade name Dimondite was changed to Firthite. </div>
+<div id="tc_7" class="t s3_7">American patent applications were made as </div>
+<div id="td_7" class="t s3_7">early as 1922, but it was not until 1926, after thorough production tests in the Essen workshops, </div>
+<div id="te_7" class="t s3_7">that Krupp marketed Widia tungsten carbide commercially for the ﬁrst time in Germany. </div>
+<div id="tf_7" class="t s3_7">Tung-</div>
+<div id="tg_7" class="t s3_7">sten carbide was expensive, costing about $450 per pound, but even at that price its use could </div>
+<div id="th_7" class="t s3_7">be justiﬁed economically. </div>
+<div id="ti_7" class="t s3_7">The practice of making only the tool tip out of cemented carbide</div>
+<div id="tj_7" class="t s3_7">was dictated as much by the cost of the material as it was by any other single consideration. </div>
+<div id="tk_7" class="t s3_7">Carboloy tools were tested in General Electric plants and came to public attention around 1928.</div>
+<div id="tl_7" class="t s3_7">Following the introduction of Widia and its counterparts, Dr. </div>
+<div id="tm_7" class="t s3_7">Balke developed a tantalum </div>
+<div id="tn_7" class="t s3_7">carbide bonded together with metallic nickel. </div>
+<div id="to_7" class="t s3_7">This material, called Ramet, resisted “cratering” </div>
+<div id="tp_7" class="t s3_7">and proved more successful in machining steel than did tungsten carbide, which exhibited </div>
+<div id="tq_7" class="t s3_7">a tendency toward early cavitation near the cutting edge, where steel chips came into inti-</div>
+<div id="tr_7" class="t s3_7">mate contact with the tool face. </div>
+<div id="ts_7" class="t s3_7">It was this characteristic of the ﬁrst carbides that impeded an </div>
+<div id="tt_7" class="t s3_7">advance in their application to machining steel comparable with the strides made in machining </div>
+<div id="tu_7" class="t s3_7">cast iron, nonferrous metals, and abrasive materials. </div>
+<div id="tv_7" class="t s3_7">Thus tantalum-bearing carbide opened </div>
+<div id="tw_7" class="t s3_7">new ﬁelds in steel cutting. </div>
+<div id="tx_7" class="t s3_7">Single and multiple carbides of tantalum, titanium, and columbium </div>
+<div id="ty_7" class="t s3_7">were also to ﬁnd use as crater preventives or resisters. </div>
+<div id="tz_7" class="t s3_7">In 1935, Philip McKenna, working at the </div>
+<div id="t10_7" class="t s3_7">time as a metallurgist for Vanadium Alloy Steel Company in Latrobe, PA, used a novel technique </div>
+<div id="t11_7" class="t s3_7">to manufacture crater-resisting carbides with improved strength and toughness and in 1937 </div>
+<div id="t12_7" class="t s3_7">introduced a tungsten-titanium carbide which, when used as a tool material, proved to be eﬀec-</div>
+<div id="t13_7" class="t s3_7">tive in steel cutting. </div>
+<div id="t14_7" class="t s3_7">He received a patent for this formulation and went on to form the McKenna </div>
+<div id="t15_7" class="t s3_7">Metals Company, now known as Kennametal Inc. </div>
+<div id="t16_7" class="t s3_7">Constant progress by the carbide manufactur-</div>
+<div id="t17_7" class="t s3_7">ers in improvement of their products has lowered the cost of carbides from the original $450 </div>
+<div id="t18_7" class="t s3_7">per pound to such an extent that they are no longer regarded as precious metals. </div>
+<div id="t19_7" class="t s3_7">Depending </div>
+<div id="t1a_7" class="t s3_7">upon grade, shape, and size, the cost, with greatly improved quality and capacity dramatically </div>
+<div id="t1b_7" class="t s3_7">increased, is but a fraction of what it was in 1929. </div>
+<div id="t1c_7" class="t s3_7">Although tungsten carbide has become an </div>
+<div id="t1d_7" class="t s3_7">extremely successful metalcutting tool, its roots are as a wear material, a wire draw die, which is </div>
+<div id="t1e_7" class="t s3_7">still a successful application of this material to this day.</div>
+<div id="t1f_7" class="t s3_7">Although various carbide manufacturers may have diﬀerent processing procedures, the ﬁnal </div>
+<div id="t1g_7" class="t s3_7">product is obtained by compacting the powder formulation by some technique and sintering </div>
+<div id="t1h_7" class="t s3_7">the constituents into a solid mass in which cobalt, or a similar metal, bonds or cements the par-</div>
+<div id="t1i_7" class="t s3_7">ticles of carbide together. </div>
+<div id="t1j_7" class="t s3_7">The manufacturing process is further described below.</div>
+<div id="t1k_7" class="t s3_7">Rigorous control is necessary throughout the manufacturing process since the quality of the </div>
+<div id="t1l_7" class="t s3_7">ﬁnal product can be greatly aﬀected by seemingly insigniﬁcant factors. </div>
+<div id="t1m_7" class="t s3_7">Purity, quantity, and </div>
+<div id="t1n_7" class="t s3_7">particle size of the powdered materials must be closely watched. </div>
+<div id="t1o_7" class="t s3_7">Mixing, milling, pressing, pre-</div>
+<div id="t1p_7" class="t s3_7">sintering, and sintering techniques are among the factors inﬂuencing the characteristics of the </div>
+<div id="t1q_7" class="t s3_7">ﬁnished material. </div>
+<div id="t1r_7" class="t s3_7">Carbide should be uniform in structure and grain size, free from porosity, and </div>
+<div id="t1s_7" class="t s3_7">of maximum density, strength, and hardness. </div>
+<div id="t1t_7" class="t s3_7">Modiﬁcations can be achieved by using various </div>
+<div id="t1u_7" class="t s3_7">carbides and bonding materials, by varying the proportions of carbide to the cementing matrix, </div>
+<div id="t1v_7" class="t s3_7">and by regulating the carbide particle size.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg7Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg7"><object width="605" height="935" data="07/7.svg" type="image/svg+xml" id="pdf7" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f7 = [['t2_7',626],['t3_7',1419],['t4_7',2071],['t5_7',984],['t6_7',1030],['t7_7',1741],['t8_7',258],['t9_7',1925],['tb_7',1109],['tc_7',950],['td_7',2066],['te_7',1901],['tg_7',2042],['th_7',550],['ti_7',1401],['tj_7',1983],['tk_7',2066],['tl_7',1298],['tm_7',606],['tn_7',989],['to_7',1001],['tp_7',1963],['tq_7',1955],['tr_7',687],['ts_7',1317],['tt_7',2067],['tu_7',1119],['tv_7',853],['tw_7',564],['tx_7',1457],['ty_7',1158],['tz_7',858],['t10_7',2061],['t11_7',1994],['t12_7',2078],['t13_7',424],['t14_7',1632],['t15_7',1058],['t16_7',999],['t17_7',2001],['t18_7',1755],['t1a_7',2027],['t1b_7',1059],['t1c_7',928],['t1d_7',2060],['t1e_7',1178],['t1f_7',1998],['t1g_7',2023],['t1h_7',2055],['t1i_7',551],['t1j_7',1181],['t1k_7',1995],['t1l_7',1532],['t1m_7',435],['t1n_7',1398],['t1o_7',637],['t1p_7',2043],['t1q_7',374],['t1r_7',1666],['t1s_7',975],['t1t_7',1024],['t1u_7',2069],['t1v_7',921]];
+function load7(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f7);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 68;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_7");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page48</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,48,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load48();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_48{left:43px;top:898px;}
+#t2_48{left:125px;top:19px;letter-spacing:12px;}
+#t3_48{left:224px;top:901px;letter-spacing:4px;}
+#t4_48{left:41px;top:71px;}
+#t5_48{left:41px;top:100px;}
+#t6_48{left:41px;top:115px;}
+#t7_48{left:451px;top:115px;}
+#t8_48{left:41px;top:131px;}
+#t9_48{left:41px;top:146px;}
+#ta_48{left:107px;top:146px;}
+#tb_48{left:41px;top:173px;}
+#tc_48{left:41px;top:198px;}
+#td_48{left:41px;top:213px;}
+#te_48{left:41px;top:228px;}
+#tf_48{left:199px;top:228px;}
+#tg_48{left:41px;top:244px;}
+#th_48{left:41px;top:259px;}
+#ti_48{left:248px;top:259px;}
+#tj_48{left:41px;top:274px;}
+#tk_48{left:41px;top:290px;}
+#tl_48{left:144px;top:297px;}
+#tm_48{left:148px;top:290px;}
+#tn_48{left:159px;top:290px;}
+#to_48{left:41px;top:305px;}
+#tp_48{left:83px;top:312px;}
+#tq_48{left:89px;top:305px;}
+#tr_48{left:163px;top:562px;}
+#ts_48{left:230px;top:562px;}
+#tt_48{left:352px;top:562px;}
+#tu_48{left:175px;top:577px;}
+
+#t4_48,#tb_48 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s1_48{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold48;
+	color: rgb(255,255,255);
+}
+
+.s4_48{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_248;
+	color: rgb(0,0,0);
+}
+
+.s2_48{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold48;
+	color: rgb(255,255,255);
+}
+
+.s7_48{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular48;
+	color: rgb(0,0,0);
+}
+
+.s3_48{
+	FONT-SIZE: 69px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_248;
+	color: rgb(0,0,0);
+}
+
+.s8_48{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold48;
+	color: rgb(0,0,0);
+}
+
+.s6_48{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_248;
+	color: rgb(219,0,60);
+}
+
+.s5_48{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular48;
+	color: rgb(0,0,0);
+}
+
+.v1_48{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold48;
+	src :url("48/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Bold48;
+	src :url("48/fonts/YJUJYE-MyriadPro-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular48;
+	src :url("48/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_248;
+	src :url("48/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_48" class="t s1_48">48</div>
+<div id="t2_48" class="t s2_48">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_48" class="t s2_48">www. generalcarbide.com</div>
+<div id="t4_48" class="t v1_48 s3_48">Chapter V - Finishing Techniques</div>
+<div id="t5_48" class="t s4_48">Cemented carbide parts can be fnished to the desired shape, size, ±atness, and sur²ace</div>
+<div id="t6_48" class="t s4_48">fnish by diamond wheel grinding or by diamond lapping and polishing. </div>
+<div id="t7_48" class="t s5_48">In addition, EDM</div>
+<div id="t8_48" class="t s5_48">(electrical discharge machining) has risen in prominence and popularity among carbide</div>
+<div id="t9_48" class="t s5_48">fabricators. </div>
+<div id="ta_48" class="t s5_48">Both techniques are covered here in detail.</div>
+<div id="tb_48" class="t v1_48 s6_48">Fundamentals o² Grinding</div>
+<div id="tc_48" class="t s5_48">Diamond wheel grinding, in an overly simpliﬁed way, can be described as removing undesirable </div>
+<div id="td_48" class="t s5_48">portions of material from a part by subjecting it to repeated overlapping contact with a rotating  </div>
+<div id="te_48" class="t s5_48">diamond wheel (Figure V-1). </div>
+<div id="tf_48" class="t s5_48">During the grinding process, the rotating diamond wheel is </div>
+<div id="tg_48" class="t s5_48">brought down on the work piece so that the tips of the exposed diamond particles barely touch </div>
+<div id="th_48" class="t s5_48">the surface to be ground (Figure V-2). </div>
+<div id="ti_48" class="t s5_48">At this starting point, the work piece is subjected to either </div>
+<div id="tj_48" class="t s5_48">a reciprocating or a rotating motion, and the wheel is dropped further by an amount equal to </div>
+<div id="tk_48" class="t s5_48">the depth of cut (D</div>
+<div id="tl_48" class="t s7_48">c</div>
+<div id="tm_48" class="t s5_48">). </div>
+<div id="tn_48" class="t s5_48">The process is repeated n times until the desired amount of material equal </div>
+<div id="to_48" class="t s5_48">to n x D</div>
+<div id="tp_48" class="t s7_48">c</div>
+<div id="tq_48" class="t s5_48">is removed.</div>
+<div id="tr_48" class="t s8_48">Figure V-1.</div>
+<div id="ts_48" class="t s5_48">The grinding process. </div>
+<div id="tt_48" class="t s5_48">The depth of</div>
+<div id="tu_48" class="t s5_48">cut is exaggerated for illustration purposes.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg48Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg48"><object width="605" height="935" data="48/48.svg" type="image/svg+xml" id="pdf48" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f48 = [['t2_48',1419],['t3_48',626],['t4_48',974],['t5_48',1951],['t6_48',1617],['t7_48',361],['t8_48',1896],['ta_48',926],['tb_48',721],['tc_48',2076],['td_48',1999],['te_48',609],['tf_48',1286],['tg_48',2073],['th_48',806],['ti_48',1254],['tj_48',2019],['tk_48',411],['tn_48',1607],['to_48',166],['tq_48',249],['tr_48',248],['ts_48',466],['tt_48',278],['tu_48',937]];
+function load48(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f48);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 31;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_48");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

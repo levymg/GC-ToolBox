@@ -1,0 +1,393 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page18</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,18,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load18();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_18{left:43px;top:898px;}
+#t2_18{left:125px;top:19px;letter-spacing:12px;}
+#t3_18{left:224px;top:901px;letter-spacing:4px;}
+#t4_18{left:41px;top:71px;}
+#t5_18{left:41px;top:108px;}
+#t6_18{left:41px;top:132px;}
+#t7_18{left:52px;top:158px;}
+#t8_18{left:52px;top:176px;}
+#t9_18{left:52px;top:195px;}
+#ta_18{left:52px;top:213px;}
+#tb_18{left:52px;top:231px;}
+#tc_18{left:52px;top:250px;}
+#td_18{left:52px;top:268px;}
+#te_18{left:52px;top:286px;}
+#tf_18{left:52px;top:305px;}
+#tg_18{left:52px;top:323px;}
+#th_18{left:41px;top:354px;}
+#ti_18{left:41px;top:369px;}
+#tj_18{left:476px;top:369px;}
+#tk_18{left:41px;top:384px;}
+#tl_18{left:41px;top:400px;}
+#tm_18{left:41px;top:415px;}
+#tn_18{left:356px;top:415px;}
+#to_18{left:41px;top:430px;}
+#tp_18{left:41px;top:445px;}
+#tq_18{left:94px;top:445px;}
+#tr_18{left:41px;top:461px;}
+#ts_18{left:406px;top:461px;}
+#tt_18{left:41px;top:476px;}
+#tu_18{left:413px;top:476px;}
+#tv_18{left:41px;top:491px;}
+#tw_18{left:41px;top:522px;}
+#tx_18{left:41px;top:537px;}
+#ty_18{left:41px;top:552px;}
+#tz_18{left:41px;top:568px;}
+#t10_18{left:107px;top:568px;}
+#t11_18{left:527px;top:568px;}
+#t12_18{left:41px;top:583px;}
+#t13_18{left:41px;top:598px;}
+#t14_18{left:41px;top:629px;}
+#t15_18{left:290px;top:629px;}
+#t16_18{left:41px;top:644px;}
+#t17_18{left:400px;top:644px;}
+#t18_18{left:41px;top:659px;}
+#t19_18{left:532px;top:659px;}
+#t1a_18{left:41px;top:675px;}
+#t1b_18{left:41px;top:690px;}
+#t1c_18{left:301px;top:690px;}
+#t1d_18{left:41px;top:705px;}
+#t1e_18{left:341px;top:705px;}
+#t1f_18{left:41px;top:720px;}
+#t1g_18{left:41px;top:736px;}
+#t1h_18{left:41px;top:751px;}
+#t1i_18{left:41px;top:766px;}
+
+#t4_18,#t5_18 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s4_18{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_218;
+	color: rgb(219,0,60);
+}
+
+.s1_18{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold18;
+	color: rgb(255,255,255);
+}
+
+.s6_18{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold18;
+	color: rgb(0,0,0);
+}
+
+.s3_18{
+	FONT-SIZE: 69px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold18;
+	color: rgb(0,0,0);
+}
+
+.s5_18{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular18;
+	color: rgb(0,0,0);
+}
+
+.s2_18{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_218;
+	color: rgb(255,255,255);
+}
+
+.v1_18{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold18;
+	src :url("18/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular18;
+	src :url("18/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_218;
+	src :url("18/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_18" class="t s1_18">18</div>
+<div id="t2_18" class="t s2_18">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_18" class="t s2_18">www. generalcarbide.com</div>
+<div id="t4_18" class="t v1_18 s3_18">Chapter III - Design Considerations</div>
+<div id="t5_18" class="t v1_18 s4_18">Stress Analysis</div>
+<div id="t6_18" class="t s5_18">There are several considerations when designing an industrial component such as:</div>
+<div id="t7_18" class="t s6_18">• Geometry</div>
+<div id="t8_18" class="t s6_18">• Stress</div>
+<div id="t9_18" class="t s6_18">• Wear</div>
+<div id="ta_18" class="t s6_18">• Corrosion</div>
+<div id="tb_18" class="t s6_18">• Impact/Shock resistance</div>
+<div id="tc_18" class="t s6_18">• Friction</div>
+<div id="td_18" class="t s6_18">• Fatigue</div>
+<div id="te_18" class="t s6_18">• Thermal conditions/properties</div>
+<div id="tf_18" class="t s6_18">• Stress risers/concentrations</div>
+<div id="tg_18" class="t s6_18">• Safety factor</div>
+<div id="th_18" class="t s5_18">All these factors play a role in determining the proper shape, size and grade of a component  </div>
+<div id="ti_18" class="t s5_18">but the amount of stress involved in an application is typically the most elusive. </div>
+<div id="tj_18" class="t s5_18">Approximate </div>
+<div id="tk_18" class="t s5_18">calculations are not usually considered adequate for general design problems, but often the </div>
+<div id="tl_18" class="t s5_18">carbide designer does not have suﬃcient information with which to perform basic engineering </div>
+<div id="tm_18" class="t s5_18">calculations, such as in many metal-forming applications. </div>
+<div id="tn_18" class="t s6_18">Hence the carbide designer’s ±rst </div>
+<div id="to_18" class="t s6_18">priority is to ensure that the component must ±rst withstand the operating load and not </div>
+<div id="tp_18" class="t s6_18">fracture.</div>
+<div id="tq_18" class="t s5_18">If the part “wears out”, the grade formulation can then be adjusted to impart a higher </div>
+<div id="tr_18" class="t s5_18">degree of wear resistance and still withstand the stresses involved. </div>
+<div id="ts_18" class="t s5_18">Failure can come in several </div>
+<div id="tt_18" class="t s5_18">forms ranging from microcracks to premature wear to total fracture. </div>
+<div id="tu_18" class="t s5_18">Contributing factors can  </div>
+<div id="tv_18" class="t s5_18">be corrosion, fatigue or material ﬂaws but avoiding total fracture is the ﬁrst priority.</div>
+<div id="tw_18" class="t s5_18">“Designing” by today’s engineering standards, initially involves determination of the shape of </div>
+<div id="tx_18" class="t s5_18">a part in order to arrive at the proper decision regarding the ﬁnal size and tolerance of the part </div>
+<div id="ty_18" class="t s5_18">followed by attempting to understand the stresses that the part will see under operating  </div>
+<div id="tz_18" class="t s5_18">conditions. </div>
+<div id="t10_18" class="t s5_18">An understanding of these factors then leads to a material recommendation. </div>
+<div id="t11_18" class="t s6_18">The </div>
+<div id="t12_18" class="t s6_18">amount of stress that the part experiences and the amount of de²ection that occurs are key </div>
+<div id="t13_18" class="t s6_18">factors in any general design situation.</div>
+<div id="t14_18" class="t s5_18">All materials deform when subjected to load. </div>
+<div id="t15_18" class="t s5_18">For most materials a change in load results in a  </div>
+<div id="t16_18" class="t s5_18">corresponding, but not necessarily linear, change in deformation. </div>
+<div id="t17_18" class="t s5_18">If, upon removal of the load, </div>
+<div id="t18_18" class="t s5_18">a body returns to its original size and shape, the body has undergone elastic deformation. </div>
+<div id="t19_18" class="t s5_18">If the </div>
+<div id="t1a_18" class="t s5_18">body does not completely recover to its original shape, it is said to be partially elastic; it is  </div>
+<div id="t1b_18" class="t s5_18">perfectly elastic when full recovery takes place. </div>
+<div id="t1c_18" class="t s5_18">In steel, if a part is stressed beyond its elastic  </div>
+<div id="t1d_18" class="t s5_18">limit deformation will occur but not necessarily failure. </div>
+<div id="t1e_18" class="t s6_18">For cemented carbide, classi±ed as a </div>
+<div id="t1f_18" class="t s6_18">brittle material, very little plastic deformation will occur preceding the initiation of a crack </div>
+<div id="t1g_18" class="t s6_18">and ultimate failure, hence the yield strength and rupture strength are essentially identical.</div>
+<div id="t1h_18" class="t s5_18">This is very diﬀerent than the yield strength and ultimate strength of low carbon and structural </div>
+<div id="t1i_18" class="t s5_18">steels where the ultimate strength is 1½ to 1¾ times higher than the yield strength.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg18Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg18"><object width="605" height="935" data="18/18.svg" type="image/svg+xml" id="pdf18" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f18 = [['t2_18',1419],['t3_18',626],['t4_18',1038],['t5_18',403],['t6_18',1785],['t7_18',254],['t8_18',161],['t9_18',140],['ta_18',247],['tb_18',576],['tc_18',199],['td_18',196],['te_18',715],['tf_18',648],['tg_18',313],['th_18',2001],['ti_18',1716],['tk_18',1989],['tl_18',2058],['tm_18',1236],['tn_18',746],['to_18',1978],['tq_18',1836],['tr_18',1435],['ts_18',581],['tt_18',1465],['tu_18',539],['tv_18',1798],['tw_18',2011],['tx_18',2043],['ty_18',1929],['t10_18',1659],['t12_18',2053],['t13_18',871],['t14_18',971],['t15_18',1023],['t16_18',1411],['t17_18',608],['t18_18',1939],['t19_18',111],['t1a_18',1939],['t1b_18',1017],['t1c_18',973],['t1d_18',1178],['t1e_18',816],['t1f_18',2017],['t1g_18',2048],['t1h_18',2049],['t1i_18',1802]];
+function load18(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f18);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 55;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_18");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

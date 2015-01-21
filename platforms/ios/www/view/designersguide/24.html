@@ -1,0 +1,391 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page24</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,24,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load24();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_24{left:43px;top:898px;}
+#t2_24{left:125px;top:19px;letter-spacing:12px;}
+#t3_24{left:224px;top:901px;letter-spacing:4px;}
+#t4_24{left:41px;top:72px;}
+#t5_24{left:41px;top:87px;}
+#t6_24{left:41px;top:103px;}
+#t7_24{left:41px;top:130px;}
+#t8_24{left:41px;top:155px;}
+#t9_24{left:469px;top:155px;}
+#ta_24{left:41px;top:170px;}
+#tb_24{left:41px;top:185px;}
+#tc_24{left:116px;top:185px;}
+#td_24{left:341px;top:186px;}
+#te_24{left:345px;top:185px;}
+#tf_24{left:469px;top:185px;}
+#tg_24{left:41px;top:201px;}
+#th_24{left:41px;top:216px;}
+#ti_24{left:125px;top:216px;}
+#tj_24{left:190px;top:217px;}
+#tk_24{left:194px;top:216px;}
+#tl_24{left:41px;top:231px;}
+#tm_24{left:76px;top:231px;}
+#tn_24{left:41px;top:246px;}
+#to_24{left:41px;top:262px;}
+#tp_24{left:41px;top:292px;}
+#tq_24{left:41px;top:307px;}
+#tr_24{left:145px;top:307px;}
+#ts_24{left:369px;top:307px;}
+#tt_24{left:41px;top:323px;}
+#tu_24{left:41px;top:338px;}
+#tv_24{left:221px;top:338px;}
+#tw_24{left:41px;top:366px;}
+#tx_24{left:41px;top:390px;}
+#ty_24{left:41px;top:405px;}
+#tz_24{left:499px;top:405px;}
+#t10_24{left:41px;top:421px;}
+#t11_24{left:41px;top:436px;}
+#t12_24{left:41px;top:466px;}
+#t13_24{left:41px;top:482px;}
+#t14_24{left:41px;top:497px;}
+#t15_24{left:41px;top:512px;}
+#t16_24{left:41px;top:527px;}
+#t17_24{left:96px;top:527px;}
+#t18_24{left:41px;top:543px;}
+#t19_24{left:90px;top:543px;}
+#t1a_24{left:41px;top:558px;}
+#t1b_24{left:41px;top:573px;}
+#t1c_24{left:443px;top:573px;}
+#t1d_24{left:41px;top:589px;}
+#t1e_24{left:41px;top:604px;}
+
+#t7_24,#tw_24 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s1_24{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold24;
+	color: rgb(255,255,255);
+}
+
+.s5_24{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_224;
+	color: rgb(0,0,0);
+}
+
+.s7_24{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold24;
+	color: rgb(219,0,60);
+}
+
+.s2_24{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold24;
+	color: rgb(255,255,255);
+}
+
+.s6_24{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular24;
+	color: rgb(0,0,0);
+}
+
+.s3_24{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular24;
+	color: rgb(0,0,0);
+}
+
+.s4_24{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_224;
+	color: rgb(219,0,60);
+}
+
+.v1_24{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold24;
+	src :url("24/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular24;
+	src :url("24/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_224;
+	src :url("24/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_24" class="t s1_24">24</div>
+<div id="t2_24" class="t s2_24">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_24" class="t s2_24">www. generalcarbide.com</div>
+<div id="t4_24" class="t s3_24">For reference, it is estimated based on experimental test results and Weibull’s theory,</div>
+<div id="t5_24" class="t s3_24">that the torsion or shear strength of a specimen of cemented carbide is, in general, 50%</div>
+<div id="t6_24" class="t s3_24">to 58% of the bending strength or transverse rupture strength.</div>
+<div id="t7_24" class="t v1_24 s4_24">Elevated Temperatures</div>
+<div id="t8_24" class="t s5_24">Cemented carbide will retain most of its strength at elevated temperatures.</div>
+<div id="t9_24" class="t s3_24">It has</div>
+<div id="ta_24" class="t s3_24">exceptional high hot hardness, a property readily taken advantage of in metal cutting</div>
+<div id="tb_24" class="t s3_24">applications. </div>
+<div id="tc_24" class="t s3_24">However, as temperatures approach 1000</div>
+<div id="td_24" class="t s6_24">o</div>
+<div id="te_24" class="t s3_24">F, oxidation will occur. </div>
+<div id="tf_24" class="t s3_24">This</div>
+<div id="tg_24" class="t s3_24">appears as a powder layer or ﬂakes on the surface of the carbide, which are easily</div>
+<div id="th_24" class="t s3_24">abraded away. </div>
+<div id="ti_24" class="t s3_24">Above 1000</div>
+<div id="tj_24" class="t s6_24">o</div>
+<div id="tk_24" class="t s3_24">F, oxidation is too severe for cemented carbide to be</div>
+<div id="tl_24" class="t s3_24">used. </div>
+<div id="tm_24" class="t s3_24">Fortunately, most industrial applications do not reach this temperature extreme.</div>
+<div id="tn_24" class="t s3_24">The grade formulations that are most suitable for elevated temperatures are the higher</div>
+<div id="to_24" class="t s3_24">binder grades, which can withstand higher impact stresses and thermal shock.</div>
+<div id="tp_24" class="t s3_24">The diﬀerence in coeﬃcient of thermal expansion (CTE) between cemented carbide and</div>
+<div id="tq_24" class="t s3_24">steel is signiﬁcant. </div>
+<div id="tr_24" class="t s3_24">Carbide has a CTE value 1/3 that of steel. </div>
+<div id="ts_24" class="t s3_24">This low thermal</div>
+<div id="tt_24" class="t s3_24">expansion rate value is readily used in designing cemented carbide for shrink-ﬁt</div>
+<div id="tu_24" class="t s3_24">assemblies using steel die cases. </div>
+<div id="tv_24" class="t s3_24">This subject is covered in more detail in Chapter IV.</div>
+<div id="tw_24" class="t v1_24 s7_24">Corrosive Environments</div>
+<div id="tx_24" class="t s5_24">Using cemented carbide for wear resistant components such as seal rings, Fow control</div>
+<div id="ty_24" class="t s5_24">devices, nozzles, and bearings, has become common practice in today’s industry.</div>
+<div id="tz_24" class="t s3_24">In</div>
+<div id="t10_24" class="t s3_24">some processing operations, the environment may include severe corrosion or extremes</div>
+<div id="t11_24" class="t s3_24">of temperature.</div>
+<div id="t12_24" class="t s3_24">Corrosion of cemented carbide is usually referred to as leaching which is the removal of</div>
+<div id="t13_24" class="t s3_24">the binder phase and, thus, the surface region will remain only as a carbide skeleton.</div>
+<div id="t14_24" class="t s3_24">The bonds between adjacent carbide grains are rather weak so the skeletal structure will</div>
+<div id="t15_24" class="t s3_24">result in higher abrasion rates and exposure of more surface area to be aﬀected by</div>
+<div id="t16_24" class="t s3_24">leaching. </div>
+<div id="t17_24" class="t s3_24">Stress concentrations caused by surface pitting will aﬀect the strength of the</div>
+<div id="t18_24" class="t s3_24">carbide. </div>
+<div id="t19_24" class="t s3_24">In lower binder content grades, the carbide skeleton is more developed and,</div>
+<div id="t1a_24" class="t s3_24">accordingly, such grades exhibit a somewhat higher combined wear and corrosion</div>
+<div id="t1b_24" class="t s3_24">resistance than corresponding grades with higher binder phase contents. </div>
+<div id="t1c_24" class="t s3_24">The</div>
+<div id="t1d_24" class="t s3_24">photomicrographs below show how the surface appears when leaching occurs and a</div>
+<div id="t1e_24" class="t s3_24">side view of the removal of the binder phase, leaving the grains “uncemented”.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg24Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg24"><object width="605" height="935" data="24/24.svg" type="image/svg+xml" id="pdf24" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f24 = [['t2_24',1419],['t3_24',626],['t4_24',1825],['t5_24',1892],['t6_24',1356],['t7_24',629],['t8_24',1687],['t9_24',116],['ta_24',1851],['tc_24',901],['te_24',474],['tg_24',1753],['th_24',314],['ti_24',258],['tk_24',1130],['tm_24',1736],['tn_24',1882],['to_24',1696],['tp_24',1903],['tq_24',393],['tr_24',876],['ts_24',359],['tt_24',1728],['tu_24',698],['tv_24',1098],['tw_24',658],['tx_24',1934],['ty_24',1809],['t10_24',1911],['t11_24',338],['t12_24',1889],['t13_24',1826],['t14_24',1911],['t15_24',1781],['t17_24',1659],['t19_24',1651],['t1a_24',1786],['t1b_24',1588],['t1d_24',1840],['t1e_24',1694]];
+function load24(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f24);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 51;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_24");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

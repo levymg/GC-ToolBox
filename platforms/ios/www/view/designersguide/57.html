@@ -1,0 +1,797 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page57</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,57,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load57();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_57{left:545px;top:897px;}
+#t2_57{left:224px;top:901px;letter-spacing:4px;}
+#t3_57{left:125px;top:19px;letter-spacing:12px;}
+#t4_57{left:41px;top:127px;}
+#t5_57{left:41px;top:149px;}
+#t6_57{left:86px;top:149px;}
+#t7_57{left:108px;top:149px;}
+#t8_57{left:160px;top:149px;}
+#t9_57{left:222px;top:149px;}
+#ta_57{left:41px;top:165px;}
+#tb_57{left:86px;top:165px;}
+#tc_57{left:108px;top:165px;}
+#td_57{left:160px;top:165px;}
+#te_57{left:222px;top:165px;}
+#tf_57{left:41px;top:182px;}
+#tg_57{left:86px;top:182px;}
+#th_57{left:108px;top:182px;}
+#ti_57{left:160px;top:182px;}
+#tj_57{left:222px;top:182px;}
+#tk_57{left:41px;top:210px;}
+#tl_57{left:41px;top:226px;}
+#tm_57{left:59px;top:228px;}
+#tn_57{left:86px;top:226px;}
+#to_57{left:108px;top:226px;}
+#tp_57{left:128px;top:228px;}
+#tq_57{left:160px;top:226px;}
+#tr_57{left:222px;top:226px;}
+#ts_57{left:41px;top:252px;}
+#tt_57{left:41px;top:269px;}
+#tu_57{left:86px;top:269px;}
+#tv_57{left:108px;top:269px;}
+#tw_57{left:160px;top:269px;}
+#tx_57{left:222px;top:269px;}
+#ty_57{left:41px;top:295px;}
+#tz_57{left:41px;top:312px;}
+#t10_57{left:86px;top:312px;}
+#t11_57{left:108px;top:312px;}
+#t12_57{left:160px;top:312px;}
+#t13_57{left:222px;top:312px;}
+#t14_57{left:41px;top:338px;}
+#t15_57{left:86px;top:338px;}
+#t16_57{left:108px;top:338px;}
+#t17_57{left:160px;top:338px;}
+#t18_57{left:222px;top:338px;}
+#t19_57{left:41px;top:364px;}
+#t1a_57{left:41px;top:381px;}
+#t1b_57{left:86px;top:381px;}
+#t1c_57{left:108px;top:381px;}
+#t1d_57{left:160px;top:381px;}
+#t1e_57{left:222px;top:381px;}
+#t1f_57{left:41px;top:407px;}
+#t1g_57{left:41px;top:424px;}
+#t1h_57{left:86px;top:424px;}
+#t1i_57{left:108px;top:424px;}
+#t1j_57{left:160px;top:424px;}
+#t1k_57{left:222px;top:424px;}
+#t1l_57{left:41px;top:440px;}
+#t1m_57{left:86px;top:440px;}
+#t1n_57{left:108px;top:440px;}
+#t1o_57{left:160px;top:440px;}
+#t1p_57{left:222px;top:440px;}
+#t1q_57{left:41px;top:457px;}
+#t1r_57{left:86px;top:457px;}
+#t1s_57{left:108px;top:457px;}
+#t1t_57{left:160px;top:457px;}
+#t1u_57{left:222px;top:457px;}
+#t1v_57{left:324px;top:132px;}
+#t1w_57{left:324px;top:154px;}
+#t1x_57{left:368px;top:154px;}
+#t1y_57{left:391px;top:154px;}
+#t1z_57{left:443px;top:154px;}
+#t20_57{left:512px;top:154px;}
+#t21_57{left:324px;top:171px;}
+#t22_57{left:368px;top:171px;}
+#t23_57{left:391px;top:171px;}
+#t24_57{left:443px;top:171px;}
+#t25_57{left:512px;top:171px;}
+#t26_57{left:324px;top:187px;}
+#t27_57{left:368px;top:187px;}
+#t28_57{left:391px;top:187px;}
+#t29_57{left:443px;top:187px;}
+#t2a_57{left:512px;top:187px;}
+#t2b_57{left:324px;top:213px;}
+#t2c_57{left:324px;top:230px;}
+#t2d_57{left:345px;top:231px;}
+#t2e_57{left:368px;top:230px;}
+#t2f_57{left:391px;top:230px;}
+#t2g_57{left:410px;top:231px;}
+#t2h_57{left:443px;top:230px;}
+#t2i_57{left:512px;top:230px;}
+#t2j_57{left:324px;top:256px;}
+#t2k_57{left:324px;top:273px;}
+#t2l_57{left:368px;top:273px;}
+#t2m_57{left:391px;top:273px;}
+#t2n_57{left:443px;top:273px;}
+#t2o_57{left:512px;top:273px;}
+#t2p_57{left:324px;top:299px;}
+#t2q_57{left:324px;top:316px;}
+#t2r_57{left:368px;top:316px;}
+#t2s_57{left:391px;top:316px;}
+#t2t_57{left:443px;top:316px;}
+#t2u_57{left:512px;top:316px;}
+#t2v_57{left:324px;top:342px;}
+#t2w_57{left:391px;top:342px;}
+#t2x_57{left:443px;top:342px;}
+#t2y_57{left:512px;top:342px;}
+#t2z_57{left:324px;top:368px;}
+#t30_57{left:324px;top:385px;}
+#t31_57{left:368px;top:385px;}
+#t32_57{left:391px;top:385px;}
+#t33_57{left:443px;top:385px;}
+#t34_57{left:512px;top:385px;}
+#t35_57{left:324px;top:411px;}
+#t36_57{left:324px;top:427px;}
+#t37_57{left:368px;top:427px;}
+#t38_57{left:391px;top:427px;}
+#t39_57{left:443px;top:427px;}
+#t3a_57{left:512px;top:427px;}
+#t3b_57{left:324px;top:444px;}
+#t3c_57{left:368px;top:444px;}
+#t3d_57{left:391px;top:444px;}
+#t3e_57{left:443px;top:444px;}
+#t3f_57{left:512px;top:444px;}
+#t3g_57{left:324px;top:461px;}
+#t3h_57{left:368px;top:461px;}
+#t3i_57{left:391px;top:461px;}
+#t3j_57{left:443px;top:461px;}
+#t3k_57{left:512px;top:461px;}
+#t3l_57{left:41px;top:103px;}
+#t3m_57{left:136px;top:103px;}
+#t3n_57{left:326px;top:103px;}
+#t3o_57{left:236px;top:72px;}
+#t3p_57{left:231px;top:521px;}
+#t3q_57{left:50px;top:561px;}
+#t3r_57{left:119px;top:561px;}
+#t3s_57{left:231px;top:561px;}
+#t3t_57{left:70px;top:577px;}
+#t3u_57{left:147px;top:577px;}
+#t3v_57{left:240px;top:577px;}
+#t3w_57{left:67px;top:592px;}
+#t3x_57{left:147px;top:592px;}
+#t3y_57{left:240px;top:592px;}
+#t3z_57{left:67px;top:607px;}
+#t40_57{left:147px;top:607px;}
+#t41_57{left:240px;top:607px;}
+#t42_57{left:67px;top:623px;}
+#t43_57{left:147px;top:623px;}
+#t44_57{left:240px;top:623px;}
+#t45_57{left:67px;top:638px;}
+#t46_57{left:147px;top:638px;}
+#t47_57{left:240px;top:638px;}
+#t48_57{left:67px;top:653px;}
+#t49_57{left:147px;top:653px;}
+#t4a_57{left:240px;top:653px;}
+#t4b_57{left:67px;top:668px;}
+#t4c_57{left:147px;top:668px;}
+#t4d_57{left:240px;top:668px;}
+#t4e_57{left:67px;top:684px;}
+#t4f_57{left:147px;top:684px;}
+#t4g_57{left:244px;top:684px;}
+#t4h_57{left:67px;top:699px;}
+#t4i_57{left:147px;top:699px;}
+#t4j_57{left:244px;top:699px;}
+#t4k_57{left:67px;top:714px;}
+#t4l_57{left:149px;top:714px;}
+#t4m_57{left:244px;top:714px;}
+#t4n_57{left:67px;top:730px;}
+#t4o_57{left:147px;top:730px;}
+#t4p_57{left:244px;top:730px;}
+#t4q_57{left:67px;top:745px;}
+#t4r_57{left:147px;top:745px;}
+#t4s_57{left:244px;top:745px;}
+#t4t_57{left:67px;top:760px;}
+#t4u_57{left:147px;top:760px;}
+#t4v_57{left:244px;top:760px;}
+#t4w_57{left:67px;top:775px;}
+#t4x_57{left:147px;top:775px;}
+#t4y_57{left:244px;top:775px;}
+#t4z_57{left:67px;top:791px;}
+#t50_57{left:147px;top:791px;}
+#t51_57{left:244px;top:791px;}
+#t52_57{left:327px;top:561px;}
+#t53_57{left:396px;top:561px;}
+#t54_57{left:508px;top:561px;}
+#t55_57{left:341px;top:576px;}
+#t56_57{left:424px;top:576px;}
+#t57_57{left:521px;top:576px;}
+#t58_57{left:341px;top:591px;}
+#t59_57{left:424px;top:591px;}
+#t5a_57{left:521px;top:591px;}
+#t5b_57{left:341px;top:607px;}
+#t5c_57{left:424px;top:607px;}
+#t5d_57{left:521px;top:607px;}
+#t5e_57{left:341px;top:622px;}
+#t5f_57{left:426px;top:622px;}
+#t5g_57{left:524px;top:622px;}
+#t5h_57{left:341px;top:637px;}
+#t5i_57{left:424px;top:637px;}
+#t5j_57{left:524px;top:637px;}
+#t5k_57{left:341px;top:652px;}
+#t5l_57{left:421px;top:652px;}
+#t5m_57{left:524px;top:652px;}
+#t5n_57{left:341px;top:668px;}
+#t5o_57{left:421px;top:668px;}
+#t5p_57{left:524px;top:668px;}
+#t5q_57{left:341px;top:683px;}
+#t5r_57{left:421px;top:683px;}
+#t5s_57{left:524px;top:683px;}
+#t5t_57{left:341px;top:698px;}
+#t5u_57{left:421px;top:698px;}
+#t5v_57{left:526px;top:698px;}
+#t5w_57{left:341px;top:713px;}
+#t5x_57{left:421px;top:713px;}
+#t5y_57{left:524px;top:713px;}
+#t5z_57{left:341px;top:729px;}
+#t60_57{left:421px;top:729px;}
+#t61_57{left:524px;top:729px;}
+#t62_57{left:341px;top:744px;}
+#t63_57{left:421px;top:744px;}
+#t64_57{left:528px;top:744px;}
+#t65_57{left:341px;top:759px;}
+#t66_57{left:422px;top:759px;}
+#t67_57{left:528px;top:759px;}
+#t68_57{left:337px;top:775px;}
+#t69_57{left:421px;top:775px;}
+#t6a_57{left:528px;top:775px;}
+#t6b_57{left:337px;top:790px;}
+#t6c_57{left:422px;top:790px;}
+#t6d_57{left:528px;top:790px;}
+
+#t4_57,#t5_57,#t6_57,#t7_57,#t8_57,#t9_57,#ta_57,#tb_57,#tc_57,#td_57,#te_57,#tf_57,#tg_57,#th_57,#ti_57,#tj_57,#tk_57,#tl_57,#tm_57,#tn_57,#to_57,#tp_57,#tq_57,#tr_57,#ts_57,#tt_57,#tu_57,#tv_57,#tw_57,#tx_57,#ty_57,#tz_57,#t10_57,#t11_57,#t12_57,#t13_57,#t14_57,#t15_57,#t16_57,#t17_57,#t18_57,#t19_57,#t1a_57,#t1b_57,#t1c_57,#t1d_57,#t1e_57,#t1f_57,#t1g_57,#t1h_57,#t1i_57,#t1j_57,#t1k_57,#t1l_57,#t1m_57,#t1n_57,#t1o_57,#t1p_57,#t1q_57,#t1r_57,#t1s_57,#t1t_57,#t1u_57,#t2d_57,#t2g_57,#t3b_57,#t3d_57,#t3g_57,#t3i_57,#t3l_57,#t3m_57,#t3n_57,#t3o_57,#t3p_57 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s1_57{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold57;
+	color: rgb(255,255,255);
+}
+
+.s11_57{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_257;
+	color: rgb(219,0,60);
+}
+
+.s13_57{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular57;
+	color: rgb(0,0,0);
+}
+
+.s3_57{
+	FONT-SIZE: 49px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold57;
+	color: rgb(219,0,60);
+}
+
+.s9_57{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_257;
+	color: rgb(219,0,60);
+}
+
+.s2_57{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold57;
+	color: rgb(255,255,255);
+}
+
+.s4_57{
+	FONT-SIZE: 49px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Cond57;
+	color: rgb(0,0,0);
+}
+
+.s5_57{
+	FONT-SIZE: 28px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Cond57;
+	color: rgb(0,0,0);
+}
+
+.s6_57{
+	FONT-SIZE: 49px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_257;
+	color: rgb(219,0,60);
+}
+
+.s12_57{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_257;
+	color: rgb(0,0,0);
+}
+
+.s7_57{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold57;
+	color: rgb(219,0,60);
+}
+
+.s10_57{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_257;
+	color: rgb(0,0,0);
+}
+
+.s8_57{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Cond57;
+	color: rgb(0,0,0);
+}
+
+.v1_57{
+-webkit-transform: scale(0.25, 0.28);
+-ms-transform: scale(0.25, 0.28);
+-moz-transform: scale(0.25, 0.28);
+-o-transform: scale(0.25, 0.28);
+}
+
+.v2_57{
+-webkit-transform: scale(0.25, 0.28);
+-ms-transform: scale(0.25, 0.28);
+-moz-transform: scale(0.25, 0.28);
+-o-transform: scale(0.25, 0.28);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold57;
+	src :url("57/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Cond57;
+	src :url("57/fonts/YJUJYE-MyriadPro-Cond.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular57;
+	src :url("57/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_257;
+	src :url("57/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_57" class="t s1_57">57</div>
+<div id="t2_57" class="t s2_57">www. generalcarbide.com</div>
+<div id="t3_57" class="t s2_57">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_57" class="t v1_57 s3_57">Pressure</div>
+<div id="t5_57" class="t v1_57 s4_57">psi </div>
+<div id="t6_57" class="t v1_57 s4_57">to </div>
+<div id="t7_57" class="t v1_57 s4_57">kPa </div>
+<div id="t8_57" class="t v1_57 s4_57">multiply by </div>
+<div id="t9_57" class="t v1_57 s4_57">6.8948 </div>
+<div id="ta_57" class="t v1_57 s4_57">psi </div>
+<div id="tb_57" class="t v1_57 s4_57">to </div>
+<div id="tc_57" class="t v1_57 s4_57">MPa </div>
+<div id="td_57" class="t v1_57 s4_57">multiply by </div>
+<div id="te_57" class="t v1_57 s4_57">0.00689 </div>
+<div id="tf_57" class="t v1_57 s4_57">psi </div>
+<div id="tg_57" class="t v1_57 s4_57">to </div>
+<div id="th_57" class="t v1_57 s4_57">Gpa </div>
+<div id="ti_57" class="t v1_57 s4_57">multiply by </div>
+<div id="tj_57" class="t v1_57 s4_57">0.00000689 </div>
+<div id="tk_57" class="t v1_57 s3_57">Density</div>
+<div id="tl_57" class="t v1_57 s4_57">lb/in</div>
+<div id="tm_57" class="t v2_57 s5_57">3</div>
+<div id="tn_57" class="t v1_57 s4_57">to </div>
+<div id="to_57" class="t v1_57 s4_57">g/cm</div>
+<div id="tp_57" class="t v2_57 s5_57">3</div>
+<div id="tq_57" class="t v1_57 s4_57">multiply by </div>
+<div id="tr_57" class="t v1_57 s4_57">27.68 </div>
+<div id="ts_57" class="t v1_57 s6_57">Mass</div>
+<div id="tt_57" class="t v1_57 s4_57">pound </div>
+<div id="tu_57" class="t v1_57 s4_57">to </div>
+<div id="tv_57" class="t v1_57 s4_57">kilogram </div>
+<div id="tw_57" class="t v1_57 s4_57">multiply by </div>
+<div id="tx_57" class="t v1_57 s4_57">0.4536 </div>
+<div id="ty_57" class="t v1_57 s6_57">Length</div>
+<div id="tz_57" class="t v1_57 s4_57">inch </div>
+<div id="t10_57" class="t v1_57 s4_57">to </div>
+<div id="t11_57" class="t v1_57 s4_57">micron </div>
+<div id="t12_57" class="t v1_57 s4_57">multiply by </div>
+<div id="t13_57" class="t v1_57 s4_57">25,400.0 </div>
+<div id="t14_57" class="t v1_57 s4_57">inch </div>
+<div id="t15_57" class="t v1_57 s4_57">to </div>
+<div id="t16_57" class="t v1_57 s4_57">millimeter </div>
+<div id="t17_57" class="t v1_57 s4_57">multiply by </div>
+<div id="t18_57" class="t v1_57 s4_57">25.4  </div>
+<div id="t19_57" class="t v1_57 s6_57">Force</div>
+<div id="t1a_57" class="t v1_57 s4_57">lbf </div>
+<div id="t1b_57" class="t v1_57 s4_57">to </div>
+<div id="t1c_57" class="t v1_57 s4_57">N </div>
+<div id="t1d_57" class="t v1_57 s4_57">multiply by </div>
+<div id="t1e_57" class="t v1_57 s4_57">4.448 </div>
+<div id="t1f_57" class="t v1_57 s6_57">Temperature</div>
+<div id="t1g_57" class="t v1_57 s4_57">in/(inºF) </div>
+<div id="t1h_57" class="t v1_57 s4_57">to </div>
+<div id="t1i_57" class="t v1_57 s4_57">m/(MºC) </div>
+<div id="t1j_57" class="t v1_57 s4_57">multiply by </div>
+<div id="t1k_57" class="t v1_57 s4_57">1.8 </div>
+<div id="t1l_57" class="t v1_57 s4_57">ºF </div>
+<div id="t1m_57" class="t v1_57 s4_57">to </div>
+<div id="t1n_57" class="t v1_57 s4_57">ºC </div>
+<div id="t1o_57" class="t v1_57 s4_57">multiply by </div>
+<div id="t1p_57" class="t v1_57 s4_57">(ºF-32)/(1.8) </div>
+<div id="t1q_57" class="t v1_57 s4_57">ºF </div>
+<div id="t1r_57" class="t v1_57 s4_57">to </div>
+<div id="t1s_57" class="t v1_57 s4_57">ºK </div>
+<div id="t1t_57" class="t v1_57 s4_57">multiply by </div>
+<div id="t1u_57" class="t v1_57 s4_57">(ºF+459.67)/(1.8)</div>
+<div id="t1v_57" class="t s7_57">Pressure</div>
+<div id="t1w_57" class="t s8_57">kPa </div>
+<div id="t1x_57" class="t s8_57">to </div>
+<div id="t1y_57" class="t s8_57">psi </div>
+<div id="t1z_57" class="t s8_57">multiply by </div>
+<div id="t20_57" class="t s8_57">0.145 </div>
+<div id="t21_57" class="t s8_57">MPa </div>
+<div id="t22_57" class="t s8_57">to </div>
+<div id="t23_57" class="t s8_57">psi </div>
+<div id="t24_57" class="t s8_57">multiply by </div>
+<div id="t25_57" class="t s8_57">145 </div>
+<div id="t26_57" class="t s8_57">Gpa </div>
+<div id="t27_57" class="t s8_57">to </div>
+<div id="t28_57" class="t s8_57">psi  </div>
+<div id="t29_57" class="t s8_57">multiply by </div>
+<div id="t2a_57" class="t s8_57">145,038 </div>
+<div id="t2b_57" class="t s7_57">Density</div>
+<div id="t2c_57" class="t s8_57">g/cm</div>
+<div id="t2d_57" class="t v2_57 s5_57">3</div>
+<div id="t2e_57" class="t s8_57">to </div>
+<div id="t2f_57" class="t s8_57">lb/in</div>
+<div id="t2g_57" class="t v2_57 s5_57">3</div>
+<div id="t2h_57" class="t s8_57">multiply by </div>
+<div id="t2i_57" class="t s8_57">0.03613 </div>
+<div id="t2j_57" class="t s9_57">Mass</div>
+<div id="t2k_57" class="t s8_57">kilogram </div>
+<div id="t2l_57" class="t s8_57">to </div>
+<div id="t2m_57" class="t s8_57">pound </div>
+<div id="t2n_57" class="t s8_57">multiply by </div>
+<div id="t2o_57" class="t s8_57">2.2046 </div>
+<div id="t2p_57" class="t s9_57">Length</div>
+<div id="t2q_57" class="t s8_57">micron </div>
+<div id="t2r_57" class="t s8_57">to </div>
+<div id="t2s_57" class="t s8_57">inch </div>
+<div id="t2t_57" class="t s8_57">multiply by </div>
+<div id="t2u_57" class="t s8_57">0.00004 </div>
+<div id="t2v_57" class="t s8_57">millimeter to </div>
+<div id="t2w_57" class="t s8_57">inch </div>
+<div id="t2x_57" class="t s8_57">multiply by </div>
+<div id="t2y_57" class="t s8_57">0.0394 </div>
+<div id="t2z_57" class="t s9_57">Force</div>
+<div id="t30_57" class="t s8_57">N </div>
+<div id="t31_57" class="t s8_57">to </div>
+<div id="t32_57" class="t s8_57">lbf </div>
+<div id="t33_57" class="t s8_57">multiply by </div>
+<div id="t34_57" class="t s8_57">0.225 </div>
+<div id="t35_57" class="t s9_57">Temperature</div>
+<div id="t36_57" class="t s8_57">m/(MºC) </div>
+<div id="t37_57" class="t s8_57">to </div>
+<div id="t38_57" class="t s8_57">in/(inºF) </div>
+<div id="t39_57" class="t s8_57">multiply by </div>
+<div id="t3a_57" class="t s8_57">0.556 </div>
+<div id="t3b_57" class="t v1_57 s4_57">ºC </div>
+<div id="t3c_57" class="t s8_57">to </div>
+<div id="t3d_57" class="t v1_57 s4_57">ºF </div>
+<div id="t3e_57" class="t s8_57">multiply by </div>
+<div id="t3f_57" class="t s8_57">(1.8ºC)+32 </div>
+<div id="t3g_57" class="t v1_57 s4_57">ºK </div>
+<div id="t3h_57" class="t s8_57">to </div>
+<div id="t3i_57" class="t v1_57 s4_57">ºF </div>
+<div id="t3j_57" class="t s8_57">multiply by </div>
+<div id="t3k_57" class="t s8_57">(1.8ºK)-459.67</div>
+<div id="t3l_57" class="t v2_57 s10_57">To Convert U.S. </div>
+<div id="t3m_57" class="t v2_57 s10_57">System to Metric System</div>
+<div id="t3n_57" class="t v2_57 s10_57">To Convert Metric System to U.S. System</div>
+<div id="t3o_57" class="t v2_57 s11_57">Metric Conversion Chart</div>
+<div id="t3p_57" class="t v2_57 s11_57">Grit Size Conversion Table</div>
+<div id="t3q_57" class="t s12_57">Grit Size </div>
+<div id="t3r_57" class="t s12_57">Average Inches  </div>
+<div id="t3s_57" class="t s12_57">Microns </div>
+<div id="t3t_57" class="t s13_57">8  </div>
+<div id="t3u_57" class="t s13_57">.1818  </div>
+<div id="t3v_57" class="t s13_57">4620 </div>
+<div id="t3w_57" class="t s13_57">10  </div>
+<div id="t3x_57" class="t s13_57">.1362  </div>
+<div id="t3y_57" class="t s13_57">3460 </div>
+<div id="t3z_57" class="t s13_57">12  </div>
+<div id="t40_57" class="t s13_57">.1003  </div>
+<div id="t41_57" class="t s13_57">2550 </div>
+<div id="t42_57" class="t s13_57">14  </div>
+<div id="t43_57" class="t s13_57">.0830  </div>
+<div id="t44_57" class="t s13_57">2100 </div>
+<div id="t45_57" class="t s13_57">16  </div>
+<div id="t46_57" class="t s13_57">.0650  </div>
+<div id="t47_57" class="t s13_57">1660 </div>
+<div id="t48_57" class="t s13_57">20  </div>
+<div id="t49_57" class="t s13_57">.0528  </div>
+<div id="t4a_57" class="t s13_57">1340 </div>
+<div id="t4b_57" class="t s13_57">24  </div>
+<div id="t4c_57" class="t s13_57">.0408  </div>
+<div id="t4d_57" class="t s13_57">1035 </div>
+<div id="t4e_57" class="t s13_57">30  </div>
+<div id="t4f_57" class="t s13_57">.0367  </div>
+<div id="t4g_57" class="t s13_57">930 </div>
+<div id="t4h_57" class="t s13_57">36  </div>
+<div id="t4i_57" class="t s13_57">.0280  </div>
+<div id="t4j_57" class="t s13_57">710 </div>
+<div id="t4k_57" class="t s13_57">46 </div>
+<div id="t4l_57" class="t s13_57">.0200  </div>
+<div id="t4m_57" class="t s13_57">508 </div>
+<div id="t4n_57" class="t s13_57">54  </div>
+<div id="t4o_57" class="t s13_57">.0170  </div>
+<div id="t4p_57" class="t s13_57">430 </div>
+<div id="t4q_57" class="t s13_57">60  </div>
+<div id="t4r_57" class="t s13_57">.0160  </div>
+<div id="t4s_57" class="t s13_57">406 </div>
+<div id="t4t_57" class="t s13_57">70 </div>
+<div id="t4u_57" class="t s13_57">.0130  </div>
+<div id="t4v_57" class="t s13_57">328 </div>
+<div id="t4w_57" class="t s13_57">80  </div>
+<div id="t4x_57" class="t s13_57">.0105  </div>
+<div id="t4y_57" class="t s13_57">267 </div>
+<div id="t4z_57" class="t s13_57">90  </div>
+<div id="t50_57" class="t s13_57">.0085  </div>
+<div id="t51_57" class="t s13_57">216 </div>
+<div id="t52_57" class="t s12_57">Grit Size </div>
+<div id="t53_57" class="t s12_57">Average Inches  </div>
+<div id="t54_57" class="t s12_57">Microns </div>
+<div id="t55_57" class="t s13_57">100  </div>
+<div id="t56_57" class="t s13_57">.0068  </div>
+<div id="t57_57" class="t s13_57">173 </div>
+<div id="t58_57" class="t s13_57">120  </div>
+<div id="t59_57" class="t s13_57">.0056  </div>
+<div id="t5a_57" class="t s13_57">142 </div>
+<div id="t5b_57" class="t s13_57">150  </div>
+<div id="t5c_57" class="t s13_57">.0048  </div>
+<div id="t5d_57" class="t s13_57">122 </div>
+<div id="t5e_57" class="t s13_57">180 </div>
+<div id="t5f_57" class="t s13_57">0034  </div>
+<div id="t5g_57" class="t s13_57">86 </div>
+<div id="t5h_57" class="t s13_57">220  </div>
+<div id="t5i_57" class="t s13_57">.0026  </div>
+<div id="t5j_57" class="t s13_57">66 </div>
+<div id="t5k_57" class="t s13_57">240  </div>
+<div id="t5l_57" class="t s13_57">.00248  </div>
+<div id="t5m_57" class="t s13_57">63 </div>
+<div id="t5n_57" class="t s13_57">280  </div>
+<div id="t5o_57" class="t s13_57">.00161  </div>
+<div id="t5p_57" class="t s13_57">40 </div>
+<div id="t5q_57" class="t s13_57">320  </div>
+<div id="t5r_57" class="t s13_57">.00124  </div>
+<div id="t5s_57" class="t s13_57">32 </div>
+<div id="t5t_57" class="t s13_57">400  </div>
+<div id="t5u_57" class="t s13_57">.00090 </div>
+<div id="t5v_57" class="t s13_57">23 </div>
+<div id="t5w_57" class="t s13_57">500  </div>
+<div id="t5x_57" class="t s13_57">.00065  </div>
+<div id="t5y_57" class="t s13_57">17 </div>
+<div id="t5z_57" class="t s13_57">600  </div>
+<div id="t60_57" class="t s13_57">.00058  </div>
+<div id="t61_57" class="t s13_57">14 </div>
+<div id="t62_57" class="t s13_57">800  </div>
+<div id="t63_57" class="t s13_57">.00037  </div>
+<div id="t64_57" class="t s13_57">9 </div>
+<div id="t65_57" class="t s13_57">900 </div>
+<div id="t66_57" class="t s13_57">.00029  </div>
+<div id="t67_57" class="t s13_57">7 </div>
+<div id="t68_57" class="t s13_57">1000  </div>
+<div id="t69_57" class="t s13_57">.00021  </div>
+<div id="t6a_57" class="t s13_57">5 </div>
+<div id="t6b_57" class="t s13_57">1200 </div>
+<div id="t6c_57" class="t s13_57">.00012  </div>
+<div id="t6d_57" class="t s13_57">3 </div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg57Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg57"><object width="605" height="935" data="57/57.svg" type="image/svg+xml" id="pdf57" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f57 = [['t2_57',626],['t3_57',1419],['t8_57',172],['td_57',172],['ti_57',172],['tq_57',172],['tw_57',172],['t12_57',172],['t17_57',172],['t18_57',74],['t1d_57',172],['t1j_57',172],['t1o_57',172],['t1t_57',172],['t1z_57',181],['t24_57',181],['t28_57',53],['t29_57',181],['t2h_57',181],['t2n_57',181],['t2t_57',181],['t2v_57',210],['t2x_57',181],['t33_57',181],['t39_57',181],['t3e_57',181],['t3j_57',181],['t3l_57',357],['t3m_57',579],['t3n_57',947],['t3o_57',574],['t3p_57',612],['t3q_57',186],['t3r_57',353],['t3t_57',37],['t3u_57',129],['t3w_57',64],['t3x_57',129],['t3z_57',64],['t40_57',129],['t42_57',64],['t43_57',129],['t45_57',64],['t46_57',129],['t48_57',64],['t49_57',129],['t4b_57',64],['t4c_57',129],['t4e_57',64],['t4f_57',129],['t4h_57',64],['t4i_57',129],['t4l_57',129],['t4n_57',64],['t4o_57',129],['t4q_57',64],['t4r_57',129],['t4u_57',129],['t4w_57',64],['t4x_57',129],['t4z_57',64],['t50_57',129],['t52_57',186],['t53_57',353],['t55_57',91],['t56_57',129],['t58_57',91],['t59_57',129],['t5b_57',91],['t5c_57',129],['t5f_57',118],['t5h_57',91],['t5i_57',129],['t5k_57',91],['t5l_57',155],['t5n_57',91],['t5o_57',155],['t5q_57',91],['t5r_57',155],['t5t_57',91],['t5w_57',91],['t5x_57',155],['t5z_57',91],['t60_57',155],['t62_57',91],['t63_57',155],['t66_57',155],['t68_57',118],['t69_57',155],['t6c_57',155]];
+function load57(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f57);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 230;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_57");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

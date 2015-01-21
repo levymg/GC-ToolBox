@@ -1,0 +1,340 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page47</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,47,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load47();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_47{left:545px;top:897px;}
+#t2_47{left:224px;top:901px;letter-spacing:4px;}
+#t3_47{left:125px;top:19px;letter-spacing:12px;}
+#t4_47{left:60px;top:363px;}
+#t5_47{left:71px;top:379px;}
+#t6_47{left:71px;top:394px;}
+#t7_47{left:71px;top:409px;}
+#t8_47{left:60px;top:440px;}
+#t9_47{left:60px;top:455px;}
+#ta_47{left:41px;top:485px;}
+#tb_47{left:60px;top:485px;}
+#tc_47{left:156px;top:485px;}
+#td_47{left:473px;top:485px;}
+#te_47{left:60px;top:501px;}
+#tf_47{left:60px;top:516px;}
+#tg_47{left:386px;top:516px;}
+#th_47{left:60px;top:531px;}
+#ti_47{left:255px;top:314px;}
+#tj_47{left:268px;top:72px;}
+#tk_47{left:268px;top:87px;}
+#tl_47{left:268px;top:103px;}
+#tm_47{left:201px;top:242px;}
+#tn_47{left:198px;top:257px;}
+#to_47{left:213px;top:273px;}
+#tp_47{left:378px;top:123px;}
+#tq_47{left:378px;top:139px;}
+#tr_47{left:378px;top:154px;}
+#ts_47{left:378px;top:169px;}
+#tt_47{left:378px;top:184px;}
+#tu_47{left:378px;top:200px;}
+#tv_47{left:378px;top:215px;}
+#tw_47{left:378px;top:230px;}
+
+.s1_47{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold47;
+	color: rgb(255,255,255);
+}
+
+.s4_47{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular_247;
+	color: rgb(0,0,0);
+}
+
+.s5_47{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_247;
+	color: rgb(0,0,0);
+}
+
+.s6_47{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold47;
+	color: rgb(0,0,0);
+}
+
+.s2_47{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold47;
+	color: rgb(255,255,255);
+}
+
+.s3_47{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular47;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold47;
+	src :url("47/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular47;
+	src :url("47/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular_247;
+	src :url("47/fonts/YJUJYE-MyriadPro-Regular_2.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_247;
+	src :url("47/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_47" class="t s1_47">47</div>
+<div id="t2_47" class="t s2_47">www. generalcarbide.com</div>
+<div id="t3_47" class="t s2_47">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_47" class="t s3_47">This technique oﬀers some advantages over the brazing of INVAR plugs:</div>
+<div id="t5_47" class="t s4_47">• No thermal stress induced by the brazing operation</div>
+<div id="t6_47" class="t s4_47">• Plug can never pull out in service</div>
+<div id="t7_47" class="t s4_47">• Plug can be removed if necessary</div>
+<div id="t8_47" class="t s3_47">Please review the type of internal threads desired with General Carbide application</div>
+<div id="t9_47" class="t s3_47">engineers before specifying on a drawing.</div>
+<div id="ta_47" class="t s3_47">(g) </div>
+<div id="tb_47" class="t s5_47">External Threads</div>
+<div id="tc_47" class="t s3_47">– In many assemblies, there is a need for external threads. </div>
+<div id="td_47" class="t s3_47">While</div>
+<div id="te_47" class="t s3_47">threading carbide is possible by hard grinding, it reduces the cross sectional strength</div>
+<div id="tf_47" class="t s3_47">due to the notch eﬀect of the threads acting as stress risers. </div>
+<div id="tg_47" class="t s3_47">An alternate approach</div>
+<div id="th_47" class="t s3_47">is to braze a thin-walled steel or INVAR bushing in place and thread the bushing.</div>
+<div id="ti_47" class="t s5_47">Figure IV-21</div>
+<div id="tj_47" class="t s6_47">THREADED </div>
+<div id="tk_47" class="t s6_47">INSERT</div>
+<div id="tl_47" class="t s5_47">A2 STEEL</div>
+<div id="tm_47" class="t s5_47">.100 MIN</div>
+<div id="tn_47" class="t s5_47">OVER TAP </div>
+<div id="to_47" class="t s6_47">SIZE</div>
+<div id="tp_47" class="t s6_47">THREADS GREEN </div>
+<div id="tq_47" class="t s5_47">MACHINED IN </div>
+<div id="tr_47" class="t s6_47">CARBIDE</div>
+<div id="ts_47" class="t s5_47">.005 – .007 GAP</div>
+<div id="tt_47" class="t s6_47">ENGINEERED IN </div>
+<div id="tu_47" class="t s5_47">THREAD DESIGN FOR </div>
+<div id="tv_47" class="t s5_47">HIGH TEMPERATURE </div>
+<div id="tw_47" class="t s6_47">EPOXY</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg47Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg47"><object width="605" height="935" data="47/47.svg" type="image/svg+xml" id="pdf47" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f47 = [['t2_47',626],['t3_47',1419],['t4_47',1554],['t5_47',1142],['t6_47',741],['t7_47',748],['t8_47',1794],['t9_47',908],['tb_47',376],['tc_47',1245],['te_47',1839],['tf_47',1285],['tg_47',485],['th_47',1731],['ti_47',271],['tl_47',206],['tm_47',199],['tn_47',219],['tp_47',379],['tq_47',312],['ts_47',348],['tt_47',352],['tu_47',476],['tv_47',459]];
+function load47(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f47);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 33;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_47");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

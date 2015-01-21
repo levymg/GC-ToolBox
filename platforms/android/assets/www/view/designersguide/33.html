@@ -1,0 +1,395 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page33</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,33,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load33();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_33{left:545px;top:897px;}
+#t2_33{left:224px;top:901px;letter-spacing:4px;}
+#t3_33{left:125px;top:19px;letter-spacing:12px;}
+#t4_33{left:41px;top:71px;}
+#t5_33{left:41px;top:96px;}
+#t6_33{left:41px;top:111px;}
+#t7_33{left:393px;top:111px;}
+#t8_33{left:41px;top:126px;}
+#t9_33{left:41px;top:142px;}
+#ta_33{left:41px;top:157px;}
+#tb_33{left:41px;top:188px;}
+#tc_33{left:41px;top:203px;}
+#td_33{left:41px;top:233px;}
+#te_33{left:208px;top:233px;}
+#tf_33{left:41px;top:249px;}
+#tg_33{left:41px;top:264px;}
+#th_33{left:423px;top:264px;}
+#ti_33{left:41px;top:279px;}
+#tj_33{left:164px;top:279px;}
+#tk_33{left:41px;top:294px;}
+#tl_33{left:449px;top:294px;}
+#tm_33{left:41px;top:310px;}
+#tn_33{left:41px;top:340px;}
+#to_33{left:220px;top:340px;}
+#tp_33{left:41px;top:356px;}
+#tq_33{left:41px;top:371px;}
+#tr_33{left:41px;top:386px;}
+#ts_33{left:436px;top:386px;}
+#tt_33{left:41px;top:401px;}
+#tu_33{left:41px;top:417px;}
+#tv_33{left:41px;top:432px;}
+#tw_33{left:194px;top:432px;}
+#tx_33{left:41px;top:447px;}
+#ty_33{left:41px;top:478px;}
+#tz_33{left:201px;top:478px;}
+#t10_33{left:41px;top:493px;}
+#t11_33{left:403px;top:493px;}
+#t12_33{left:41px;top:508px;}
+#t13_33{left:41px;top:524px;}
+#t14_33{left:456px;top:524px;}
+#t15_33{left:41px;top:539px;}
+#t16_33{left:41px;top:554px;}
+#t17_33{left:296px;top:554px;}
+#t18_33{left:41px;top:569px;}
+#t19_33{left:41px;top:600px;}
+#t1a_33{left:368px;top:600px;}
+#t1b_33{left:41px;top:615px;}
+#t1c_33{left:41px;top:631px;}
+#t1d_33{left:335px;top:631px;}
+#t1e_33{left:41px;top:646px;}
+#t1f_33{left:41px;top:661px;}
+#t1g_33{left:198px;top:661px;}
+#t1h_33{left:41px;top:676px;}
+#t1i_33{left:41px;top:707px;}
+#t1j_33{left:41px;top:722px;}
+#t1k_33{left:421px;top:722px;}
+#t1l_33{left:41px;top:738px;}
+#t1m_33{left:41px;top:753px;}
+
+#t4_33 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s5_33{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_233;
+	color: rgb(0,0,0);
+}
+
+.s1_33{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold33;
+	color: rgb(255,255,255);
+}
+
+.s2_33{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold33;
+	color: rgb(255,255,255);
+}
+
+.s3_33{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_233;
+	color: rgb(219,0,60);
+}
+
+.s4_33{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular33;
+	color: rgb(0,0,0);
+}
+
+.v1_33{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold33;
+	src :url("33/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular33;
+	src :url("33/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_233;
+	src :url("33/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_33" class="t s1_33">33</div>
+<div id="t2_33" class="t s2_33">www. generalcarbide.com</div>
+<div id="t3_33" class="t s2_33">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_33" class="t v1_33 s3_33">Types of Brazing Compounds</div>
+<div id="t5_33" class="t s4_33">The most common brazing compounds for bonding cemented carbide to steel are the</div>
+<div id="t6_33" class="t s4_33">silver-copper series, commonly referred to as silver solder alloys. </div>
+<div id="t7_33" class="t s4_33">Various other brazing</div>
+<div id="t8_33" class="t s4_33">compounds are available for bonding cemented carbide to ferrous alloys and they range</div>
+<div id="t9_33" class="t s4_33">from low temperature tin/lead/zinc alloy solders to a high temperature copper brazing</div>
+<div id="ta_33" class="t s4_33">ﬁller composition.</div>
+<div id="tb_33" class="t s5_33">Consideration must be given to the temperature range of the application and the bonding</div>
+<div id="tc_33" class="t s5_33">temperature of the material when specifying a braze compound for a given job.</div>
+<div id="td_33" class="t s5_33">Low Temperature Soldering –</div>
+<div id="te_33" class="t s4_33">The lowest temperature solders have the advantage of</div>
+<div id="tf_33" class="t s4_33">less thermal strain after bonding but they have low mechanical strength and certainly will</div>
+<div id="tg_33" class="t s4_33">not stand up to operating conditions much above room temperature. </div>
+<div id="th_33" class="t s4_33">Bond temperature</div>
+<div id="ti_33" class="t s4_33">is only 700°F or lower. </div>
+<div id="tj_33" class="t s4_33">This low temperature permits brazing of large areas or long wear</div>
+<div id="tk_33" class="t s4_33">strips of cemented carbide and the thermal strains are held to a minimum. </div>
+<div id="tl_33" class="t s4_33">Low temp</div>
+<div id="tm_33" class="t s4_33">solders of this type contain approximately 40% tin, 35% lead, and 25% zinc.</div>
+<div id="tn_33" class="t s5_33">Medium Temperature Brazing –</div>
+<div id="to_33" class="t s4_33">The silver solder braze compounds are the most</div>
+<div id="tp_33" class="t s4_33">common brazing alloys for bonding cemented carbide to steel, as mentioned previously.</div>
+<div id="tq_33" class="t s4_33">Silver solder alloys are available in rod form as well as pre-cut shims or strips and</div>
+<div id="tr_33" class="t s4_33">typically contain other elements to aid in wetting of the carbide surface. </div>
+<div id="ts_33" class="t s4_33">A typical</div>
+<div id="tt_33" class="t s4_33">combination of ingredients would be 50% silver with copper, zinc and nickel additives.</div>
+<div id="tu_33" class="t s4_33">They are high enough in melting point to be a good choice for the vast majority of  </div>
+<div id="tv_33" class="t s4_33">wear resistant applications. </div>
+<div id="tw_33" class="t s4_33">This material begins to melt at 1170°F and is completely  </div>
+<div id="tx_33" class="t s4_33">ﬂuid at 1270°F.</div>
+<div id="ty_33" class="t s5_33">High Temperature Brazing –</div>
+<div id="tz_33" class="t s4_33">Straight copper is used as a brazing material because it</div>
+<div id="t10_33" class="t s4_33">retains practically all of its strength up to a temperature of 1000°F. </div>
+<div id="t11_33" class="t s4_33">Beyond this</div>
+<div id="t12_33" class="t s4_33">temperature, most cemented carbides begin to oxidize anyway so this alloy will perform</div>
+<div id="t13_33" class="t s4_33">at the highest practical operating temperature for most cemented carbides. </div>
+<div id="t14_33" class="t s4_33">However,</div>
+<div id="t15_33" class="t s4_33">copper brazing requires a hydrogen atmosphere furnace for best results and thus is</div>
+<div id="t16_33" class="t s4_33">usually limited to high production operations. </div>
+<div id="t17_33" class="t s4_33">It is usually accomplished with pre-cut</div>
+<div id="t18_33" class="t s4_33">strips or shim material because the parts are inaccessible during brazing.</div>
+<div id="t19_33" class="t s4_33">Copper makes a good braze as far as bonding is concerned. </div>
+<div id="t1a_33" class="t s4_33">However, at the 2100°F</div>
+<div id="t1b_33" class="t s4_33">bonding temperature required to use copper, most common steels will suﬀer excessive</div>
+<div id="t1c_33" class="t s4_33">grain growth and, as a result, will be brittle and weak. </div>
+<div id="t1d_33" class="t s4_33">Some high-speed steels, as well</div>
+<div id="t1e_33" class="t s4_33">as air-hardening steels or silicon-manganese steels can take these high temperatures</div>
+<div id="t1f_33" class="t s4_33">without detrimental eﬀects. </div>
+<div id="t1g_33" class="t s4_33">Other high temperature brazing alloys are composed</div>
+<div id="t1h_33" class="t s4_33">primarily of nickel and ﬂow at temperatures from approximately 1820°F to 1925°F.</div>
+<div id="t1i_33" class="t s4_33">To ensure proper tinning of the surfaces and freedom from inclusions or voids, it is best</div>
+<div id="t1j_33" class="t s4_33">to heat the assembly well above the fusion point of the ﬁller material. </div>
+<div id="t1k_33" class="t s4_33">If the designer is</div>
+<div id="t1l_33" class="t s4_33">unsure which of the above brazing compounds is best for a certain application, please</div>
+<div id="t1m_33" class="t s4_33">consult the application engineers at General Carbide for recommendations.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg33Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg33"><object width="605" height="935" data="33/33.svg" type="image/svg+xml" id="pdf33" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f33 = [['t2_33',626],['t3_33',1419],['t4_33',801],['t5_33',1866],['t6_33',1385],['t7_33',465],['t8_33',1915],['t9_33',1873],['ta_33',391],['tb_33',2025],['tc_33',1781],['td_33',659],['te_33',1181],['tf_33',1943],['tg_33',1504],['th_33',400],['ti_33',469],['tj_33',1400],['tk_33',1607],['tl_33',218],['tm_33',1626],['tn_33',705],['to_33',1038],['tp_33',1917],['tq_33',1737],['tr_33',1558],['ts_33',188],['tt_33',1869],['tu_33',1791],['tv_33',589],['tw_33',1220],['tx_33',317],['ty_33',626],['tz_33',1188],['t10_33',1423],['t11_33',256],['t12_33',1908],['t13_33',1637],['t15_33',1802],['t16_33',995],['t17_33',832],['t18_33',1571],['t19_33',1284],['t1a_33',499],['t1b_33',1882],['t1c_33',1151],['t1d_33',684],['t1e_33',1836],['t1f_33',604],['t1g_33',1151],['t1h_33',1770],['t1i_33',1884],['t1j_33',1498],['t1k_33',356],['t1l_33',1862],['t1m_33',1632]];
+function load33(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f33);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 59;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_33");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page19</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,19,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load19();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_19{left:545px;top:897px;}
+#t2_19{left:224px;top:901px;letter-spacing:4px;}
+#t3_19{left:125px;top:19px;letter-spacing:12px;}
+#t4_19{left:41px;top:72px;}
+#t5_19{left:41px;top:87px;}
+#t6_19{left:41px;top:103px;}
+#t7_19{left:261px;top:141px;}
+#t8_19{left:281px;top:133px;}
+#t9_19{left:281px;top:149px;}
+#ta_19{left:41px;top:179px;}
+#tb_19{left:41px;top:210px;}
+#tc_19{left:398px;top:211px;}
+#td_19{left:402px;top:210px;}
+#te_19{left:41px;top:225px;}
+#tf_19{left:41px;top:240px;}
+#tg_19{left:41px;top:271px;}
+#th_19{left:41px;top:286px;}
+#ti_19{left:261px;top:326px;}
+#tj_19{left:283px;top:317px;}
+#tk_19{left:283px;top:332px;}
+#tl_19{left:41px;top:362px;}
+#tm_19{left:41px;top:393px;}
+#tn_19{left:41px;top:408px;}
+#to_19{left:372px;top:408px;}
+#tp_19{left:41px;top:424px;}
+#tq_19{left:41px;top:439px;}
+#tr_19{left:41px;top:469px;}
+#ts_19{left:41px;top:485px;}
+#tt_19{left:286px;top:485px;}
+#tu_19{left:41px;top:500px;}
+#tv_19{left:348px;top:500px;}
+#tw_19{left:41px;top:515px;}
+#tx_19{left:41px;top:531px;}
+#ty_19{left:421px;top:531px;}
+#tz_19{left:41px;top:546px;}
+#t10_19{left:41px;top:561px;}
+#t11_19{left:41px;top:576px;}
+#t12_19{left:41px;top:607px;}
+#t13_19{left:41px;top:622px;}
+#t14_19{left:238px;top:622px;}
+#t15_19{left:41px;top:637px;}
+#t16_19{left:41px;top:653px;}
+
+.s1_19{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold19;
+	color: rgb(255,255,255);
+}
+
+.s3_19{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular19;
+	color: rgb(0,0,0);
+}
+
+.s4_19{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_219;
+	color: rgb(0,0,0);
+}
+
+.s5_19{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular19;
+	color: rgb(0,0,0);
+}
+
+.s2_19{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_219;
+	color: rgb(255,255,255);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold19;
+	src :url("19/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular19;
+	src :url("19/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_219;
+	src :url("19/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_19" class="t s1_19">19</div>
+<div id="t2_19" class="t s2_19">www. generalcarbide.com</div>
+<div id="t3_19" class="t s2_19">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_19" class="t s3_19">Generalized in its simplest form for tensile stresses and compressive stresses, Hooke’s Law says </div>
+<div id="t5_19" class="t s3_19">that stress is proportional to strain and Young’s Modulus of Elasticity is a constant of this  </div>
+<div id="t6_19" class="t s3_19">proportionality expressed in equation form as:</div>
+<div id="t7_19" class="t s4_19">E =</div>
+<div id="t8_19" class="t s4_19">σ</div>
+<div id="t9_19" class="t s4_19">є</div>
+<div id="ta_19" class="t s3_19">where stress σ is the force per unit area and strain є is the deformation per unit length.</div>
+<div id="tb_19" class="t s3_19">Cemented carbide has an E value of 93,000,000 psi ( ~ 650 kN/mm</div>
+<div id="tc_19" class="t s5_19">2</div>
+<div id="td_19" class="t s3_19">) for its Modulus of</div>
+<div id="te_19" class="t s3_19">Elasticity, meaning it is approximately 2-3 times stiﬀer than steel which has a Young’s</div>
+<div id="tf_19" class="t s3_19">Modulus of 30,000,00 psi.</div>
+<div id="tg_19" class="t s3_19">For a shear stress and strain, the proportionality constant is G (sometimes called the</div>
+<div id="th_19" class="t s3_19">modulus of rigidity, or torsional modulus) and it is represented in equation form as:</div>
+<div id="ti_19" class="t s4_19">G =</div>
+<div id="tj_19" class="t s4_19">τ</div>
+<div id="tk_19" class="t s4_19">γ</div>
+<div id="tl_19" class="t s3_19">where τ is the shear load per unit area and γ is the shear deformation per unit length.</div>
+<div id="tm_19" class="t s3_19">G is anywhere from one third to one half the magnitude of E for most materials and this</div>
+<div id="tn_19" class="t s3_19">holds true with experimental ﬁndings for cemented carbide. </div>
+<div id="to_19" class="t s3_19">Thus, the resistance to</div>
+<div id="tp_19" class="t s3_19">torsional loading and shear stress for cemented carbide is still 2 to 3 times that of steel,</div>
+<div id="tq_19" class="t s3_19">a very useful property for rotating tooling.</div>
+<div id="tr_19" class="t s3_19">In many cases, simple tensile or compressive loads are not the only stresses put on a</div>
+<div id="ts_19" class="t s3_19">machine component or tooling component. </div>
+<div id="tt_19" class="t s3_19">Radial loads may be combined with axial</div>
+<div id="tu_19" class="t s3_19">loads as well thermal stresses to confound the designer. </div>
+<div id="tv_19" class="t s3_19">Stresses, deﬂections, strains</div>
+<div id="tw_19" class="t s3_19">and loads may be determined by the application of strain gages to the surface of the</div>
+<div id="tx_19" class="t s3_19">part, then applying loads simulating those encountered in operation. </div>
+<div id="ty_19" class="t s3_19">Many times this is</div>
+<div id="tz_19" class="t s3_19">not feasible or practical for a carbide application and elegant ﬁnite element analysis</div>
+<div id="t10_19" class="t s3_19">(FEA) models have been created to try to determine the stress levels in parts where</div>
+<div id="t11_19" class="t s3_19">strain cannot be measured and stress cannot be calculated.</div>
+<div id="t12_19" class="t s3_19">The scope of this chapter will be conﬁned to special considerations governing the design</div>
+<div id="t13_19" class="t s3_19">of a cemented carbide component. </div>
+<div id="t14_19" class="t s3_19">Consult General Carbide application engineers for</div>
+<div id="t15_19" class="t s3_19">speciﬁc recommendations on grade selection based on various operating conditions</div>
+<div id="t16_19" class="t s3_19">where experience plays an important role in successful design.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg19Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg19"><object width="605" height="935" data="19/19.svg" type="image/svg+xml" id="pdf19" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f19 = [['t2_19',626],['t3_19',1419],['t4_19',2036],['t5_19',1909],['t6_19',1004],['t7_19',68],['ta_19',1864],['tb_19',1428],['td_19',404],['te_19',1827],['tf_19',550],['tg_19',1810],['th_19',1795],['ti_19',76],['tl_19',1836],['tm_19',1889],['tn_19',1304],['to_19',482],['tp_19',1874],['tq_19',911],['tr_19',1816],['ts_19',956],['tt_19',882],['tu_19',1206],['tv_19',599],['tw_19',1830],['tx_19',1497],['ty_19',385],['tz_19',1811],['t10_19',1792],['t11_19',1282],['t12_19',1926],['t13_19',763],['t14_19',1082],['t15_19',1833],['t16_19',1354]];
+function load19(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f19);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 43;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_19");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

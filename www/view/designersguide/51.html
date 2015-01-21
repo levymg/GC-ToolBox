@@ -1,0 +1,401 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page51</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,51,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load51();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_51{left:545px;top:897px;}
+#t2_51{left:224px;top:901px;letter-spacing:4px;}
+#t3_51{left:125px;top:19px;letter-spacing:12px;}
+#t4_51{left:41px;top:72px;}
+#t5_51{left:60px;top:103px;}
+#t6_51{left:75px;top:103px;}
+#t7_51{left:60px;top:127px;}
+#t8_51{left:75px;top:127px;}
+#t9_51{left:72px;top:142px;}
+#ta_51{left:60px;top:167px;}
+#tb_51{left:75px;top:167px;}
+#tc_51{left:433px;top:167px;}
+#td_51{left:72px;top:182px;}
+#te_51{left:72px;top:197px;}
+#tf_51{left:60px;top:222px;}
+#tg_51{left:75px;top:222px;}
+#th_51{left:72px;top:237px;}
+#ti_51{left:170px;top:237px;}
+#tj_51{left:72px;top:252px;}
+#tk_51{left:60px;top:277px;}
+#tl_51{left:75px;top:277px;}
+#tm_51{left:72px;top:292px;}
+#tn_51{left:315px;top:292px;}
+#to_51{left:72px;top:307px;}
+#tp_51{left:386px;top:307px;}
+#tq_51{left:72px;top:323px;}
+#tr_51{left:41px;top:359px;}
+#ts_51{left:41px;top:404px;}
+#tt_51{left:41px;top:427px;}
+#tu_51{left:41px;top:442px;}
+#tv_51{left:274px;top:442px;}
+#tw_51{left:41px;top:457px;}
+#tx_51{left:41px;top:472px;}
+#ty_51{left:342px;top:472px;}
+#tz_51{left:41px;top:488px;}
+#t10_51{left:41px;top:503px;}
+#t11_51{left:41px;top:518px;}
+#t12_51{left:41px;top:549px;}
+#t13_51{left:326px;top:549px;}
+#t14_51{left:41px;top:564px;}
+#t15_51{left:41px;top:579px;}
+#t16_51{left:177px;top:579px;}
+#t17_51{left:41px;top:610px;}
+#t18_51{left:367px;top:610px;}
+#t19_51{left:41px;top:625px;}
+#t1a_51{left:350px;top:625px;}
+#t1b_51{left:41px;top:641px;}
+#t1c_51{left:470px;top:641px;}
+#t1d_51{left:41px;top:656px;}
+#t1e_51{left:41px;top:671px;}
+#t1f_51{left:41px;top:686px;}
+#t1g_51{left:41px;top:725px;}
+#t1h_51{left:41px;top:747px;}
+#t1i_51{left:41px;top:763px;}
+#t1j_51{left:203px;top:763px;}
+#t1k_51{left:41px;top:778px;}
+#t1l_51{left:142px;top:778px;}
+#t1m_51{left:41px;top:793px;}
+
+#tr_51 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s1_51{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold51;
+	color: rgb(255,255,255);
+}
+
+.s3_51{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular51;
+	color: rgb(0,0,0);
+}
+
+.s4_51{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold51;
+	color: rgb(219,0,60);
+}
+
+.s5_51{
+	FONT-SIZE: 58px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold51;
+	color: rgb(219,0,60);
+}
+
+.s6_51{
+	FONT-SIZE: 58px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_251;
+	color: rgb(219,0,60);
+}
+
+.s2_51{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_251;
+	color: rgb(255,255,255);
+}
+
+.v1_51{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold51;
+	src :url("51/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular51;
+	src :url("51/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_251;
+	src :url("51/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_51" class="t s1_51">51</div>
+<div id="t2_51" class="t s2_51">www. generalcarbide.com</div>
+<div id="t3_51" class="t s2_51">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_51" class="t s3_51">The following guidelines are presented to help avoid grinding cracks and crazing:</div>
+<div id="t5_51" class="t s3_51">1. </div>
+<div id="t6_51" class="t s3_51">Never let coolant ﬂow be disrupted.</div>
+<div id="t7_51" class="t s3_51">2. </div>
+<div id="t8_51" class="t s3_51">Avoid dry grinding unless the operator is extremely skillful and can quickly detect </div>
+<div id="t9_51" class="t s3_51">heat buildup.</div>
+<div id="ta_51" class="t s3_51">3. </div>
+<div id="tb_51" class="t s3_51">Generally, maintain a feed rate equal to the depth of cut per pass. </div>
+<div id="tc_51" class="t s3_51">Avoid an in-feed </div>
+<div id="td_51" class="t s3_51">per pass over 0.0003” on low binder, hard carbide grades, and over 0.0010” for </div>
+<div id="te_51" class="t s3_51">higher binder carbide grades.</div>
+<div id="tf_51" class="t s3_51">4. </div>
+<div id="tg_51" class="t s3_51">Avoid using hard-bond diamond grinding wheels, such as vitriﬁed and metal-bonded </div>
+<div id="th_51" class="t s3_51">diamond wheels. </div>
+<div id="ti_51" class="t s3_51">Resinoid-bonded diamond grinding wheels are recommended </div>
+<div id="tj_51" class="t s3_51">when dimensional accuracy, ﬂatness, and surface ﬁnish are important.</div>
+<div id="tk_51" class="t s3_51">5. </div>
+<div id="tl_51" class="t s3_51">Dress the grinding wheel frequently to avoid a “loaded” wheel, particularly when </div>
+<div id="tm_51" class="t s3_51">grinding steel and carbide in the same pass. </div>
+<div id="tn_51" class="t s3_51">If the steel is a blue color from the heat </div>
+<div id="to_51" class="t s3_51">of grinding, a crack will probably be found in the carbide. </div>
+<div id="tp_51" class="t s3_51">However, the crack may </div>
+<div id="tq_51" class="t s3_51">not reveal itself until the assembly is in use.</div>
+<div id="tr_51" class="t v1_51 s4_51">Electrical Discharge Machining of Cemented Carbide</div>
+<div id="ts_51" class="t s5_51">What Is It?</div>
+<div id="tt_51" class="t s3_51">EDM or, electrical discharge machining, is the process by which a part is machined using the </div>
+<div id="tu_51" class="t s3_51">erosive properties of electrical discharges. </div>
+<div id="tv_51" class="t s3_51">Most people think of EDMing as a relatively recent </div>
+<div id="tw_51" class="t s3_51">discovery, when in fact it dates back to 1770 when an English scientist named Priestly ﬁrst  </div>
+<div id="tx_51" class="t s3_51">discovered the corrosive eﬀect of electrical discharges. </div>
+<div id="ty_51" class="t s3_51">However, it was not until 1943 that two </div>
+<div id="tz_51" class="t s3_51">Russian scientist/brothers named Lazarenko developed the idea of exploiting the destructive </div>
+<div id="t10_51" class="t s3_51">eﬀect of electrical discharges and developed a controlled process to machine electrically  </div>
+<div id="t11_51" class="t s3_51">conductive materials.</div>
+<div id="t12_51" class="t s3_51">The Lazarenko brothers perfected the EDM process. </div>
+<div id="t13_51" class="t s3_51">Simply put, it is a succession of electrical </div>
+<div id="t14_51" class="t s3_51">discharges that take place between two conductors that are separated by a non-conducting </div>
+<div id="t15_51" class="t s3_51">liquid called a dielectric. </div>
+<div id="t16_51" class="t s3_51">Today, this process still bears their name, the “Lazarenko Circuit.”</div>
+<div id="t17_51" class="t s3_51">EDM today has two basic types: wire and probe (die sinker). </div>
+<div id="t18_51" class="t s3_51">Wire EDM is used primarily for </div>
+<div id="t19_51" class="t s3_51">shapes that are cut through a selected part or assembly. </div>
+<div id="t1a_51" class="t s3_51">A hole must ﬁrst be drilled into the </div>
+<div id="t1b_51" class="t s3_51">workpiece and then a wire is fed through the hole to complete the machining. </div>
+<div id="t1c_51" class="t s3_51">Probe EDMs are </div>
+<div id="t1d_51" class="t s3_51">used for complex geometries where the EDM machine uses a machined graphite, copper  </div>
+<div id="t1e_51" class="t s3_51">tungsten or copper graphite electrode to erode the desired shape into the part or assembly. </div>
+<div id="t1f_51" class="t s3_51">Probe EDM does not require a pre-drilled hole in the part.</div>
+<div id="t1g_51" class="t s6_51">How It Works</div>
+<div id="t1h_51" class="t s3_51">During the EDM process, a series of non-stationary, timed electrical pulses remove</div>
+<div id="t1i_51" class="t s3_51">material from the workpiece. </div>
+<div id="t1j_51" class="t s3_51">The electrode, workpiece, and the dielectric are all held by</div>
+<div id="t1k_51" class="t s3_51">the machine tool. </div>
+<div id="t1l_51" class="t s3_51">A power supply controls the timing and intensity of the electrical</div>
+<div id="t1m_51" class="t s3_51">discharges and the movement of the electrode in relation to the workpiece.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg51Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg51"><object width="605" height="935" data="51/51.svg" type="image/svg+xml" id="pdf51" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f51 = [['t2_51',626],['t3_51',1419],['t4_51',1759],['t6_51',774],['t8_51',1765],['t9_51',289],['tb_51',1413],['tc_51',355],['td_51',1677],['te_51',640],['tg_51',1849],['th_51',371],['ti_51',1358],['tj_51',1515],['tl_51',1740],['tm_51',950],['tn_51',841],['to_51',1236],['tp_51',514],['tq_51',933],['tr_51',1443],['ts_51',257],['tt_51',1990],['tu_51',908],['tv_51',1086],['tw_51',1949],['tx_51',1180],['ty_51',848],['tz_51',2012],['t10_51',1927],['t11_51',464],['t12_51',1117],['t13_51',873],['t14_51',1994],['t15_51',522],['t16_51',1385],['t17_51',1284],['t18_51',649],['t19_51',1211],['t1a_51',752],['t1b_51',1692],['t1c_51',341],['t1d_51',1933],['t1e_51',1988],['t1f_51',1243],['t1g_51',328],['t1h_51',1775],['t1i_51',625],['t1j_51',1260],['t1k_51',380],['t1l_51',1405],['t1m_51',1636]];
+function load51(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f51);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 59;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_51");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

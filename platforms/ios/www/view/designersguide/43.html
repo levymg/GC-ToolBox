@@ -1,0 +1,389 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page43</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,43,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load43();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_43{left:545px;top:897px;}
+#t2_43{left:224px;top:901px;letter-spacing:4px;}
+#t3_43{left:125px;top:19px;letter-spacing:12px;}
+#t4_43{left:246px;top:805px;}
+#t5_43{left:41px;top:71px;}
+#t6_43{left:41px;top:96px;}
+#t7_43{left:41px;top:111px;}
+#t8_43{left:77px;top:111px;}
+#t9_43{left:41px;top:126px;}
+#ta_43{left:41px;top:142px;}
+#tb_43{left:352px;top:142px;}
+#tc_43{left:41px;top:157px;}
+#td_43{left:41px;top:172px;}
+#te_43{left:355px;top:172px;}
+#tf_43{left:41px;top:188px;}
+#tg_43{left:41px;top:203px;}
+#th_43{left:41px;top:218px;}
+#ti_43{left:41px;top:249px;}
+#tj_43{left:41px;top:267px;}
+#tk_43{left:41px;top:282px;}
+#tl_43{left:53px;top:313px;}
+#tm_43{left:69px;top:328px;}
+#tn_43{left:69px;top:343px;}
+#to_43{left:351px;top:343px;}
+#tp_43{left:69px;top:359px;}
+#tq_43{left:53px;top:389px;}
+#tr_43{left:69px;top:404px;}
+#ts_43{left:69px;top:420px;}
+#tt_43{left:276px;top:420px;}
+#tu_43{left:69px;top:435px;}
+#tv_43{left:69px;top:450px;}
+#tw_43{left:53px;top:481px;}
+#tx_43{left:69px;top:496px;}
+#ty_43{left:336px;top:496px;}
+#tz_43{left:69px;top:511px;}
+#t10_43{left:69px;top:527px;}
+#t11_43{left:69px;top:542px;}
+#t12_43{left:41px;top:573px;}
+#t13_43{left:41px;top:591px;}
+#t14_43{left:456px;top:591px;}
+#t15_43{left:41px;top:606px;}
+#t16_43{left:53px;top:637px;}
+#t17_43{left:137px;top:637px;}
+#t18_43{left:69px;top:652px;}
+#t19_43{left:246px;top:652px;}
+#t1a_43{left:271px;top:652px;}
+#t1b_43{left:69px;top:667px;}
+#t1c_43{left:279px;top:667px;}
+#t1d_43{left:69px;top:683px;}
+#t1e_43{left:103px;top:683px;}
+#t1f_43{left:464px;top:683px;}
+#t1g_43{left:69px;top:698px;}
+
+#t5_43 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s4_43{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_243;
+	color: rgb(219,0,60);
+}
+
+.s1_43{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold43;
+	color: rgb(255,255,255);
+}
+
+.s6_43{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular43;
+	color: rgb(0,0,0);
+}
+
+.s5_43{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold43;
+	color: rgb(0,0,0);
+}
+
+.s2_43{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold43;
+	color: rgb(255,255,255);
+}
+
+.s3_43{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_243;
+	color: rgb(0,0,0);
+}
+
+.v1_43{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold43;
+	src :url("43/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular43;
+	src :url("43/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_243;
+	src :url("43/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_43" class="t s1_43">43</div>
+<div id="t2_43" class="t s2_43">www. generalcarbide.com</div>
+<div id="t3_43" class="t s2_43">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_43" class="t s3_43">Figure IV-14</div>
+<div id="t5_43" class="t v1_43 s4_43">Mechanical Fastening</div>
+<div id="t6_43" class="t s3_43">Mechanical fastening represents a proven method for fastening cemented carbide to</div>
+<div id="t7_43" class="t s5_43">steel.</div>
+<div id="t8_43" class="t s6_43">It cannot be overemphasized that when utilizing mechanical joining, no allowances  </div>
+<div id="t9_43" class="t s6_43">need to be made for the temperature diﬀerence between the thermal expansion rate of carbide </div>
+<div id="ta_43" class="t s6_43">and that of the steel holding part or other material used. </div>
+<div id="tb_43" class="t s6_43">Even when the temperature range is </div>
+<div id="tc_43" class="t s6_43">somewhat wide, and there would be a bimetal strip eﬀect as depicted in Figure IV-1, design  </div>
+<div id="td_43" class="t s6_43">modiﬁcations can be made to compensate for this eﬀect. </div>
+<div id="te_43" class="t s6_43">Another advantage to be considered </div>
+<div id="tf_43" class="t s6_43">is that the steel-based member of the assembly can be hardened and receive the required ﬁnal </div>
+<div id="tg_43" class="t s6_43">surface ﬁnish that can be easily matched later on by grinding or polishing of the carbide  </div>
+<div id="th_43" class="t s6_43">member of the assembly.</div>
+<div id="ti_43" class="t s3_43">Design Rules For Mechanical Fastening</div>
+<div id="tj_43" class="t s6_43">Certain principles of design should be followed when designing a mechanical mounting</div>
+<div id="tk_43" class="t s6_43">for a carbide wear part or component:</div>
+<div id="tl_43" class="t s6_43">a)  To maximize support, allow the carbide to rest against a solid surface or shoulder so</div>
+<div id="tm_43" class="t s6_43">that the clamping mechanism only has to hold the carbide in place and not resist the</div>
+<div id="tn_43" class="t s6_43">direction of the operating thrust of the application. </div>
+<div id="to_43" class="t s6_43">Secure the carbide in a pocket or</div>
+<div id="tp_43" class="t s6_43">up against a stop for maximum rigidity and support.</div>
+<div id="tq_43" class="t s6_43">b) A highly polished cemented carbide surface, such as a polished shank on a rotary</div>
+<div id="tr_43" class="t s6_43">tool, looks beautiful good but is more diﬃcult to grip than the “as-sintered” surface</div>
+<div id="ts_43" class="t s6_43">due to its lower coeﬃcient of friction. </div>
+<div id="tt_43" class="t s6_43">The same is true of a working knife-edge</div>
+<div id="tu_43" class="t s6_43">where the body of the blade need not be highly polished to allow a clamping device</div>
+<div id="tv_43" class="t s6_43">to better secure the blade.</div>
+<div id="tw_43" class="t s6_43">c) Whenever possible, an assembly should be designed to take advantage of the</div>
+<div id="tx_43" class="t s6_43">extremely high compressive strength of carbide. </div>
+<div id="ty_43" class="t s6_43">Thus, the designer should focus on</div>
+<div id="tz_43" class="t s6_43">generating a compressive load on the carbide wherever possible but keeping in mind</div>
+<div id="t10_43" class="t s6_43">that notches and keyways should be avoided because they represent (mostly tensile</div>
+<div id="t11_43" class="t s6_43">and shearing) stress risers as discussed in Chapter III.</div>
+<div id="t12_43" class="t s3_43">Methods of Mechanical Fastening</div>
+<div id="t13_43" class="t s6_43">A variety of methods can be used to fasten cemented carbide mechanically. </div>
+<div id="t14_43" class="t s6_43">Some of</div>
+<div id="t15_43" class="t s6_43">the most common are the following:</div>
+<div id="t16_43" class="t s3_43">(a) Clamping –</div>
+<div id="t17_43" class="t s6_43">The carbide insert is ﬁtted into a pocket or supporting recess, then held</div>
+<div id="t18_43" class="t s6_43">in place by one or more clamps. </div>
+<div id="t19_43" class="t s6_43">Fig. </div>
+<div id="t1a_43" class="t s6_43">IV-14 shows a typical clamp design used for</div>
+<div id="t1b_43" class="t s6_43">wear parts and machine components. </div>
+<div id="t1c_43" class="t s6_43">Many other similar variations or designs are</div>
+<div id="t1d_43" class="t s6_43">used. </div>
+<div id="t1e_43" class="t s6_43">The key here is to exert uniform pressure over all contact surfaces. </div>
+<div id="t1f_43" class="t s6_43">All sharp</div>
+<div id="t1g_43" class="t s6_43">edges nested in the recess should be broken as noted in Chapter III.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg43Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg43"><object width="605" height="935" data="43/43.svg" type="image/svg+xml" id="pdf43" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f43 = [['t2_43',626],['t3_43',1419],['t4_43',271],['t5_43',597],['t6_43',1904],['t8_43',1818],['t9_43',2070],['ta_43',1220],['tb_43',788],['tc_43',1986],['td_43',1232],['te_43',797],['tf_43',2050],['tg_43',1915],['th_43',547],['ti_43',873],['tj_43',1909],['tk_43',824],['tl_43',1871],['tm_43',1837],['tn_43',1105],['to_43',711],['tp_43',1130],['tq_43',1816],['tr_43',1787],['ts_43',807],['tt_43',881],['tu_43',1827],['tv_43',570],['tw_43',1746],['tx_43',1047],['ty_43',754],['tz_43',1852],['t10_43',1823],['t11_43',1133],['t12_43',756],['t13_43',1637],['t14_43',179],['t15_43',791],['t16_43',324],['t17_43',1544],['t18_43',687],['t1a_43',941],['t1b_43',820],['t1c_43',941],['t1e_43',1424],['t1f_43',189],['t1g_43',1459]];
+function load43(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f43);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 53;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_43");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

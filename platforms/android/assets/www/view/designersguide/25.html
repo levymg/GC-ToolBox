@@ -1,0 +1,313 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page25</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,25,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load25();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_25{left:545px;top:897px;}
+#t2_25{left:224px;top:901px;letter-spacing:4px;}
+#t3_25{left:125px;top:19px;letter-spacing:12px;}
+#t4_25{left:41px;top:290px;}
+#t5_25{left:41px;top:305px;}
+#t6_25{left:487px;top:305px;}
+#t7_25{left:41px;top:320px;}
+#t8_25{left:41px;top:336px;}
+#t9_25{left:41px;top:351px;}
+#ta_25{left:184px;top:351px;}
+#tb_25{left:41px;top:366px;}
+#tc_25{left:41px;top:397px;}
+#td_25{left:41px;top:412px;}
+#te_25{left:314px;top:412px;}
+#tf_25{left:41px;top:427px;}
+#tg_25{left:332px;top:427px;}
+#th_25{left:41px;top:443px;}
+#ti_25{left:41px;top:458px;}
+#tj_25{left:41px;top:489px;}
+#tk_25{left:41px;top:504px;}
+#tl_25{left:41px;top:519px;}
+#tm_25{left:252px;top:519px;}
+#tn_25{left:41px;top:534px;}
+#to_25{left:268px;top:534px;}
+#tp_25{left:41px;top:550px;}
+#tq_25{left:126px;top:249px;}
+#tr_25{left:378px;top:249px;}
+
+.s1_25{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold25;
+	color: rgb(255,255,255);
+}
+
+.s4_25{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_225;
+	color: rgb(0,0,0);
+}
+
+.s2_25{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold25;
+	color: rgb(255,255,255);
+}
+
+.s3_25{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular25;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold25;
+	src :url("25/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular25;
+	src :url("25/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_225;
+	src :url("25/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_25" class="t s1_25">25</div>
+<div id="t2_25" class="t s2_25">www. generalcarbide.com</div>
+<div id="t3_25" class="t s2_25">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_25" class="t s3_25">The limited corrosion resistance of straight tungsten carbide and cobalt (WC-Co) grades often </div>
+<div id="t5_25" class="t s3_25">makes them unsuitable in applications where the corrosive conditions are severe. </div>
+<div id="t6_25" class="t s3_25">For these  </div>
+<div id="t7_25" class="t s3_25">applications, most carbide manufacturers have formulated a series of highly corrosion resistant </div>
+<div id="t8_25" class="t s3_25">grades, which substitute nickel for cobalt or contain mixed binder phases of chrome, nickel,  </div>
+<div id="t9_25" class="t s3_25">cobalt and molybdenum. </div>
+<div id="ta_25" class="t s3_25">Some manufacturers also produce grades with combinations of  </div>
+<div id="tb_25" class="t s3_25">titanium carbide and nickel to add an extra measure of corrosion resistance.</div>
+<div id="tc_25" class="t s3_25">In most corrosion-wear situations, the better choice is specially alloyed WC-Ni grades, as shown </div>
+<div id="td_25" class="t s3_25">in Figure III-4, which are resistant down to pH 2-3. </div>
+<div id="te_25" class="t s3_25">Even in certain solutions with pH values less </div>
+<div id="tf_25" class="t s3_25">than 2, they have proven to be resistant to corrosion. </div>
+<div id="tg_25" class="t s3_25">Since they have tungsten carbide as the </div>
+<div id="th_25" class="t s3_25">hard principle ingredient, and Ni and Co are similar metals in most respects, the mechanical and </div>
+<div id="ti_25" class="t s3_25">thermal properties of WC-Ni grades are comparable to those of straight WC-Co grades.</div>
+<div id="tj_25" class="t s3_25">The pH value is one of the most important parameters when determining the corrosivity of </div>
+<div id="tk_25" class="t s3_25">a medium, but other factors also have a major inﬂuence, such as the temperature and the </div>
+<div id="tl_25" class="t s3_25">electrical conductivity of the medium. </div>
+<div id="tm_25" class="t s3_25">The latter is dependent on the ion concentration, i.e., the </div>
+<div id="tn_25" class="t s3_25">amount of dissolved salts in the solution. </div>
+<div id="to_25" class="t s3_25">Thus, one cannot deﬁne the corrosivity of a certain </div>
+<div id="tp_25" class="t s3_25">medium in a simple way and, accordingly, no general rules are valid in all situations.</div>
+<div id="tq_25" class="t s4_25">Figure III-2</div>
+<div id="tr_25" class="t s4_25">Figure III-3</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg25Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg25"><object width="605" height="935" data="25/25.svg" type="image/svg+xml" id="pdf25" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f25 = [['t2_25',626],['t3_25',1419],['t4_25',2026],['t5_25',1759],['t6_25',211],['t7_25',2054],['t8_25',1987],['t9_25',548],['ta_25',1387],['tb_25',1639],['tc_25',2056],['td_25',1069],['te_25',952],['tf_25',1141],['tg_25',863],['th_25',2074],['ti_25',1869],['tj_25',1966],['tk_25',1933],['tl_25',824],['tm_25',1229],['tn_25',885],['to_25',1097],['tp_25',1806],['tq_25',240],['tr_25',240]];
+function load25(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f25);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 28;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_25");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

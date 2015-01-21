@@ -1,0 +1,326 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page1</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,1,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+        <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase" onclick="location.replace('../../index.html');"></i></div>
+	
+        <div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left" onclick="IDRViewer.prev()"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right" onclick="IDRViewer.next()"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load1();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_1{left:354px;top:730px;}
+#t2_1{left:231px;top:815px;letter-spacing:-6px;}
+#t3_1{left:524px;top:609px;}
+#t4_1{left:217px;top:406px;letter-spacing:-6px;}
+#t5_1{-webkit-transform:matrix(1,0.12,-0.12,1,65, 460) scale(0.25);-ms-transform:matrix(1,0.12,-0.12,1,65, 460) scale(0.25);-moz-transform:matrix(1,0.12,-0.12,1,65, 460) scale(0.25);-o-transform:matrix(1,0.12,-0.12,1,65, 460) scale(0.25);}
+#t6_1{-webkit-transform:matrix(0.89,-0.45,0.45,0.89,367, 475) scale(0.25);-ms-transform:matrix(0.89,-0.45,0.45,0.89,367, 475) scale(0.25);-moz-transform:matrix(0.89,-0.45,0.45,0.89,367, 475) scale(0.25);-o-transform:matrix(0.89,-0.45,0.45,0.89,367, 475) scale(0.25);}
+#t7_1{-webkit-transform:matrix(0.96,0.27,-0.27,0.96,83, 318) scale(0.25);-ms-transform:matrix(0.96,0.27,-0.27,0.96,83, 318) scale(0.25);-moz-transform:matrix(0.96,0.27,-0.27,0.96,83, 318) scale(0.25);-o-transform:matrix(0.96,0.27,-0.27,0.96,83, 318) scale(0.25);}
+#t8_1{-webkit-transform:matrix(0.96,0.27,-0.27,0.96,58, 794) scale(0.25);-ms-transform:matrix(0.96,0.27,-0.27,0.96,58, 794) scale(0.25);-moz-transform:matrix(0.96,0.27,-0.27,0.96,58, 794) scale(0.25);-o-transform:matrix(0.96,0.27,-0.27,0.96,58, 794) scale(0.25);}
+#t9_1{-webkit-transform:matrix(1,0.08,-0.08,1,270, 697) scale(0.25);-ms-transform:matrix(1,0.08,-0.08,1,270, 697) scale(0.25);-moz-transform:matrix(1,0.08,-0.08,1,270, 697) scale(0.25);-o-transform:matrix(1,0.08,-0.08,1,270, 697) scale(0.25);}
+#ta_1{-webkit-transform:matrix(0.96,0.27,-0.27,0.96,431, 285) scale(0.25);-ms-transform:matrix(0.96,0.27,-0.27,0.96,431, 285) scale(0.25);-moz-transform:matrix(0.96,0.27,-0.27,0.96,431, 285) scale(0.25);-o-transform:matrix(0.96,0.27,-0.27,0.96,431, 285) scale(0.25);}
+#tb_1{-webkit-transform:matrix(0.96,0.27,-0.27,0.96,485, 477) scale(0.25);-ms-transform:matrix(0.96,0.27,-0.27,0.96,485, 477) scale(0.25);-moz-transform:matrix(0.96,0.27,-0.27,0.96,485, 477) scale(0.25);-o-transform:matrix(0.96,0.27,-0.27,0.96,485, 477) scale(0.25);}
+#tc_1{-webkit-transform:matrix(0.97,-0.22,0.22,0.97,90, 665) scale(0.25);-ms-transform:matrix(0.97,-0.22,0.22,0.97,90, 665) scale(0.25);-moz-transform:matrix(0.97,-0.22,0.22,0.97,90, 665) scale(0.25);-o-transform:matrix(0.97,-0.22,0.22,0.97,90, 665) scale(0.25);}
+#td_1{left:146px;top:156px;letter-spacing:5px;}
+#te_1{left:147px;top:191px;letter-spacing:6px;}
+#tf_1{left:349px;top:77px;letter-spacing:11px;}
+
+#t5_1,#t6_1,#t7_1,#t8_1,#t9_1,#ta_1,#tb_1,#tc_1 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s1_1{
+	FONT-SIZE: 201px;
+	FONT-FAMILY: KGKDKG-HelveticaNeue-Roman1;
+	color: rgb(255,255,255);
+}
+
+.s5_1{
+	FONT-SIZE: 142px;
+	FONT-FAMILY: JYAXWI-Handwriting1;
+	color: rgb(255,255,255);
+}
+
+.s7_1{
+	FONT-SIZE: 146px;
+	FONT-FAMILY: YJUJYE-MyriadPro-BoldCond1;
+	color: rgb(255,255,255);
+}
+
+.s3_1{
+	FONT-SIZE: 129px;
+	FONT-FAMILY: JYAXWI-Handwriting1;
+	color: rgb(255,255,255);
+}
+
+.s8_1{
+	FONT-SIZE: 59px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold1;
+	color: rgb(255,255,255);
+}
+
+.s4_1{
+	FONT-SIZE: 138px;
+	FONT-FAMILY: JYAXWI-Handwriting1;
+	color: rgb(255,255,255);
+}
+
+.s6_1{
+	FONT-SIZE: 139px;
+	FONT-FAMILY: JYAXWI-Handwriting1;
+	color: rgb(255,255,255);
+}
+
+.s2_1{
+	FONT-SIZE: 141px;
+	FONT-FAMILY: JYAXWI-Handwriting1;
+	color: rgb(255,255,255);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold1;
+	src :url("index/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: JYAXWI-Handwriting1;
+	src :url("index/fonts/JYAXWI-Handwriting.woff") format("woff");
+}
+
+@font-face {
+	font-family: KGKDKG-HelveticaNeue-Roman1;
+	src :url("index/fonts/KGKDKG-HelveticaNeue-Roman.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-BoldCond1;
+	src :url("index/fonts/YJUJYE-MyriadPro-BoldCond.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_1" class="t s1_1">b</div>
+<div id="t2_1" class="t s1_1">steel</div>
+<div id="t3_1" class="t s1_1">a</div>
+<div id="t4_1" class="t s1_1">carbide</div>
+<div id="t5_1" class="t s2_1">Corrosion Resistance</div>
+<div id="t6_1" class="t s3_1">Shrink Fit Assembly</div>
+<div id="t7_1" class="t s4_1">Brazing Procedures</div>
+<div id="t8_1" class="t s4_1">Transverse Rupture Strength</div>
+<div id="t9_1" class="t s5_1">Young's Modulus Of Elasticity</div>
+<div id="ta_1" class="t s4_1">EDM</div>
+<div id="tb_1" class="t s4_1">WC</div>
+<div id="tc_1" class="t s6_1">Industrial Adhesives</div>
+<div id="td_1" class="t s7_1">THE DESIGNER’S GUIDE  </div>
+<div id="te_1" class="t s7_1">TO TUNGSTEN CARBIDE</div>
+<div id="tf_1" class="t s8_1">SHAPING YOUR SUCCESS</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg1Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg1"><object width="605" height="935" data="index/1.svg" type="image/svg+xml" id="pdf1" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f1 = [['t5_1',797],['t6_1',732],['t7_1',735],['t8_1',1088],['t9_1',1099],['tc_1',756],['td_1',1278],['te_1',1242],['tf_1',849]];
+function load1(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f1);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 16;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_1");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

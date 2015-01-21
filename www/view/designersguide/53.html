@@ -1,0 +1,395 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page53</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,53,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load53();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_53{left:545px;top:897px;}
+#t2_53{left:224px;top:901px;letter-spacing:4px;}
+#t3_53{left:125px;top:19px;letter-spacing:12px;}
+#t4_53{left:41px;top:72px;}
+#t5_53{left:41px;top:86px;}
+#t6_53{left:389px;top:86px;}
+#t7_53{left:41px;top:100px;}
+#t8_53{left:41px;top:114px;}
+#t9_53{left:458px;top:114px;}
+#ta_53{left:41px;top:128px;}
+#tb_53{left:41px;top:157px;}
+#tc_53{left:375px;top:157px;}
+#td_53{left:41px;top:171px;}
+#te_53{left:414px;top:171px;}
+#tf_53{left:41px;top:185px;}
+#tg_53{left:323px;top:185px;}
+#th_53{left:41px;top:199px;}
+#ti_53{left:130px;top:199px;}
+#tj_53{left:41px;top:213px;}
+#tk_53{left:41px;top:241px;}
+#tl_53{left:41px;top:255px;}
+#tm_53{left:220px;top:255px;}
+#tn_53{left:41px;top:269px;}
+#to_53{left:345px;top:269px;}
+#tp_53{left:41px;top:283px;}
+#tq_53{left:41px;top:311px;}
+#tr_53{left:397px;top:311px;}
+#ts_53{left:41px;top:325px;}
+#tt_53{left:41px;top:353px;}
+#tu_53{left:443px;top:353px;}
+#tv_53{left:41px;top:367px;}
+#tw_53{left:41px;top:381px;}
+#tx_53{left:41px;top:408px;}
+#ty_53{left:41px;top:431px;}
+#tz_53{left:465px;top:431px;}
+#t10_53{left:41px;top:445px;}
+#t11_53{left:425px;top:445px;}
+#t12_53{left:41px;top:459px;}
+#t13_53{left:41px;top:487px;}
+#t14_53{left:520px;top:487px;}
+#t15_53{left:41px;top:501px;}
+#t16_53{left:276px;top:501px;}
+#t17_53{left:41px;top:516px;}
+#t18_53{left:41px;top:547px;}
+#t19_53{left:41px;top:571px;}
+#t1a_53{left:96px;top:591px;}
+#t1b_53{left:96px;top:607px;}
+#t1c_53{left:96px;top:622px;}
+#t1d_53{left:96px;top:642px;}
+#t1e_53{left:96px;top:662px;}
+#t1f_53{left:96px;top:677px;}
+#t1g_53{left:96px;top:692px;}
+#t1h_53{left:41px;top:721px;}
+#t1i_53{left:41px;top:735px;}
+#t1j_53{left:41px;top:754px;}
+#t1k_53{left:41px;top:768px;}
+#t1l_53{left:41px;top:787px;}
+#t1m_53{left:41px;top:802px;}
+
+#tx_53,#t18_53 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s1_53{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold53;
+	color: rgb(255,255,255);
+}
+
+.s4_53{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_253;
+	color: rgb(0,0,0);
+}
+
+.s2_53{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold53;
+	color: rgb(255,255,255);
+}
+
+.s3_53{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular53;
+	color: rgb(0,0,0);
+}
+
+.s5_53{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_253;
+	color: rgb(219,0,60);
+}
+
+.v1_53{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold53;
+	src :url("53/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular53;
+	src :url("53/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_253;
+	src :url("53/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_53" class="t s1_53">53</div>
+<div id="t2_53" class="t s2_53">www. generalcarbide.com</div>
+<div id="t3_53" class="t s2_53">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_53" class="t s3_53">To eliminate any danger from micro-cracking, and to produce the best surface edge, it is a good </div>
+<div id="t5_53" class="t s3_53">practice to use suﬃcient skim cuts when EDMing carbide parts. </div>
+<div id="t6_53" class="t s3_53">Because EDM does not involve </div>
+<div id="t7_53" class="t s3_53">contact with the workpiece, it is possible to design shapes in carbide that would break during </div>
+<div id="t8_53" class="t s3_53">production when using conventional machining practices, such as grinding. </div>
+<div id="t9_53" class="t s3_53">Parts that cannot </div>
+<div id="ta_53" class="t s3_53">take this type of stress can be machined eﬀectively with EDM.</div>
+<div id="tb_53" class="t s3_53">Sometimes it is diﬃcult to machine a part that has thin walls. </div>
+<div id="tc_53" class="t s3_53">EDM is ideal for this sort of part </div>
+<div id="td_53" class="t s3_53">because the process does not involve force, contact or deformation. </div>
+<div id="te_53" class="t s3_53">A wire EDM can be used  </div>
+<div id="tf_53" class="t s3_53">on parts with wall thicknesses as thin as 0.005 inch. </div>
+<div id="tg_53" class="t s3_53">A probe EDM can produce walls as thin  </div>
+<div id="th_53" class="t s3_53">as 0.002 inches. </div>
+<div id="ti_53" class="t s3_53">This makes EDM a good choice when designing small surgical tools from  </div>
+<div id="tj_53" class="t s3_53">tungsten carbide.</div>
+<div id="tk_53" class="t s3_53">Another consideration for use of EDM is when the part being designed has a high ratio of cavity </div>
+<div id="tl_53" class="t s3_53">depth to width, like slots or ribs. </div>
+<div id="tm_53" class="t s3_53">Since there is no force between the tool and the workpiece, </div>
+<div id="tn_53" class="t s3_53">long electrodes can be used to make very intricate ribs. </div>
+<div id="to_53" class="t s3_53">Wire and probe EDMs are excellent for </div>
+<div id="tp_53" class="t s3_53">jet engine blade designs.</div>
+<div id="tq_53" class="t s3_53">Use probe EDM when your design calls for diﬃcult recessed cuts. </div>
+<div id="tr_53" class="t s3_53">Conventional cutting tools </div>
+<div id="ts_53" class="t s3_53">cannot reach these cutting areas to apply the necessary force.</div>
+<div id="tt_53" class="t s4_53">Hardness of the carbide grade is of no concern when considering EDM. </div>
+<div id="tu_53" class="t s4_53">Because the </div>
+<div id="tv_53" class="t s4_53">EDM process vaporizes material, instead of cutting it, so the hardness need not be a factor </div>
+<div id="tw_53" class="t s4_53">for consideration.</div>
+<div id="tx_53" class="t v1_53 s5_53">Cutting Speed</div>
+<div id="ty_53" class="t s3_53">Cutting speed is rated by the square inches of material that is cut in one hour. </div>
+<div id="tz_53" class="t s3_53">It can vary  </div>
+<div id="t10_53" class="t s3_53">according to the conductivity and the melting properties of materials. </div>
+<div id="t11_53" class="t s3_53">For example, aluminum,  </div>
+<div id="t12_53" class="t s3_53">a good electrical conductor with a low melting temperature, cuts much faster than steel.</div>
+<div id="t13_53" class="t s3_53">On the other hand, cemented carbide, a poorer conductor, cuts much slower than steel. </div>
+<div id="t14_53" class="t s3_53">It is the </div>
+<div id="t15_53" class="t s3_53">binder, usually cobalt, that is melted away. </div>
+<div id="t16_53" class="t s3_53">Diﬀerent carbide grades EDM at diﬀerent speeds </div>
+<div id="t17_53" class="t s3_53">because of carbide grain size and the binder amount and type.</div>
+<div id="t18_53" class="t v1_53 s5_53">EDM Limitations</div>
+<div id="t19_53" class="t s3_53">Maximum workpiece dimensions for wire EDM are approximately as follows:</div>
+<div id="t1a_53" class="t s3_53">Y axis = 59 inches</div>
+<div id="t1b_53" class="t s3_53">Z axis = 24 inches</div>
+<div id="t1c_53" class="t s3_53">X axis = no limit</div>
+<div id="t1d_53" class="t s3_53">For probe EDM:</div>
+<div id="t1e_53" class="t s3_53">Y axis = 59 inches</div>
+<div id="t1f_53" class="t s3_53">Z axis = 17 inches</div>
+<div id="t1g_53" class="t s3_53">X axis = 98 inches</div>
+<div id="t1h_53" class="t s3_53">Maximum taper angle for wire EDM is + or – 45 degrees</div>
+<div id="t1i_53" class="t s3_53">Maximum angle/height combination is 30 degrees at 16 inches high</div>
+<div id="t1j_53" class="t s3_53">Accuracy of wire EDM is about 0.00002 inches</div>
+<div id="t1k_53" class="t s3_53">Probe EDM is + or – 0.0001 inch</div>
+<div id="t1l_53" class="t s3_53">Surface ﬁnish is about 4 microinch for wire EDM on a ﬁnish pass and 24 microinch  </div>
+<div id="t1m_53" class="t s3_53">ﬁnish with a roughing pass.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg53Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg53"><object width="605" height="935" data="53/53.svg" type="image/svg+xml" id="pdf53" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f53 = [['t2_53',626],['t3_53',1419],['t4_53',2068],['t5_53',1368],['t6_53',662],['t7_53',2021],['t8_53',1643],['t9_53',371],['ta_53',1332],['tb_53',1314],['tc_53',677],['td_53',1467],['te_53',532],['tf_53',1106],['tg_53',856],['th_53',336],['ti_53',1580],['tj_53',381],['tk_53',2066],['tl_53',691],['tm_53',1287],['tn_53',1193],['to_53',826],['tp_53',541],['tq_53',1402],['tr_53',577],['ts_53',1335],['tt_53',1584],['tu_53',271],['tv_53',2016],['tw_53',397],['tx_53',393],['ty_53',1673],['tz_53',234],['t10_53',1511],['t11_53',534],['t12_53',1911],['t13_53',1893],['t14_53',158],['t15_53',915],['t16_53',1053],['t17_53',1355],['t18_53',453],['t19_53',1648],['t1a_53',380],['t1b_53',380],['t1c_53',342],['t1d_53',335],['t1e_53',380],['t1f_53',380],['t1g_53',381],['t1h_53',1199],['t1i_53',1477],['t1j_53',989],['t1k_53',682],['t1l_53',1774],['t1m_53',593]];
+function load53(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f53);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 59;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_53");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page11</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,11,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load11();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_11{left:545px;top:897px;}
+#t2_11{left:224px;top:901px;letter-spacing:4px;}
+#t3_11{left:125px;top:19px;letter-spacing:12px;}
+#t4_11{left:41px;top:71px;}
+#t5_11{left:41px;top:99px;}
+#t6_11{left:41px;top:114px;}
+#t7_11{left:317px;top:114px;}
+#t8_11{left:41px;top:129px;}
+#t9_11{left:41px;top:145px;}
+#ta_11{left:41px;top:160px;}
+#tb_11{left:199px;top:160px;}
+#tc_11{left:41px;top:175px;}
+#td_11{left:41px;top:191px;}
+#te_11{left:338px;top:191px;}
+#tf_11{left:41px;top:206px;}
+#tg_11{left:41px;top:221px;}
+#th_11{left:213px;top:221px;}
+#ti_11{left:41px;top:236px;}
+#tj_11{left:76px;top:238px;}
+#tk_11{left:80px;top:236px;}
+#tl_11{left:88px;top:236px;}
+#tm_11{left:41px;top:252px;}
+#tn_11{left:41px;top:267px;}
+#to_11{left:41px;top:626px;}
+#tp_11{left:41px;top:641px;}
+#tq_11{left:41px;top:657px;}
+#tr_11{left:351px;top:657px;}
+#ts_11{left:41px;top:672px;}
+#tt_11{left:41px;top:687px;}
+#tu_11{left:41px;top:702px;}
+#tv_11{left:228px;top:702px;}
+#tw_11{left:41px;top:718px;}
+#tx_11{left:41px;top:733px;}
+#ty_11{left:103px;top:733px;}
+#tz_11{left:251px;top:733px;}
+#t10_11{left:41px;top:748px;}
+#t11_11{left:247px;top:352px;letter-spacing:-2px;}
+#t12_11{left:249px;top:574px;}
+
+#t4_11,#t11_11 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s1_11{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold11;
+	color: rgb(255,255,255);
+}
+
+.s7_11{
+	FONT-SIZE: 87px;
+	FONT-FAMILY: YJUJYE-MyriadPro-BoldIt11;
+	color: rgb(0,0,0);
+}
+
+.s6_11{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular11;
+	color: rgb(0,0,0);
+}
+
+.s4_11{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold11;
+	color: rgb(0,0,0);
+}
+
+.s3_11{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold11;
+	color: rgb(219,0,60);
+}
+
+.s5_11{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular11;
+	color: rgb(0,0,0);
+}
+
+.s2_11{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_211;
+	color: rgb(255,255,255);
+}
+
+.v1_11{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold11;
+	src :url("11/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-BoldIt11;
+	src :url("11/fonts/YJUJYE-MyriadPro-BoldIt.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular11;
+	src :url("11/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_211;
+	src :url("11/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_11" class="t s1_11">11</div>
+<div id="t2_11" class="t s2_11">www. generalcarbide.com</div>
+<div id="t3_11" class="t s2_11">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_11" class="t v1_11 s3_11">Transverse Rupture Strength</div>
+<div id="t5_11" class="t s4_11">The mechanical strength of cemented carbide is usually determined by this method</div>
+<div id="t6_11" class="t s5_11">rather than a tensile test commonly used for steel. </div>
+<div id="t7_11" class="t s5_11">The reason for this is that brittle</div>
+<div id="t8_11" class="t s5_11">materials are extremely sensitive to misalignment of the tensile test apparatus and</div>
+<div id="t9_11" class="t s5_11">sensitive to any notch or surface defect, which would cause a stress concentration and</div>
+<div id="ta_11" class="t s5_11">lead to incorrect test results. </div>
+<div id="tb_11" class="t s5_11">The transverse rupture strength (TRS) is determined by</div>
+<div id="tc_11" class="t s5_11">placing a standard sample (per ASTM B-406, ISO 3327) between two supports and</div>
+<div id="td_11" class="t s5_11">loading it until fracture occurs, as shown in Figure II-2. </div>
+<div id="te_11" class="t s5_11">The value obtained is called the</div>
+<div id="tf_11" class="t s5_11">transverse rupture strength or bending strength and is measured as the load that is</div>
+<div id="tg_11" class="t s5_11">needed to fracture the sample. </div>
+<div id="th_11" class="t s5_11">This is shown as load per unit area, expressed in psi or</div>
+<div id="ti_11" class="t s5_11">N/mm</div>
+<div id="tj_11" class="t s6_11">2</div>
+<div id="tk_11" class="t s5_11">. </div>
+<div id="tl_11" class="t s5_11">Several tests are conducted and the value is taken as the average of all</div>
+<div id="tm_11" class="t s5_11">observed tests because cemented carbide exhibits a range of fracture values caused by</div>
+<div id="tn_11" class="t s5_11">the existence of micro-voids, inherent in all brittle materials.</div>
+<div id="to_11" class="t s5_11">The values for transverse rupture strength of cemented carbide grades that appear in</div>
+<div id="tp_11" class="t s5_11">various suppliers’ properties charts are based on the above standard test and thus,</div>
+<div id="tq_11" class="t s5_11">reﬂect the mechanical strength for this sample size only. </div>
+<div id="tr_11" class="t s5_11">Many designers, even those in</div>
+<div id="ts_11" class="t s5_11">the carbide industry, often regard the TRS values as the design strength value for a</div>
+<div id="tt_11" class="t s5_11">grade and use it in designating which grade should work in a particular application,</div>
+<div id="tu_11" class="t s5_11">expecting that value to hold true. </div>
+<div id="tv_11" class="t s5_11">In reality, these values decrease as the size of the part</div>
+<div id="tw_11" class="t s5_11">increases and the design strength value for larger pieces must be calculated due to the</div>
+<div id="tx_11" class="t s5_11">size eﬀect. </div>
+<div id="ty_11" class="t s5_11">More on this in Chapter III. </div>
+<div id="tz_11" class="t s5_11">The TRS values increase with increasing binder</div>
+<div id="t10_11" class="t s5_11">content as shown in Figure II-3.</div>
+<div id="t11_11" class="t v1_11 s7_11">LOAD</div>
+<div id="t12_11" class="t s4_11">Figure II-2</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg11Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg11"><object width="605" height="935" data="11/11.svg" type="image/svg+xml" id="pdf11" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f11 = [['t2_11',626],['t3_11',1419],['t4_11',787],['t5_11',1876],['t6_11',1082],['t7_11',686],['t8_11',1784],['t9_11',1865],['ta_11',611],['tb_11',1187],['tc_11',1770],['td_11',1165],['te_11',685],['tf_11',1801],['tg_11',666],['th_11',1162],['tl_11',1520],['tm_11',1885],['tn_11',1294],['to_11',1843],['tp_11',1780],['tq_11',1215],['tr_11',654],['ts_11',1781],['tt_11',1807],['tu_11',723],['tv_11',1154],['tw_11',1877],['tx_11',226],['ty_11',569],['tz_11',1006],['t10_11',673],['t12_11',226]];
+function load11(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f11);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 39;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_11");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

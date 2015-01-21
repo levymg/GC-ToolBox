@@ -1,0 +1,407 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page54</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,54,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load54();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_54{left:43px;top:898px;}
+#t2_54{left:125px;top:19px;letter-spacing:12px;}
+#t3_54{left:224px;top:901px;letter-spacing:4px;}
+#t4_54{left:41px;top:71px;}
+#t5_54{left:41px;top:100px;}
+#t6_54{left:41px;top:115px;}
+#t7_54{left:69px;top:140px;}
+#t8_54{left:86px;top:140px;}
+#t9_54{left:242px;top:140px;}
+#ta_54{left:248px;top:140px;}
+#tb_54{left:401px;top:140px;}
+#tc_54{left:410px;top:140px;}
+#td_54{left:86px;top:155px;}
+#te_54{left:69px;top:180px;}
+#tf_54{left:86px;top:180px;}
+#tg_54{left:235px;top:180px;}
+#th_54{left:240px;top:180px;}
+#ti_54{left:430px;top:180px;}
+#tj_54{left:438px;top:180px;}
+#tk_54{left:86px;top:195px;}
+#tl_54{left:69px;top:219px;}
+#tm_54{left:86px;top:219px;}
+#tn_54{left:134px;top:219px;}
+#to_54{left:173px;top:219px;}
+#tp_54{left:178px;top:219px;}
+#tq_54{left:308px;top:219px;}
+#tr_54{left:317px;top:219px;}
+#ts_54{left:86px;top:235px;}
+#tt_54{left:69px;top:259px;}
+#tu_54{left:86px;top:259px;}
+#tv_54{left:161px;top:259px;}
+#tw_54{left:166px;top:259px;}
+#tx_54{left:370px;top:259px;}
+#ty_54{left:379px;top:259px;}
+#tz_54{left:86px;top:274px;}
+#t10_54{left:209px;top:274px;}
+#t11_54{left:318px;top:274px;}
+#t12_54{left:69px;top:299px;}
+#t13_54{left:86px;top:299px;}
+#t14_54{left:102px;top:299px;}
+#t15_54{left:145px;top:299px;}
+#t16_54{left:151px;top:299px;}
+#t17_54{left:393px;top:299px;}
+#t18_54{left:401px;top:299px;}
+#t19_54{left:86px;top:314px;}
+#t1a_54{left:170px;top:314px;}
+#t1b_54{left:69px;top:338px;}
+#t1c_54{left:86px;top:338px;}
+#t1d_54{left:102px;top:338px;}
+#t1e_54{left:172px;top:338px;}
+#t1f_54{left:227px;top:338px;}
+#t1g_54{left:233px;top:338px;}
+#t1h_54{left:439px;top:338px;}
+#t1i_54{left:447px;top:338px;}
+#t1j_54{left:86px;top:354px;}
+#t1k_54{left:263px;top:354px;}
+
+#t4_54 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s5_54{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-Times-Roman54;
+	color: rgb(0,0,0);
+}
+
+.s1_54{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold54;
+	color: rgb(255,255,255);
+}
+
+.s6_54{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-It54;
+	color: rgb(0,0,0);
+}
+
+.s2_54{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold54;
+	color: rgb(255,255,255);
+}
+
+.s3_54{
+	FONT-SIZE: 69px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_254;
+	color: rgb(219,0,60);
+}
+
+.s4_54{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular54;
+	color: rgb(0,0,0);
+}
+
+.v1_54{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold54;
+	src :url("54/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-It54;
+	src :url("54/fonts/YJUJYE-MyriadPro-It.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular54;
+	src :url("54/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-Times-Roman54;
+	src :url("54/fonts/YJUJYE-Times-Roman.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_254;
+	src :url("54/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_54" class="t s1_54">54</div>
+<div id="t2_54" class="t s2_54">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_54" class="t s2_54">www. generalcarbide.com</div>
+<div id="t4_54" class="t v1_54 s3_54">References</div>
+<div id="t5_54" class="t s4_54">Acknowledgement is given to the following publications and articles that were used as</div>
+<div id="t6_54" class="t s4_54">reference documents in the compilation of this information:</div>
+<div id="t7_54" class="t s4_54">1. </div>
+<div id="t8_54" class="t s4_54">Publication A80-184 (10) FO, </div>
+<div id="t9_54" class="t s5_54">“</div>
+<div id="ta_54" class="t s4_54">Designing with Kennametal,</div>
+<div id="tb_54" class="t s5_54">”</div>
+<div id="tc_54" class="t s4_54">Kennametal Inc., </div>
+<div id="td_54" class="t s4_54">Latrobe, PA.</div>
+<div id="te_54" class="t s4_54">2. </div>
+<div id="tf_54" class="t s4_54">Publication H-9100B - ENG, </div>
+<div id="tg_54" class="t s5_54">“</div>
+<div id="th_54" class="t s4_54">Understanding Cemented Carbide,</div>
+<div id="ti_54" class="t s5_54">”</div>
+<div id="tj_54" class="t s4_54">Sandvik Hard </div>
+<div id="tk_54" class="t s4_54">Materials, Sweden.</div>
+<div id="tl_54" class="t s4_54">3. </div>
+<div id="tm_54" class="t s4_54">Harry C. </div>
+<div id="tn_54" class="t s4_54">Moser, </div>
+<div id="to_54" class="t s5_54">“</div>
+<div id="tp_54" class="t s4_54">When Should You EDM?</div>
+<div id="tq_54" class="t s5_54">”</div>
+<div id="tr_54" class="t s4_54">Charmilles Technologies Corporation </div>
+<div id="ts_54" class="t s4_54">and Mikron, Lincolnshire, IL.</div>
+<div id="tt_54" class="t s4_54">4. </div>
+<div id="tu_54" class="t s4_54">Carl Sommer, </div>
+<div id="tv_54" class="t s5_54">“</div>
+<div id="tw_54" class="t s4_54">Understanding the Wire EDM Process,</div>
+<div id="tx_54" class="t s5_54">”</div>
+<div id="ty_54" class="t s4_54">taken from the Nontraditional </div>
+<div id="tz_54" class="t s4_54">Machining Handbook, </div>
+<div id="t10_54" class="t s6_54">Tooling &amp; Production</div>
+<div id="t11_54" class="t s4_54">, November 1999.</div>
+<div id="t12_54" class="t s4_54">5. </div>
+<div id="t13_54" class="t s4_54">N. </div>
+<div id="t14_54" class="t s4_54">Langer, </div>
+<div id="t15_54" class="t s5_54">“</div>
+<div id="t16_54" class="t s4_54">Where Adhesives beat Mechanical Fasteners,</div>
+<div id="t17_54" class="t s5_54">”</div>
+<div id="t18_54" class="t s4_54">Dymax Corporation,  </div>
+<div id="t19_54" class="t s6_54">Machine Design</div>
+<div id="t1a_54" class="t s4_54">, August 2005.</div>
+<div id="t1b_54" class="t s4_54">6. </div>
+<div id="t1c_54" class="t s4_54">D. </div>
+<div id="t1d_54" class="t s4_54">Small and P. </div>
+<div id="t1e_54" class="t s4_54">Courtney, </div>
+<div id="t1f_54" class="t s5_54">“</div>
+<div id="t1g_54" class="t s4_54">Fundamentals of Industrial Adhesives,</div>
+<div id="t1h_54" class="t s5_54">”</div>
+<div id="t1i_54" class="t s4_54">Henkel Corporation,  </div>
+<div id="t1j_54" class="t s6_54">Advanced Materials and Processes</div>
+<div id="t1k_54" class="t s4_54">, May 2005.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg54Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg54"><object width="605" height="935" data="54/54.svg" type="image/svg+xml" id="pdf54" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f54 = [['t2_54',1419],['t3_54',626],['t5_54',1879],['t6_54',1295],['t8_54',614],['ta_54',614],['tc_54',359],['td_54',255],['tf_54',585],['th_54',757],['tj_54',287],['tk_54',404],['tm_54',171],['tp_54',518],['tr_54',799],['ts_54',604],['tu_54',289],['tw_54',816],['ty_54',649],['tz_54',483],['t10_54',435],['t11_54',381],['t16_54',968],['t18_54',449],['t19_54',335],['t1a_54',307],['t1d_54',256],['t1g_54',823],['t1i_54',448],['t1j_54',710],['t1k_54',242]];
+function load54(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f54);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 57;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_54");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

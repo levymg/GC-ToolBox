@@ -1,0 +1,359 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page13</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,13,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load13();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_13{left:545px;top:897px;}
+#t2_13{left:224px;top:901px;letter-spacing:4px;}
+#t3_13{left:125px;top:19px;letter-spacing:12px;}
+#t4_13{left:41px;top:576px;}
+#t5_13{left:41px;top:600px;}
+#t6_13{left:41px;top:616px;}
+#t7_13{left:41px;top:631px;}
+#t8_13{left:261px;top:661px;}
+#t9_13{left:289px;top:655px;}
+#ta_13{left:289px;top:671px;}
+#tb_13{left:41px;top:707px;}
+#tc_13{left:501px;top:708px;}
+#td_13{left:505px;top:707px;}
+#te_13{left:41px;top:723px;}
+#tf_13{left:242px;top:723px;}
+#tg_13{left:41px;top:738px;}
+#th_13{left:91px;top:738px;}
+#ti_13{left:41px;top:753px;}
+#tj_13{left:41px;top:71px;}
+#tk_13{left:41px;top:96px;}
+#tl_13{left:475px;top:96px;}
+#tm_13{left:41px;top:111px;}
+#tn_13{left:41px;top:126px;}
+#to_13{left:427px;top:126px;}
+#tp_13{left:41px;top:142px;}
+#tq_13{left:41px;top:157px;}
+#tr_13{left:91px;top:157px;}
+#ts_13{left:41px;top:172px;}
+#tt_13{left:70px;top:172px;}
+#tu_13{left:41px;top:188px;}
+#tv_13{left:175px;top:189px;}
+#tw_13{left:179px;top:188px;}
+#tx_13{left:249px;top:244px;}
+#ty_13{left:290px;top:531px;}
+
+#t4_13,#tj_13 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s5_13{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_213;
+	color: rgb(0,0,0);
+}
+
+.s1_13{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold13;
+	color: rgb(255,255,255);
+}
+
+.s7_13{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold13;
+	color: rgb(0,0,0);
+}
+
+.s6_13{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular13;
+	color: rgb(0,0,0);
+}
+
+.s3_13{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold13;
+	color: rgb(219,0,60);
+}
+
+.s4_13{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular13;
+	color: rgb(0,0,0);
+}
+
+.s2_13{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_213;
+	color: rgb(255,255,255);
+}
+
+.v1_13{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold13;
+	src :url("13/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular13;
+	src :url("13/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_213;
+	src :url("13/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_13" class="t s1_13">13</div>
+<div id="t2_13" class="t s2_13">www. generalcarbide.com</div>
+<div id="t3_13" class="t s2_13">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_13" class="t v1_13 s3_13">Modulus of Elasticity of Cemented Carbide</div>
+<div id="t5_13" class="t s4_13">The modulus of elasticity or Young’s Modulus (E) is a measure of the “stiﬀness” of a</div>
+<div id="t6_13" class="t s4_13">material and is measured as the rate of change of tensile or compressive stress “σ“ with</div>
+<div id="t7_13" class="t s4_13">respect to unit strain “є ” and is expressed as:</div>
+<div id="t8_13" class="t s5_13">E = </div>
+<div id="t9_13" class="t s5_13">σ</div>
+<div id="ta_13" class="t s5_13">є</div>
+<div id="tb_13" class="t s4_13">The Young’s Modulus for cemented carbide is as high as 94,000,000 psi (&gt;650 kN/mm</div>
+<div id="tc_13" class="t s6_13">2</div>
+<div id="td_13" class="t s4_13">)</div>
+<div id="te_13" class="t s4_13">and is 2 to 3 times higher than steel. </div>
+<div id="tf_13" class="t s4_13">It increases linearly with decreasing binder</div>
+<div id="tg_13" class="t s4_13">content. </div>
+<div id="th_13" class="t s4_13">This property of carbide is used to resist deﬂection and is extremely useful</div>
+<div id="ti_13" class="t s4_13">when employing this material in a cantilever beam, such as a boring bar application.</div>
+<div id="tj_13" class="t v1_13 s3_13">Compressive Strength</div>
+<div id="tk_13" class="t s4_13">This property is also one of the most important attributes of cemented carbide. </div>
+<div id="tl_13" class="t s4_13">Ductile</div>
+<div id="tm_13" class="t s4_13">materials under compression loading merely bulge or swell without fracture but a brittle</div>
+<div id="tn_13" class="t s4_13">material will fail, due mostly to a shear fracture than true compression. </div>
+<div id="to_13" class="t s5_13">Cemented</div>
+<div id="tp_13" class="t s7_13">carbide exhibits very high compressive strength when compared to most any other</div>
+<div id="tq_13" class="t s5_13">material</div>
+<div id="tr_13" class="t s4_13">and the value increases with decreasing binder content and decreasing grain</div>
+<div id="ts_13" class="t s4_13">size. </div>
+<div id="tt_13" class="t s4_13">(Figure II-5) Depending on the grain size and binder content, values between</div>
+<div id="tu_13" class="t s4_13">400K-900K psi (7 kN/mm</div>
+<div id="tv_13" class="t s6_13">2</div>
+<div id="tw_13" class="t s4_13">) are typical for cemented carbide.</div>
+<div id="tx_13" class="t s7_13">Compressive Strength</div>
+<div id="ty_13" class="t s7_13">Figure II-5</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg13Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg13"><object width="605" height="935" data="13/13.svg" type="image/svg+xml" id="pdf13" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f13 = [['t2_13',626],['t3_13',1419],['t4_13',1168],['t5_13',1765],['t6_13',1873],['t7_13',959],['t8_13',68],['tb_13',1837],['te_13',780],['tf_13',924],['th_13',1603],['ti_13',1821],['tj_13',609],['tk_13',1713],['tm_13',1914],['tn_13',1521],['tp_13',1867],['tr_13',1666],['tt_13',1664],['tu_13',534],['tw_13',737],['tx_13',498],['ty_13',226]];
+function load13(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f13);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 35;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_13");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

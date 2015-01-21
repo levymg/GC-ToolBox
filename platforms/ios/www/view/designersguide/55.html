@@ -1,0 +1,671 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page55</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,55,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load55();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_55{left:545px;top:897px;}
+#t2_55{left:224px;top:901px;letter-spacing:4px;}
+#t3_55{left:125px;top:19px;letter-spacing:12px;}
+#t4_55{left:117px;top:720px;}
+#t5_55{left:41px;top:753px;}
+#t6_55{left:364px;top:753px;}
+#t7_55{left:225px;top:71px;}
+#t8_55{left:204px;top:117px;}
+#t9_55{left:218px;top:127px;}
+#ta_55{left:325px;top:126px;}
+#tb_55{left:335px;top:135px;}
+#tc_55{left:417px;top:125px;}
+#td_55{left:420px;top:135px;}
+#te_55{left:439px;top:136px;}
+#tf_55{left:442px;top:135px;}
+#tg_55{left:481px;top:121px;}
+#th_55{left:517px;top:121px;}
+#ti_55{left:489px;top:130px;}
+#tj_55{left:515px;top:139px;}
+#tk_55{left:208px;top:141px;}
+#tl_55{left:246px;top:141px;}
+#tm_55{left:275px;top:141px;}
+#tn_55{left:50px;top:155px;}
+#to_55{left:50px;top:171px;}
+#tp_55{left:50px;top:187px;}
+#tq_55{left:203px;top:187px;}
+#tr_55{left:242px;top:187px;}
+#ts_55{left:319px;top:187px;}
+#tt_55{left:400px;top:187px;}
+#tu_55{left:502px;top:187px;}
+#tv_55{left:50px;top:204px;}
+#tw_55{left:208px;top:204px;}
+#tx_55{left:245px;top:204px;}
+#ty_55{left:319px;top:204px;}
+#tz_55{left:401px;top:204px;}
+#t10_55{left:502px;top:204px;}
+#t11_55{left:50px;top:220px;}
+#t12_55{left:208px;top:220px;}
+#t13_55{left:245px;top:220px;}
+#t14_55{left:319px;top:220px;}
+#t15_55{left:401px;top:220px;}
+#t16_55{left:502px;top:220px;}
+#t17_55{left:50px;top:237px;}
+#t18_55{left:50px;top:253px;}
+#t19_55{left:203px;top:253px;}
+#t1a_55{left:243px;top:253px;}
+#t1b_55{left:319px;top:253px;}
+#t1c_55{left:400px;top:253px;}
+#t1d_55{left:502px;top:253px;}
+#t1e_55{left:50px;top:269px;}
+#t1f_55{left:208px;top:269px;}
+#t1g_55{left:245px;top:269px;}
+#t1h_55{left:319px;top:269px;}
+#t1i_55{left:400px;top:269px;}
+#t1j_55{left:502px;top:269px;}
+#t1k_55{left:50px;top:286px;}
+#t1l_55{left:208px;top:286px;}
+#t1m_55{left:245px;top:286px;}
+#t1n_55{left:282px;top:286px;}
+#t1o_55{left:319px;top:286px;}
+#t1p_55{left:400px;top:286px;}
+#t1q_55{left:502px;top:286px;}
+#t1r_55{left:50px;top:302px;}
+#t1s_55{left:208px;top:302px;}
+#t1t_55{left:245px;top:302px;}
+#t1u_55{left:319px;top:302px;}
+#t1v_55{left:400px;top:302px;}
+#t1w_55{left:502px;top:302px;}
+#t1x_55{left:50px;top:318px;}
+#t1y_55{left:208px;top:318px;}
+#t1z_55{left:245px;top:318px;}
+#t20_55{left:282px;top:318px;}
+#t21_55{left:319px;top:318px;}
+#t22_55{left:400px;top:318px;}
+#t23_55{left:502px;top:318px;}
+#t24_55{left:50px;top:335px;}
+#t25_55{left:50px;top:351px;}
+#t26_55{left:208px;top:351px;}
+#t27_55{left:248px;top:351px;}
+#t28_55{left:319px;top:351px;}
+#t29_55{left:400px;top:351px;}
+#t2a_55{left:502px;top:351px;}
+#t2b_55{left:50px;top:367px;}
+#t2c_55{left:208px;top:367px;}
+#t2d_55{left:248px;top:367px;}
+#t2e_55{left:319px;top:367px;}
+#t2f_55{left:400px;top:367px;}
+#t2g_55{left:502px;top:367px;}
+#t2h_55{left:50px;top:384px;}
+#t2i_55{left:208px;top:384px;}
+#t2j_55{left:248px;top:384px;}
+#t2k_55{left:319px;top:384px;}
+#t2l_55{left:400px;top:384px;}
+#t2m_55{left:502px;top:384px;}
+#t2n_55{left:50px;top:400px;}
+#t2o_55{left:208px;top:400px;}
+#t2p_55{left:248px;top:400px;}
+#t2q_55{left:319px;top:400px;}
+#t2r_55{left:400px;top:400px;}
+#t2s_55{left:502px;top:400px;}
+#t2t_55{left:50px;top:417px;}
+#t2u_55{left:208px;top:417px;}
+#t2v_55{left:245px;top:417px;}
+#t2w_55{left:319px;top:417px;}
+#t2x_55{left:400px;top:417px;}
+#t2y_55{left:502px;top:417px;}
+#t2z_55{left:50px;top:433px;}
+#t30_55{left:50px;top:449px;}
+#t31_55{left:208px;top:449px;}
+#t32_55{left:245px;top:449px;}
+#t33_55{left:319px;top:449px;}
+#t34_55{left:400px;top:449px;}
+#t35_55{left:502px;top:449px;}
+#t36_55{left:50px;top:466px;}
+#t37_55{left:208px;top:466px;}
+#t38_55{left:245px;top:466px;}
+#t39_55{left:319px;top:466px;}
+#t3a_55{left:400px;top:466px;}
+#t3b_55{left:502px;top:466px;}
+#t3c_55{left:50px;top:482px;}
+#t3d_55{left:208px;top:482px;}
+#t3e_55{left:245px;top:482px;}
+#t3f_55{left:319px;top:482px;}
+#t3g_55{left:400px;top:482px;}
+#t3h_55{left:502px;top:482px;}
+#t3i_55{left:50px;top:498px;}
+#t3j_55{left:208px;top:498px;}
+#t3k_55{left:245px;top:498px;}
+#t3l_55{left:319px;top:498px;}
+#t3m_55{left:400px;top:498px;}
+#t3n_55{left:502px;top:498px;}
+#t3o_55{left:50px;top:515px;}
+#t3p_55{left:208px;top:515px;}
+#t3q_55{left:245px;top:515px;}
+#t3r_55{left:319px;top:515px;}
+#t3s_55{left:400px;top:515px;}
+#t3t_55{left:502px;top:515px;}
+#t3u_55{left:50px;top:531px;}
+#t3v_55{left:208px;top:531px;}
+#t3w_55{left:245px;top:531px;}
+#t3x_55{left:319px;top:531px;}
+#t3y_55{left:400px;top:531px;}
+#t3z_55{left:502px;top:531px;}
+#t40_55{left:50px;top:547px;}
+#t41_55{left:50px;top:564px;}
+#t42_55{left:208px;top:564px;}
+#t43_55{left:245px;top:564px;}
+#t44_55{left:319px;top:564px;}
+#t45_55{left:400px;top:564px;}
+#t46_55{left:502px;top:564px;}
+#t47_55{left:50px;top:580px;}
+#t48_55{left:50px;top:597px;}
+#t49_55{left:208px;top:597px;}
+#t4a_55{left:248px;top:597px;}
+#t4b_55{left:319px;top:597px;}
+#t4c_55{left:400px;top:597px;}
+#t4d_55{left:502px;top:597px;}
+#t4e_55{left:50px;top:613px;}
+#t4f_55{left:208px;top:613px;}
+#t4g_55{left:245px;top:613px;}
+#t4h_55{left:319px;top:613px;}
+#t4i_55{left:400px;top:613px;}
+#t4j_55{left:502px;top:613px;}
+#t4k_55{left:50px;top:629px;}
+#t4l_55{left:208px;top:629px;}
+#t4m_55{left:245px;top:629px;}
+#t4n_55{left:319px;top:629px;}
+#t4o_55{left:400px;top:629px;}
+#t4p_55{left:502px;top:629px;}
+#t4q_55{left:41px;top:652px;}
+
+#t7_55 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s10_55{
+	FONT-SIZE: 48px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold55;
+	color: rgb(220,66,68);
+}
+
+.s5_55{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: YJUJYE-MyriadPro-BoldIt55;
+	color: rgb(0,0,0);
+}
+
+.s1_55{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold55;
+	color: rgb(255,255,255);
+}
+
+.s2_55{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold55;
+	color: rgb(255,255,255);
+}
+
+.s12_55{
+	FONT-SIZE: 42px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular55;
+	color: rgb(0,0,0);
+}
+
+.s8_55{
+	FONT-SIZE: 17px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold55;
+	color: rgb(255,255,255);
+}
+
+.s9_55{
+	FONT-SIZE: 48px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold55;
+	color: rgb(0,0,0);
+}
+
+.s4_55{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular55;
+	color: rgb(0,0,0);
+}
+
+.s3_55{
+	FONT-SIZE: 48px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold55;
+	color: rgb(225,44,49);
+}
+
+.s7_55{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Bold55;
+	color: rgb(255,255,255);
+}
+
+.s11_55{
+	FONT-SIZE: 48px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular55;
+	color: rgb(0,0,0);
+}
+
+.s6_55{
+	FONT-SIZE: 69px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_255;
+	color: rgb(219,0,60);
+}
+
+.v1_55{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold55;
+	src :url("55/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-BoldIt55;
+	src :url("55/fonts/YJUJYE-MyriadPro-BoldIt.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular55;
+	src :url("55/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Bold55;
+	src :url("55/fonts/YJUJYE-MyriadPro-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_255;
+	src :url("55/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_55" class="t s1_55">55</div>
+<div id="t2_55" class="t s2_55">www. generalcarbide.com</div>
+<div id="t3_55" class="t s2_55">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_55" class="t s3_55">Please visit our website for the latest grade specification information.</div>
+<div id="t5_55" class="t s4_55">* AVAILABLE IN WIRE EDM GRADE</div>
+<div id="t6_55" class="t s5_55">Sinter-HIP process guaranteed</div>
+<div id="t7_55" class="t v1_55 s6_55">Grade Specifcations</div>
+<div id="t8_55" class="t s7_55">CHEMICAL COMPOSITION</div>
+<div id="t9_55" class="t s7_55">WEIGHT PERCENT</div>
+<div id="ta_55" class="t s7_55">HARDNESS</div>
+<div id="tb_55" class="t s7_55">(HRA)</div>
+<div id="tc_55" class="t s7_55">DENSITY</div>
+<div id="td_55" class="t s7_55">±g/cm</div>
+<div id="te_55" class="t s8_55">3</div>
+<div id="tf_55" class="t s7_55">²</div>
+<div id="tg_55" class="t s7_55">AVERAGE </div>
+<div id="th_55" class="t s7_55">TRANSVERSE </div>
+<div id="ti_55" class="t s7_55">RUPTURE STRENGTH</div>
+<div id="tj_55" class="t s7_55">±psi²</div>
+<div id="tk_55" class="t s7_55">WC</div>
+<div id="tl_55" class="t s7_55">Co</div>
+<div id="tm_55" class="t s7_55">Other</div>
+<div id="tn_55" class="t s9_55">Tungsten Carbide Grades with Cobalt Binder</div>
+<div id="to_55" class="t s10_55">Ultrafine</div>
+<div id="tp_55" class="t s11_55">GC-004F </div>
+<div id="tq_55" class="t s11_55">95.5 </div>
+<div id="tr_55" class="t s11_55">4 .5</div>
+<div id="ts_55" class="t s11_55">94.0 - 95.5 </div>
+<div id="tt_55" class="t s11_55">14.73 - 15.01 </div>
+<div id="tu_55" class="t s11_55">435,000</div>
+<div id="tv_55" class="t s11_55">GC-012F* </div>
+<div id="tw_55" class="t s11_55">88 </div>
+<div id="tx_55" class="t s11_55">12 </div>
+<div id="ty_55" class="t s11_55">92.2 - 93.7 </div>
+<div id="tz_55" class="t s11_55">14.04 -14.24 </div>
+<div id="t10_55" class="t s11_55">475,000</div>
+<div id="t11_55" class="t s11_55">GC-015F* </div>
+<div id="t12_55" class="t s11_55">85 </div>
+<div id="t13_55" class="t s11_55">15</div>
+<div id="t14_55" class="t s11_55">90.1 - 92.1 </div>
+<div id="t15_55" class="t s11_55">13.84 -14.05 </div>
+<div id="t16_55" class="t s11_55">560,000</div>
+<div id="t17_55" class="t s10_55">Submicron</div>
+<div id="t18_55" class="t s11_55">GC-005 </div>
+<div id="t19_55" class="t s11_55">94.5 </div>
+<div id="t1a_55" class="t s11_55">5.5</div>
+<div id="t1b_55" class="t s11_55">93.0 - 94.5 </div>
+<div id="t1c_55" class="t s11_55">14.82 - 15.04 </div>
+<div id="t1d_55" class="t s11_55">445,000</div>
+<div id="t1e_55" class="t s11_55">GC-010* </div>
+<div id="t1f_55" class="t s11_55">90 </div>
+<div id="t1g_55" class="t s11_55">10</div>
+<div id="t1h_55" class="t s11_55">91.5 - 93.0 </div>
+<div id="t1i_55" class="t s11_55">14.32 - 14.56 </div>
+<div id="t1j_55" class="t s11_55">520,000</div>
+<div id="t1k_55" class="t s11_55">GC-010CR* </div>
+<div id="t1l_55" class="t s11_55">89 </div>
+<div id="t1m_55" class="t s11_55">10 </div>
+<div id="t1n_55" class="t s11_55">1 </div>
+<div id="t1o_55" class="t s11_55">91.9 - 93.4 </div>
+<div id="t1p_55" class="t s11_55">14.12 - 14.38 </div>
+<div id="t1q_55" class="t s11_55">530,000</div>
+<div id="t1r_55" class="t s11_55">GC-015* </div>
+<div id="t1s_55" class="t s11_55">85 </div>
+<div id="t1t_55" class="t s11_55">15</div>
+<div id="t1u_55" class="t s11_55">89.4 - 91.0 </div>
+<div id="t1v_55" class="t s11_55">13.82 - 14.05 </div>
+<div id="t1w_55" class="t s11_55">535,000</div>
+<div id="t1x_55" class="t s11_55">GC-015CR* </div>
+<div id="t1y_55" class="t s11_55">84 </div>
+<div id="t1z_55" class="t s11_55">15 </div>
+<div id="t20_55" class="t s11_55">1 </div>
+<div id="t21_55" class="t s11_55">90.5 - 92.2</div>
+<div id="t22_55" class="t s11_55">13.73 - 13.88 </div>
+<div id="t23_55" class="t s11_55">550,000</div>
+<div id="t24_55" class="t s10_55">Fine</div>
+<div id="t25_55" class="t s11_55">GC-106 </div>
+<div id="t26_55" class="t s11_55">94 </div>
+<div id="t27_55" class="t s11_55">6</div>
+<div id="t28_55" class="t s11_55">91.5 - 93.0 </div>
+<div id="t29_55" class="t s11_55">14.79 - 15.02 </div>
+<div id="t2a_55" class="t s11_55">510,000</div>
+<div id="t2b_55" class="t s11_55">GC-109 </div>
+<div id="t2c_55" class="t s11_55">91 </div>
+<div id="t2d_55" class="t s11_55">9</div>
+<div id="t2e_55" class="t s11_55">90.8 - 92.3 </div>
+<div id="t2f_55" class="t s11_55">14.49 - 14.70 </div>
+<div id="t2g_55" class="t s11_55">525,000</div>
+<div id="t2h_55" class="t s11_55">GC-206 </div>
+<div id="t2i_55" class="t s11_55">94 </div>
+<div id="t2j_55" class="t s11_55">6</div>
+<div id="t2k_55" class="t s11_55">91.2 - 92.7 </div>
+<div id="t2l_55" class="t s11_55">14.79 - 15.02 </div>
+<div id="t2m_55" class="t s11_55">480,000</div>
+<div id="t2n_55" class="t s11_55">GC-209 </div>
+<div id="t2o_55" class="t s11_55">91 </div>
+<div id="t2p_55" class="t s11_55">9</div>
+<div id="t2q_55" class="t s11_55">90.5 - 92.0 </div>
+<div id="t2r_55" class="t s11_55">14.49 - 14.70 </div>
+<div id="t2s_55" class="t s11_55">515,000</div>
+<div id="t2t_55" class="t s11_55">GC-211* </div>
+<div id="t2u_55" class="t s11_55">89 </div>
+<div id="t2v_55" class="t s11_55">11</div>
+<div id="t2w_55" class="t s11_55">89.8 - 91.3</div>
+<div id="t2x_55" class="t s11_55">14.29 - 14.49 </div>
+<div id="t2y_55" class="t s11_55">530,000</div>
+<div id="t2z_55" class="t s10_55">Medium</div>
+<div id="t30_55" class="t s11_55">GC-310* </div>
+<div id="t31_55" class="t s11_55">90 </div>
+<div id="t32_55" class="t s11_55">10</div>
+<div id="t33_55" class="t s11_55">89.7 - 91.2 </div>
+<div id="t34_55" class="t s11_55">14.29 - 14.49 </div>
+<div id="t35_55" class="t s11_55">510,000</div>
+<div id="t36_55" class="t s11_55">GC-313* </div>
+<div id="t37_55" class="t s11_55">87 </div>
+<div id="t38_55" class="t s11_55">13</div>
+<div id="t39_55" class="t s11_55">88.0 - 90.5 </div>
+<div id="t3a_55" class="t s11_55">13.90 - 14.30 </div>
+<div id="t3b_55" class="t s11_55">515,000</div>
+<div id="t3c_55" class="t s11_55">GC-315* </div>
+<div id="t3d_55" class="t s11_55">85 </div>
+<div id="t3e_55" class="t s11_55">15</div>
+<div id="t3f_55" class="t s11_55">87.8 - 90.3 </div>
+<div id="t3g_55" class="t s11_55">13.85 - 14.15 </div>
+<div id="t3h_55" class="t s11_55">520,000</div>
+<div id="t3i_55" class="t s11_55">GC-320* </div>
+<div id="t3j_55" class="t s11_55">80 </div>
+<div id="t3k_55" class="t s11_55">20</div>
+<div id="t3l_55" class="t s11_55">85.1 - 86.6 </div>
+<div id="t3m_55" class="t s11_55">13.46 - 13.64 </div>
+<div id="t3n_55" class="t s11_55">470,000</div>
+<div id="t3o_55" class="t s11_55">GC-325* </div>
+<div id="t3p_55" class="t s11_55">75 </div>
+<div id="t3q_55" class="t s11_55">25</div>
+<div id="t3r_55" class="t s11_55">82.5 - 84.7 </div>
+<div id="t3s_55" class="t s11_55">13.03 - 13.23 </div>
+<div id="t3t_55" class="t s11_55">440,000</div>
+<div id="t3u_55" class="t s11_55">GC-330* </div>
+<div id="t3v_55" class="t s11_55">70 </div>
+<div id="t3w_55" class="t s11_55">30</div>
+<div id="t3x_55" class="t s11_55">81.4 - 82.9 </div>
+<div id="t3y_55" class="t s11_55">12.61 - 12.82 </div>
+<div id="t3z_55" class="t s11_55">420,000</div>
+<div id="t40_55" class="t s10_55">Extra Coarse</div>
+<div id="t41_55" class="t s11_55">GC-915* </div>
+<div id="t42_55" class="t s11_55">85 </div>
+<div id="t43_55" class="t s11_55">15</div>
+<div id="t44_55" class="t s11_55">86.0 - 87.5 </div>
+<div id="t45_55" class="t s11_55">13.90 - 14.12 </div>
+<div id="t46_55" class="t s11_55">440,000</div>
+<div id="t47_55" class="t s10_55">Mixed</div>
+<div id="t48_55" class="t s11_55">GC-608M </div>
+<div id="t49_55" class="t s11_55">92 </div>
+<div id="t4a_55" class="t s11_55">8</div>
+<div id="t4b_55" class="t s11_55">89.5 - 91.0</div>
+<div id="t4c_55" class="t s11_55">14.60 - 14.83 </div>
+<div id="t4d_55" class="t s11_55">490,000</div>
+<div id="t4e_55" class="t s11_55">GC-610M </div>
+<div id="t4f_55" class="t s11_55">90 </div>
+<div id="t4g_55" class="t s11_55">10</div>
+<div id="t4h_55" class="t s11_55">89.3 - 90.8 </div>
+<div id="t4i_55" class="t s11_55">14.41 - 14.62 </div>
+<div id="t4j_55" class="t s11_55">500,000</div>
+<div id="t4k_55" class="t s11_55">GC-612M </div>
+<div id="t4l_55" class="t s11_55">88 </div>
+<div id="t4m_55" class="t s11_55">12</div>
+<div id="t4n_55" class="t s11_55">88.0 - 89.5</div>
+<div id="t4o_55" class="t s11_55">14.21 - 14.42 </div>
+<div id="t4p_55" class="t s11_55">510,000</div>
+<div id="t4q_55" class="t s12_55">REV. 9/1/13</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg55Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg55"><object width="605" height="935" data="55/55.svg" type="image/svg+xml" id="pdf55" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f55 = [['t2_55',626],['t3_55',1419],['t4_55',1501],['t5_55',763],['t6_55',797],['t7_55',614],['t8_55',355],['t9_55',246],['ti_55',288],['tn_55',955],['tr_55',70],['ts_55',204],['tt_55',254],['ty_55',204],['tz_55',244],['t14_55',204],['t15_55',244],['t1b_55',204],['t1c_55',254],['t1h_55',204],['t1i_55',254],['t1o_55',204],['t1p_55',254],['t1u_55',204],['t1v_55',254],['t21_55',204],['t22_55',254],['t28_55',204],['t29_55',254],['t2e_55',204],['t2f_55',254],['t2k_55',204],['t2l_55',254],['t2q_55',204],['t2r_55',254],['t2w_55',204],['t2x_55',254],['t33_55',204],['t34_55',254],['t39_55',204],['t3a_55',254],['t3f_55',204],['t3g_55',254],['t3l_55',204],['t3m_55',254],['t3r_55',204],['t3s_55',254],['t3x_55',204],['t3y_55',254],['t40_55',269],['t44_55',204],['t45_55',254],['t4b_55',204],['t4c_55',254],['t4h_55',204],['t4i_55',254],['t4n_55',204],['t4o_55',254],['t4q_55',201]];
+function load55(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f55);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 171;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_55");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page46</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,46,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load46();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_46{left:43px;top:898px;}
+#t2_46{left:125px;top:19px;letter-spacing:12px;}
+#t3_46{left:224px;top:901px;letter-spacing:4px;}
+#t4_46{left:63px;top:355px;}
+#t5_46{left:63px;top:370px;}
+#t6_46{left:493px;top:370px;}
+#t7_46{left:63px;top:386px;}
+#t8_46{left:329px;top:386px;}
+#t9_46{left:63px;top:401px;}
+#ta_46{left:454px;top:401px;}
+#tb_46{left:63px;top:416px;}
+#tc_46{left:41px;top:447px;letter-spacing:1px;}
+#td_46{left:63px;top:447px;}
+#te_46{left:151px;top:447px;}
+#tf_46{left:63px;top:462px;}
+#tg_46{left:63px;top:493px;}
+#th_46{left:63px;top:508px;}
+#ti_46{left:367px;top:508px;}
+#tj_46{left:63px;top:523px;}
+#tk_46{left:63px;top:539px;}
+#tl_46{left:195px;top:539px;}
+#tm_46{left:63px;top:554px;}
+#tn_46{left:63px;top:584px;}
+#to_46{left:63px;top:600px;}
+#tp_46{left:359px;top:600px;}
+#tq_46{left:63px;top:615px;}
+#tr_46{left:63px;top:630px;}
+#ts_46{left:482px;top:630px;}
+#tt_46{left:63px;top:645px;}
+#tu_46{left:63px;top:676px;}
+#tv_46{left:63px;top:691px;}
+#tw_46{left:311px;top:691px;}
+#tx_46{left:63px;top:707px;}
+#ty_46{left:63px;top:722px;}
+#tz_46{left:334px;top:722px;}
+#t10_46{left:63px;top:737px;}
+#t11_46{left:365px;top:737px;}
+#t12_46{left:63px;top:752px;}
+#t13_46{left:488px;top:752px;}
+#t14_46{left:63px;top:768px;}
+#t15_46{left:271px;top:312px;}
+
+.s1_46{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold46;
+	color: rgb(255,255,255);
+}
+
+.s4_46{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_246;
+	color: rgb(0,0,0);
+}
+
+.s2_46{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold46;
+	color: rgb(255,255,255);
+}
+
+.s3_46{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular46;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold46;
+	src :url("46/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular46;
+	src :url("46/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_246;
+	src :url("46/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_46" class="t s1_46">46</div>
+<div id="t2_46" class="t s2_46">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_46" class="t s2_46">www. generalcarbide.com</div>
+<div id="t4_46" class="t s3_46">The high compressive strength of carbide makes it well suited for the compression  </div>
+<div id="t5_46" class="t s3_46">loading and the high tensile strength of the steel complements this technique. </div>
+<div id="t6_46" class="t s3_46">The steel  </div>
+<div id="t7_46" class="t s3_46">can be pre-heated and then all parts assembled. </div>
+<div id="t8_46" class="t s3_46">Upon cooling, the steel drawrod shrinks </div>
+<div id="t9_46" class="t s3_46">and the pre-load is applied axially to the carbide compression member. </div>
+<div id="ta_46" class="t s3_46">Please note that  </div>
+<div id="tb_46" class="t s3_46">the pre-load must be calculated so as not to exceed the yield strength of the steel.</div>
+<div id="tc_46" class="t s3_46">(f)  </div>
+<div id="td_46" class="t s4_46">Tapped Holes –</div>
+<div id="te_46" class="t s3_46">Tapped holes can be achieved in diﬀerent ways, either by threading of in-</div>
+<div id="tf_46" class="t s3_46">serts or plugs or the use of external studs brazed to the non-working surface of the carbide.</div>
+<div id="tg_46" class="t s3_46">A common technique is to use INVAR plugs that can be brazed (see page 34) into a hole  </div>
+<div id="th_46" class="t s3_46">previously green machined into the carbide workpiece. </div>
+<div id="ti_46" class="t s3_46">Because INVAR has a CTE closer to </div>
+<div id="tj_46" class="t s3_46">that of cemented carbide, the resulting assembly is secure through the temperature range </div>
+<div id="tk_46" class="t s3_46">of the braze ﬁller metal. </div>
+<div id="tl_46" class="t s3_46">The insert is then drilled and threaded to required position and </div>
+<div id="tm_46" class="t s3_46">thread size.</div>
+<div id="tn_46" class="t s3_46">If the assembly allows for an external boss, a tapped stud can be brazed to the workpiece. </div>
+<div id="to_46" class="t s3_46">Studs are usually cross-slotted to reduce braze strains. </div>
+<div id="tp_46" class="t s3_46">With the advancements in CNC </div>
+<div id="tq_46" class="t s3_46">machining, it is possible to put internal threads into cemented carbide in the green state but </div>
+<div id="tr_46" class="t s3_46">care must be taken not to over-torque the bolt and strip the carbide threads. </div>
+<div id="ts_46" class="t s3_46">Also, calculat-</div>
+<div id="tt_46" class="t s3_46">ing shrink factors to ensure the proper hole location is critical when employing this method.</div>
+<div id="tu_46" class="t s3_46">Another technique, developed by General Carbide engineers, is to use a combination of </div>
+<div id="tv_46" class="t s3_46">internal carbide threads and epoxy adhesive. </div>
+<div id="tw_46" class="t s3_46">In this method, depicted in Figure IV-21, a </div>
+<div id="tx_46" class="t s3_46">hole is drilled and internally CNC threaded in the green carbide to an oversize condition of </div>
+<div id="ty_46" class="t s3_46">.010” - .014” in diameter from the desired tap size. </div>
+<div id="tz_46" class="t s3_46">After sintering, an A2 threaded steel plug </div>
+<div id="t10_46" class="t s3_46">is screwed into the hole with high temp epoxy cement. </div>
+<div id="t11_46" class="t s3_46">The .005” - .007” gap per side allows </div>
+<div id="t12_46" class="t s3_46">room for the epoxy cement to securely fasten the steel insert into the carbide. </div>
+<div id="t13_46" class="t s3_46">The carbide is </div>
+<div id="t14_46" class="t s3_46">then ready for screw mounting.</div>
+<div id="t15_46" class="t s4_46">Figure IV-20</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg46Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg46"><object width="605" height="935" data="46/46.svg" type="image/svg+xml" id="pdf46" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f46 = [['t2_46',1419],['t3_46',626],['t4_46',1793],['t5_46',1701],['t6_46',205],['t7_46',1044],['t8_46',862],['t9_46',1541],['ta_46',360],['tb_46',1775],['tc_46',61],['td_46',343],['te_46',1585],['tf_46',1977],['tg_46',1903],['th_46',1195],['ti_46',736],['tj_46',1952],['tk_46',510],['tl_46',1365],['tm_46',246],['tn_46',1937],['to_46',1165],['tp_46',674],['tq_46',1998],['tr_46',1654],['ts_46',297],['tt_46',1990],['tu_46',1897],['tv_46',972],['tw_46',902],['tx_46',1952],['ty_46',1065],['tz_46',891],['t10_46',1190],['t11_46',767],['t12_46',1681],['t13_46',299],['t14_46',681],['t15_46',271]];
+function load46(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f46);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 42;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_46");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

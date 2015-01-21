@@ -1,0 +1,431 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page16</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,16,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load16();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_16{left:43px;top:898px;}
+#t2_16{left:125px;top:19px;letter-spacing:12px;}
+#t3_16{left:224px;top:901px;letter-spacing:4px;}
+#t4_16{left:41px;top:71px;}
+#t5_16{left:41px;top:96px;}
+#t6_16{left:101px;top:96px;}
+#t7_16{left:41px;top:111px;}
+#t8_16{left:338px;top:111px;}
+#t9_16{left:346px;top:111px;}
+#ta_16{left:41px;top:126px;}
+#tb_16{left:41px;top:142px;}
+#tc_16{left:41px;top:177px;}
+#td_16{left:41px;top:203px;}
+#te_16{left:41px;top:227px;}
+#tf_16{left:41px;top:243px;}
+#tg_16{left:122px;top:243px;}
+#th_16{left:394px;top:243px;}
+#ti_16{left:41px;top:258px;}
+#tj_16{left:173px;top:258px;}
+#tk_16{left:353px;top:258px;}
+#tl_16{left:41px;top:273px;}
+#tm_16{left:166px;top:273px;}
+#tn_16{left:400px;top:273px;}
+#to_16{left:41px;top:288px;}
+#tp_16{left:41px;top:322px;}
+#tq_16{left:41px;top:346px;}
+#tr_16{left:181px;top:346px;}
+#ts_16{left:447px;top:346px;}
+#tt_16{left:41px;top:362px;}
+#tu_16{left:289px;top:362px;}
+#tv_16{left:41px;top:377px;}
+#tw_16{left:41px;top:408px;}
+#tx_16{left:41px;top:423px;}
+#ty_16{left:201px;top:423px;}
+#tz_16{left:41px;top:438px;}
+#t10_16{left:475px;top:438px;}
+#t11_16{left:41px;top:453px;}
+#t12_16{left:41px;top:469px;}
+#t13_16{left:284px;top:469px;}
+#t14_16{left:41px;top:484px;}
+#t15_16{left:41px;top:519px;}
+#t16_16{left:41px;top:548px;}
+#t17_16{left:41px;top:563px;}
+#t18_16{left:283px;top:563px;}
+#t19_16{left:41px;top:579px;}
+#t1a_16{left:237px;top:579px;}
+#t1b_16{left:41px;top:594px;}
+#t1c_16{left:300px;top:594px;}
+#t1d_16{left:307px;top:594px;}
+#t1e_16{left:41px;top:609px;}
+#t1f_16{left:435px;top:609px;}
+#t1g_16{left:41px;top:624px;}
+#t1h_16{left:468px;top:624px;}
+#t1i_16{left:41px;top:640px;}
+#t1j_16{left:291px;top:640px;}
+#t1k_16{left:41px;top:655px;}
+#t1l_16{left:41px;top:686px;}
+#t1m_16{left:498px;top:686px;}
+#t1n_16{left:41px;top:701px;}
+#t1o_16{left:41px;top:716px;}
+#t1p_16{left:188px;top:716px;}
+#t1q_16{left:41px;top:731px;}
+#t1r_16{left:331px;top:731px;}
+#t1s_16{left:41px;top:747px;}
+
+#t4_16,#tc_16,#td_16,#tp_16,#t15_16 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s8_16{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_216;
+	color: rgb(0,0,0);
+}
+
+.s1_16{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold16;
+	color: rgb(255,255,255);
+}
+
+.s5_16{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold16;
+	color: rgb(0,0,0);
+}
+
+.s6_16{
+	FONT-SIZE: 69px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold16;
+	color: rgb(219,0,60);
+}
+
+.s3_16{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold16;
+	color: rgb(219,0,60);
+}
+
+.s9_16{
+	FONT-SIZE: 69px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_216;
+	color: rgb(219,0,60);
+}
+
+.s7_16{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_216;
+	color: rgb(219,0,60);
+}
+
+.s4_16{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular16;
+	color: rgb(0,0,0);
+}
+
+.s2_16{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_216;
+	color: rgb(255,255,255);
+}
+
+.v1_16{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold16;
+	src :url("16/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular16;
+	src :url("16/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_216;
+	src :url("16/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_16" class="t s1_16">16</div>
+<div id="t2_16" class="t s2_16">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_16" class="t s2_16">www. generalcarbide.com</div>
+<div id="t4_16" class="t v1_16 s3_16">Thermal Conductivity</div>
+<div id="t5_16" class="t s4_16">Pure WC is </div>
+<div id="t6_16" class="t s5_16">an excellent conductor of heat but WC-Co cemented carbides have a thermal </div>
+<div id="t7_16" class="t s5_16">conductivity factor of about one-third that of copper</div>
+<div id="t8_16" class="t s4_16">. </div>
+<div id="t9_16" class="t s4_16">Grain size has no noticeable eﬀect </div>
+<div id="ta_16" class="t s4_16">on this property, however, the presence of titanium carbide or tantalum carbide additives will </div>
+<div id="tb_16" class="t s4_16">decrease the thermal conductivity factor signiﬁcantly.</div>
+<div id="tc_16" class="t v1_16 s6_16">ELECTRICAL AND MAGNETIC PROPERTIES</div>
+<div id="td_16" class="t v1_16 s7_16">Electrical Resistance and Conductivity</div>
+<div id="te_16" class="t s4_16">WC-Co cemented carbides have low electrical resistance with a typical value of 20 μΩ cm. </div>
+<div id="tf_16" class="t s4_16">Consequently, </div>
+<div id="tg_16" class="t s8_16">cemented carbide is a good electrical conductor</div>
+<div id="th_16" class="t s4_16">having a value of about 10%  </div>
+<div id="ti_16" class="t s4_16">of the copper standard. </div>
+<div id="tj_16" class="t s4_16">This property is useful because it </div>
+<div id="tk_16" class="t s5_16">allows the use of EDM (electrical </div>
+<div id="tl_16" class="t s5_16">discharge machining)</div>
+<div id="tm_16" class="t s4_16">as a fabrication tool for cemented carbide. </div>
+<div id="tn_16" class="t s4_16">See more on this technique  </div>
+<div id="to_16" class="t s4_16">in Chapter V.</div>
+<div id="tp_16" class="t v1_16 s3_16">Magnetic Properties</div>
+<div id="tq_16" class="t s4_16">Cemented carbides show </div>
+<div id="tr_16" class="t s5_16">ferromagnetic properties at room temperature</div>
+<div id="ts_16" class="t s4_16">due to the presence </div>
+<div id="tt_16" class="t s4_16">of the metallic binder phase, cobalt or nickel. </div>
+<div id="tu_16" class="t s4_16">This property is useful in nondestructive testing of </div>
+<div id="tv_16" class="t s4_16">a piece of carbide to determine magnetic saturation and coercivity.</div>
+<div id="tw_16" class="t s4_16">Low magnetic permeability is a characteristic of WC-Co cemented carbides that contain a  </div>
+<div id="tx_16" class="t s4_16">ferromagnetic binder phase. </div>
+<div id="ty_16" class="t s4_16">It increases with the cobalt content and the typical range of values </div>
+<div id="tz_16" class="t s4_16">is 1.01 to about 12 when the standard is considered a vacuum with a value of 1. </div>
+<div id="t10_16" class="t s4_16">This property </div>
+<div id="t11_16" class="t s4_16">can be useful in abrasion resistant applications involving computer or disk drive media where </div>
+<div id="t12_16" class="t s4_16">magnetism would have a deleterious eﬀect. </div>
+<div id="t13_16" class="t s4_16">A low magnetic permeability is important in a  </div>
+<div id="t14_16" class="t s4_16">compacting die for pressing magnetic powders.</div>
+<div id="t15_16" class="t v1_16 s9_16">CORROSION PROPERTIES</div>
+<div id="t16_16" class="t s4_16">More detailed information on corrosion resistance is presented in Chapter III but some</div>
+<div id="t17_16" class="t s4_16">fundamental information is presented here. </div>
+<div id="t18_16" class="t s5_16">Tungsten carbide particles themselves are </div>
+<div id="t19_16" class="t s5_16">resistant to most corrosive media. </div>
+<div id="t1a_16" class="t s5_16">It is the binder material that is susceptible to leaching in </div>
+<div id="t1b_16" class="t s5_16">the presence of a strong acid or alkali solution</div>
+<div id="t1c_16" class="t s4_16">. </div>
+<div id="t1d_16" class="t s4_16">The binder material will leach from the surface </div>
+<div id="t1e_16" class="t s4_16">of cemented carbide, leaving a skeletal structure, which is unsupported. </div>
+<div id="t1f_16" class="t s4_16">The carbide particles </div>
+<div id="t1g_16" class="t s4_16">will then abrade away quite readily, exposing new surface area to be attacked. </div>
+<div id="t1h_16" class="t s4_16">When binder </div>
+<div id="t1i_16" class="t s4_16">content is low, the carbide skeleton is denser. </div>
+<div id="t1j_16" class="t s4_16">Low binder grades show a slightly higher com-</div>
+<div id="t1k_16" class="t s4_16">bined wear and corrosion resistance than those grades with a higher binder content.</div>
+<div id="t1l_16" class="t s4_16">Straight WC-Co grades are corrosion resistant at neutral pH, which is a value of pH7. </div>
+<div id="t1m_16" class="t s4_16">This is also </div>
+<div id="t1n_16" class="t s4_16">true for WC-Co grades that contain additives like titanium carbide (TiC), tantalum carbide (TaC) </div>
+<div id="t1o_16" class="t s4_16">or niobium carbide (NbC). </div>
+<div id="t1p_16" class="t s4_16">Certain alloyed titanium carbide/nickel binder based grades possess </div>
+<div id="t1q_16" class="t s4_16">the highest corrosion resistance down to about pH1. </div>
+<div id="t1r_16" class="t s4_16">When compared to straight WC-Co grades </div>
+<div id="t1s_16" class="t s4_16">these grades are brittle and have inferior thermal conductivity.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg16Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg16"><object width="605" height="935" data="16/16.svg" type="image/svg+xml" id="pdf16" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f16 = [['t2_16',1419],['t3_16',626],['t4_16',595],['t5_16',226],['t6_16',1719],['t7_16',1185],['t9_16',739],['ta_16',2022],['tb_16',1162],['tc_16',1240],['td_16',1042],['te_16',1932],['tg_16',1080],['th_16',626],['ti_16',507],['tj_16',709],['tk_16',723],['tl_16',487],['tm_16',913],['tn_16',606],['to_16',273],['tp_16',557],['tq_16',549],['tr_16',1051],['ts_16',433],['tt_16',971],['tu_16',1088],['tv_16',1451],['tw_16',1939],['tx_16',615],['ty_16',1437],['tz_16',1713],['t10_16',290],['t11_16',2019],['t12_16',948],['t13_16',1002],['t14_16',1035],['t15_16',751],['t16_16',1864],['t17_16',944],['t18_16',946],['t19_16',760],['t1a_16',1257],['t1b_16',1033],['t1d_16',1006],['t1e_16',1555],['t1f_16',451],['t1g_16',1688],['t1h_16',282],['t1i_16',978],['t1j_16',1012],['t1k_16',1830],['t1l_16',1805],['t1m_16',229],['t1n_16',2048],['t1o_16',563],['t1p_16',1477],['t1q_16',1137],['t1r_16',914],['t1s_16',1352]];
+function load16(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f16);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 65;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_16");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

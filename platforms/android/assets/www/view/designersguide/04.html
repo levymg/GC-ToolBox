@@ -1,0 +1,508 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page4</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,4,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load4();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_4{left:43px;top:898px;}
+#t2_4{left:125px;top:19px;letter-spacing:12px;}
+#t3_4{left:224px;top:901px;letter-spacing:4px;}
+#t4_4{left:113px;top:126px;}
+#t5_4{left:113px;top:145px;}
+#t6_4{left:166px;top:145px;}
+#t7_4{left:461px;top:145px;}
+#t8_4{left:113px;top:176px;}
+#t9_4{left:156px;top:176px;}
+#ta_4{left:461px;top:176px;}
+#tb_4{left:126px;top:191px;}
+#tc_4{left:327px;top:191px;}
+#td_4{left:461px;top:191px;}
+#te_4{left:126px;top:207px;}
+#tf_4{left:235px;top:207px;}
+#tg_4{left:461px;top:207px;}
+#th_4{left:126px;top:222px;}
+#ti_4{left:266px;top:222px;}
+#tj_4{left:461px;top:222px;}
+#tk_4{left:126px;top:237px;}
+#tl_4{left:189px;top:237px;}
+#tm_4{left:461px;top:237px;}
+#tn_4{left:137px;top:252px;}
+#to_4{left:228px;top:252px;}
+#tp_4{left:461px;top:252px;}
+#tq_4{left:137px;top:268px;}
+#tr_4{left:332px;top:268px;}
+#ts_4{left:461px;top:268px;}
+#tt_4{left:128px;top:283px;}
+#tu_4{left:266px;top:283px;}
+#tv_4{left:461px;top:283px;}
+#tw_4{left:128px;top:298px;}
+#tx_4{left:348px;top:298px;}
+#ty_4{left:461px;top:298px;}
+#tz_4{left:113px;top:329px;}
+#t10_4{left:220px;top:329px;}
+#t11_4{left:461px;top:329px;}
+#t12_4{left:137px;top:344px;}
+#t13_4{left:222px;top:344px;}
+#t14_4{left:461px;top:344px;}
+#t15_4{left:137px;top:359px;}
+#t16_4{left:238px;top:359px;}
+#t17_4{left:461px;top:359px;}
+#t18_4{left:113px;top:390px;}
+#t19_4{left:284px;top:390px;}
+#t1a_4{left:461px;top:390px;}
+#t1b_4{left:137px;top:405px;}
+#t1c_4{left:238px;top:405px;}
+#t1d_4{left:461px;top:405px;}
+#t1e_4{left:137px;top:420px;}
+#t1f_4{left:309px;top:420px;}
+#t1g_4{left:461px;top:420px;}
+#t1h_4{left:137px;top:436px;}
+#t1i_4{left:187px;top:436px;}
+#t1j_4{left:461px;top:436px;}
+#t1k_4{left:113px;top:466px;}
+#t1l_4{left:228px;top:466px;}
+#t1m_4{left:461px;top:466px;}
+#t1n_4{left:137px;top:482px;}
+#t1o_4{left:207px;top:482px;}
+#t1p_4{left:461px;top:482px;}
+#t1q_4{left:137px;top:497px;}
+#t1r_4{left:253px;top:497px;}
+#t1s_4{left:461px;top:497px;}
+#t1t_4{left:137px;top:512px;}
+#t1u_4{left:279px;top:512px;}
+#t1v_4{left:461px;top:512px;}
+#t1w_4{left:113px;top:543px;}
+#t1x_4{left:113px;top:563px;}
+#t1y_4{left:121px;top:578px;}
+#t1z_4{left:169px;top:578px;}
+#t20_4{left:461px;top:578px;}
+#t21_4{left:137px;top:593px;}
+#t22_4{left:215px;top:593px;}
+#t23_4{left:461px;top:593px;}
+#t24_4{left:137px;top:608px;}
+#t25_4{left:174px;top:608px;}
+#t26_4{left:461px;top:608px;}
+#t27_4{left:137px;top:624px;}
+#t28_4{left:222px;top:624px;}
+#t29_4{left:461px;top:624px;}
+#t2a_4{left:137px;top:639px;}
+#t2b_4{left:187px;top:639px;}
+#t2c_4{left:461px;top:639px;}
+#t2d_4{left:137px;top:654px;}
+#t2e_4{left:238px;top:654px;}
+#t2f_4{left:461px;top:654px;}
+#t2g_4{left:113px;top:685px;}
+#t2h_4{left:307px;top:685px;}
+#t2i_4{left:461px;top:685px;}
+#t2j_4{left:137px;top:700px;}
+#t2k_4{left:238px;top:700px;}
+#t2l_4{left:461px;top:700px;}
+#t2m_4{left:137px;top:715px;}
+#t2n_4{left:215px;top:715px;}
+#t2o_4{left:461px;top:715px;}
+#t2p_4{left:137px;top:731px;}
+#t2q_4{left:225px;top:731px;}
+#t2r_4{left:461px;top:731px;}
+#t2s_4{left:113px;top:761px;}
+#t2t_4{left:171px;top:761px;}
+#t2u_4{left:461px;top:761px;}
+#t2v_4{left:113px;top:776px;}
+#t2w_4{left:222px;top:776px;}
+#t2x_4{left:461px;top:776px;}
+#t2y_4{left:113px;top:792px;}
+#t2z_4{left:212px;top:792px;}
+#t30_4{left:461px;top:792px;}
+#t31_4{left:113px;top:807px;}
+#t32_4{left:146px;top:807px;}
+#t33_4{left:461px;top:807px;}
+#t34_4{left:198px;top:70px;}
+#t35_4{left:364px;top:78px;}
+
+.s1_4{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold4;
+	color: rgb(255,255,255);
+}
+
+.s6_4{
+	FONT-SIZE: 85px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_24;
+	color: rgb(219,0,60);
+}
+
+.s4_4{
+	FONT-SIZE: 49px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular4;
+	color: rgb(0,0,0);
+}
+
+.s2_4{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold4;
+	color: rgb(255,255,255);
+}
+
+.s5_4{
+	FONT-SIZE: 49px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_24;
+	color: rgb(0,0,0);
+}
+
+.s7_4{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-SemiboldIt4;
+	color: rgb(219,0,60);
+}
+
+.s3_4{
+	FONT-SIZE: 49px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_24;
+	color: rgb(219,0,60);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold4;
+	src :url("04/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular4;
+	src :url("04/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-SemiboldIt4;
+	src :url("04/fonts/YJUJYE-MyriadPro-SemiboldIt.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_24;
+	src :url("04/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_4" class="t s1_4">4</div>
+<div id="t2_4" class="t s2_4">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_4" class="t s2_4">www. generalcarbide.com</div>
+<div id="t4_4" class="t s3_4">Chapter IV – Attaching &amp; Assembling of Cemented Carbide Parts</div>
+<div id="t5_4" class="t s4_4">Overview .</div>
+<div id="t6_4" class="t s4_4">...................................................................................................................</div>
+<div id="t7_4" class="t s4_4">27</div>
+<div id="t8_4" class="t s4_4">Brazing .</div>
+<div id="t9_4" class="t s4_4">.......................................................................................................................</div>
+<div id="ta_4" class="t s4_4">28</div>
+<div id="tb_4" class="t s4_4">Bi-metal Thermal Expansion Diﬀerence .</div>
+<div id="tc_4" class="t s4_4">....................................................</div>
+<div id="td_4" class="t s4_4">28</div>
+<div id="te_4" class="t s4_4">Relieving Braze Stain .</div>
+<div id="tf_4" class="t s4_4">........................................................................................</div>
+<div id="tg_4" class="t s4_4">29</div>
+<div id="th_4" class="t s4_4">Design Recommendations .</div>
+<div id="ti_4" class="t s4_4">............................................................................</div>
+<div id="tj_4" class="t s4_4">31</div>
+<div id="tk_4" class="t s4_4">Braze Joints .</div>
+<div id="tl_4" class="t s4_4">..........................................................................................................</div>
+<div id="tm_4" class="t s4_4">32</div>
+<div id="tn_4" class="t s4_4">Thickness, Shape .</div>
+<div id="to_4" class="t s4_4">...........................................................................................</div>
+<div id="tp_4" class="t s4_4">33</div>
+<div id="tq_4" class="t s4_4">Performance at Various Temperatures .</div>
+<div id="tr_4" class="t s4_4">..................................................</div>
+<div id="ts_4" class="t s4_4">33</div>
+<div id="tt_4" class="t s4_4">Brazing to Hardened Steel .</div>
+<div id="tu_4" class="t s4_4">............................................................................</div>
+<div id="tv_4" class="t s4_4">34</div>
+<div id="tw_4" class="t s4_4">Brazing Procedures for Cemented Carbide .</div>
+<div id="tx_4" class="t s4_4">............................................</div>
+<div id="ty_4" class="t s4_4">34</div>
+<div id="tz_4" class="t s4_4">Industrial Adhesives .</div>
+<div id="t10_4" class="t s4_4">..............................................................................................</div>
+<div id="t11_4" class="t s4_4">36</div>
+<div id="t12_4" class="t s4_4">Thermal Cycling .</div>
+<div id="t13_4" class="t s4_4">.............................................................................................</div>
+<div id="t14_4" class="t s4_4">37</div>
+<div id="t15_4" class="t s4_4">Recommendations .</div>
+<div id="t16_4" class="t s4_4">.......................................................................................</div>
+<div id="t17_4" class="t s4_4">37</div>
+<div id="t18_4" class="t s4_4">Interference/Shrink Fit Assembly .</div>
+<div id="t19_4" class="t s4_4">.....................................................................</div>
+<div id="t1a_4" class="t s4_4">38</div>
+<div id="t1b_4" class="t s4_4">General Guidelines .</div>
+<div id="t1c_4" class="t s4_4">.......................................................................................</div>
+<div id="t1d_4" class="t s4_4">39</div>
+<div id="t1e_4" class="t s4_4">Carbide on the Outside Diameter .</div>
+<div id="t1f_4" class="t s4_4">...........................................................</div>
+<div id="t1g_4" class="t s4_4">41</div>
+<div id="t1h_4" class="t s4_4">Press Fits .</div>
+<div id="t1i_4" class="t s4_4">...........................................................................................................</div>
+<div id="t1j_4" class="t s4_4">41</div>
+<div id="t1k_4" class="t s4_4">Mechanical Fastening .</div>
+<div id="t1l_4" class="t s4_4">...........................................................................................</div>
+<div id="t1m_4" class="t s4_4">43</div>
+<div id="t1n_4" class="t s4_4">Design Rules .</div>
+<div id="t1o_4" class="t s4_4">...................................................................................................</div>
+<div id="t1p_4" class="t s4_4">43</div>
+<div id="t1q_4" class="t s4_4">Methods of Fastening .</div>
+<div id="t1r_4" class="t s4_4">.................................................................................</div>
+<div id="t1s_4" class="t s4_4">44</div>
+<div id="t1t_4" class="t s4_4">Internal Threads and Epoxy.</div>
+<div id="t1u_4" class="t s4_4">.......................................................................</div>
+<div id="t1v_4" class="t s4_4">46</div>
+<div id="t1w_4" class="t s3_4">Chapter V – Finishing Techniques</div>
+<div id="t1x_4" class="t s4_4">Finishing </div>
+<div id="t1y_4" class="t s4_4">Grinding .</div>
+<div id="t1z_4" class="t s4_4">..................................................................................................................</div>
+<div id="t20_4" class="t s4_4">48</div>
+<div id="t21_4" class="t s4_4">Fundamentals .</div>
+<div id="t22_4" class="t s4_4">...............................................................................................</div>
+<div id="t23_4" class="t s4_4">48</div>
+<div id="t24_4" class="t s4_4">Factors±</div>
+<div id="t25_4" class="t s4_4">................................................................................................................</div>
+<div id="t26_4" class="t s4_4">49</div>
+<div id="t27_4" class="t s4_4">Surface Finishes .</div>
+<div id="t28_4" class="t s4_4">.............................................................................................</div>
+<div id="t29_4" class="t s4_4">49</div>
+<div id="t2a_4" class="t s4_4">Cautions .</div>
+<div id="t2b_4" class="t s4_4">...........................................................................................................</div>
+<div id="t2c_4" class="t s4_4">50</div>
+<div id="t2d_4" class="t s4_4">Recommendations .</div>
+<div id="t2e_4" class="t s4_4">.......................................................................................</div>
+<div id="t2f_4" class="t s4_4">50</div>
+<div id="t2g_4" class="t s4_4">Electrical Discharge Machining (EDM) .</div>
+<div id="t2h_4" class="t s4_4">............................................................</div>
+<div id="t2i_4" class="t s4_4">51</div>
+<div id="t2j_4" class="t s4_4">Designing for EDM .</div>
+<div id="t2k_4" class="t s4_4">.......................................................................................</div>
+<div id="t2l_4" class="t s4_4">52</div>
+<div id="t2m_4" class="t s4_4">Cutting Speed .</div>
+<div id="t2n_4" class="t s4_4">................................................................................................</div>
+<div id="t2o_4" class="t s4_4">53</div>
+<div id="t2p_4" class="t s4_4">EDM Limitations .</div>
+<div id="t2q_4" class="t s4_4">............................................................................................</div>
+<div id="t2r_4" class="t s4_4">53</div>
+<div id="t2s_4" class="t s5_4">References</div>
+<div id="t2t_4" class="t s4_4">.................................................................................................................</div>
+<div id="t2u_4" class="t s4_4">54</div>
+<div id="t2v_4" class="t s5_4">Grade Speci±cations</div>
+<div id="t2w_4" class="t s4_4">.............................................................................................</div>
+<div id="t2x_4" class="t s4_4">55</div>
+<div id="t2y_4" class="t s5_4">Conversion Charts</div>
+<div id="t2z_4" class="t s4_4">.................................................................................................</div>
+<div id="t30_4" class="t s4_4">57</div>
+<div id="t31_4" class="t s4_4">Notes .</div>
+<div id="t32_4" class="t s4_4">...........................................................................................................................</div>
+<div id="t33_4" class="t s4_4">58</div>
+<div id="t34_4" class="t s6_4">Table of Contents </div>
+<div id="t35_4" class="t s7_4">cont’d </div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg4Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg4"><object width="605" height="935" data="04/4.svg" type="image/svg+xml" id="pdf4" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f4 = [['t2_4',1419],['t3_4',626],['t4_4',1361],['t5_4',214],['t8_4',173],['tb_4',805],['te_4',437],['th_4',560],['tk_4',254],['tn_4',361],['tq_4',780],['tt_4',550],['tw_4',876],['tz_4',429],['t12_4',341],['t15_4',402],['t18_4',684],['t1b_4',402],['t1e_4',688],['t1h_4',198],['t1k_4',459],['t1n_4',280],['t1q_4',464],['t1t_4',566],['t1w_4',699],['t1y_4',193],['t21_4',310],['t27_4',341],['t2a_4',198],['t2d_4',402],['t2g_4',776],['t2j_4',402],['t2m_4',310],['t2p_4',351],['t2v_4',435],['t2y_4',389],['t31_4',132],['t34_4',643]];
+function load4(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f4);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 114;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_4");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

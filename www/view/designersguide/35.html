@@ -1,0 +1,437 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page35</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,35,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load35();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_35{left:545px;top:897px;}
+#t2_35{left:224px;top:901px;letter-spacing:4px;}
+#t3_35{left:125px;top:19px;letter-spacing:12px;}
+#t4_35{left:41px;top:72px;}
+#t5_35{left:57px;top:86px;}
+#t6_35{left:72px;top:86px;}
+#t7_35{left:341px;top:86px;}
+#t8_35{left:96px;top:100px;}
+#t9_35{left:72px;top:113px;}
+#ta_35{left:429px;top:113px;}
+#tb_35{left:72px;top:127px;}
+#tc_35{left:57px;top:141px;}
+#td_35{left:72px;top:141px;}
+#te_35{left:57px;top:155px;}
+#tf_35{left:72px;top:155px;}
+#tg_35{left:57px;top:168px;}
+#th_35{left:72px;top:168px;}
+#ti_35{left:72px;top:182px;}
+#tj_35{left:57px;top:196px;}
+#tk_35{left:72px;top:196px;}
+#tl_35{left:57px;top:210px;}
+#tm_35{left:72px;top:210px;}
+#tn_35{left:72px;top:223px;}
+#to_35{left:210px;top:223px;}
+#tp_35{left:57px;top:237px;}
+#tq_35{left:72px;top:237px;}
+#tr_35{left:72px;top:251px;}
+#ts_35{left:167px;top:251px;}
+#tt_35{left:57px;top:265px;}
+#tu_35{left:72px;top:265px;}
+#tv_35{left:72px;top:278px;}
+#tw_35{left:41px;top:306px;}
+#tx_35{left:41px;top:333px;}
+#ty_35{left:57px;top:347px;}
+#tz_35{left:57px;top:361px;}
+#t10_35{left:72px;top:361px;}
+#t11_35{left:57px;top:375px;}
+#t12_35{left:72px;top:375px;}
+#t13_35{left:72px;top:388px;}
+#t14_35{left:119px;top:388px;}
+#t15_35{left:339px;top:388px;}
+#t16_35{left:72px;top:402px;}
+#t17_35{left:224px;top:402px;}
+#t18_35{left:57px;top:416px;}
+#t19_35{left:72px;top:416px;}
+#t1a_35{left:526px;top:416px;}
+#t1b_35{left:72px;top:430px;}
+#t1c_35{left:57px;top:443px;}
+#t1d_35{left:72px;top:443px;}
+#t1e_35{left:72px;top:457px;}
+#t1f_35{left:57px;top:471px;}
+#t1g_35{left:72px;top:471px;}
+#t1h_35{left:72px;top:485px;}
+#t1i_35{left:72px;top:498px;}
+#t1j_35{left:57px;top:512px;}
+#t1k_35{left:72px;top:512px;}
+#t1l_35{left:72px;top:526px;}
+#t1m_35{left:57px;top:540px;}
+#t1n_35{left:72px;top:540px;}
+#t1o_35{left:72px;top:553px;}
+#t1p_35{left:57px;top:567px;}
+#t1q_35{left:72px;top:567px;}
+#t1r_35{left:72px;top:581px;}
+#t1s_35{left:215px;top:581px;}
+#t1t_35{left:72px;top:595px;}
+#t1u_35{left:57px;top:608px;}
+#t1v_35{left:78px;top:608px;}
+#t1w_35{left:41px;top:636px;}
+#t1x_35{left:41px;top:650px;}
+#t1y_35{left:56px;top:650px;}
+#t1z_35{left:41px;top:663px;}
+#t20_35{left:56px;top:663px;}
+#t21_35{left:41px;top:677px;}
+#t22_35{left:41px;top:705px;}
+#t23_35{left:41px;top:718px;}
+#t24_35{left:56px;top:718px;}
+#t25_35{left:41px;top:732px;}
+#t26_35{left:56px;top:732px;}
+#t27_35{left:41px;top:760px;}
+#t28_35{left:57px;top:773px;}
+#t29_35{left:72px;top:773px;}
+#t2a_35{left:72px;top:787px;}
+#t2b_35{left:57px;top:801px;}
+#t2c_35{left:72px;top:801px;}
+#t2d_35{left:318px;top:801px;}
+#t2e_35{left:72px;top:815px;}
+
+.s1_35{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold35;
+	color: rgb(255,255,255);
+}
+
+.s4_35{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular35;
+	color: rgb(0,0,0);
+}
+
+.s5_35{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold35;
+	color: rgb(0,0,0);
+}
+
+.s2_35{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold35;
+	color: rgb(255,255,255);
+}
+
+.s3_35{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_235;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold35;
+	src :url("35/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular35;
+	src :url("35/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_235;
+	src :url("35/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_35" class="t s1_35">35</div>
+<div id="t2_35" class="t s2_35">www. generalcarbide.com</div>
+<div id="t3_35" class="t s2_35">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_35" class="t s3_35">Preparing the Parts:</div>
+<div id="t5_35" class="t s4_35">1. </div>
+<div id="t6_35" class="t s4_35">Grit blast parts using silicon carbide ceramic grit. </div>
+<div id="t7_35" class="t s4_35">CAUTION: Aluminum oxide abrasive  </div>
+<div id="t8_35" class="t s4_35">should not be used since it will inhibit proper wetting of the surface and decrease the  </div>
+<div id="t9_35" class="t s4_35">bonding strength, especially when brazing ﬂat surfaces together. </div>
+<div id="ta_35" class="t s4_35">Silicon carbide is a more  </div>
+<div id="tb_35" class="t s4_35">friable abrasive and will not penetrate into the micropores of the surface.</div>
+<div id="tc_35" class="t s4_35">2. </div>
+<div id="td_35" class="t s4_35">Wearing rubber gloves, clean all pieces with Denatured Alcohol or Toluene.</div>
+<div id="te_35" class="t s4_35">3. </div>
+<div id="tf_35" class="t s4_35">Be sure the parts are dry.</div>
+<div id="tg_35" class="t s4_35">4. </div>
+<div id="th_35" class="t s4_35">Flux the hole in the part and the plug with Stay-Sylv high-temperature ﬂux.</div>
+<div id="ti_35" class="t s4_35">(Fluxing will alleviate air and help capillary action of the braze material to take place).</div>
+<div id="tj_35" class="t s4_35">5. </div>
+<div id="tk_35" class="t s4_35">Set parts on a ceramic tray.</div>
+<div id="tl_35" class="t s4_35">6. </div>
+<div id="tm_35" class="t s4_35">If the plug is to be inserted into a blind hole, drop small pieces of braze material into the  </div>
+<div id="tn_35" class="t s4_35">hole and insert the plug. </div>
+<div id="to_35" class="t s4_35">(You can also partially wrap braze material around the plug).</div>
+<div id="tp_35" class="t s4_35">7. </div>
+<div id="tq_35" class="t s4_35">In some cases you may have to use a graphite plug to prevent the ﬂow of braze into  </div>
+<div id="tr_35" class="t s4_35">unwanted areas. </div>
+<div id="ts_35" class="t s4_35">For example, a counterbored hole with a through hole being plugged.</div>
+<div id="tt_35" class="t s4_35">8. </div>
+<div id="tu_35" class="t s4_35">When brazing ﬂat bars with through holes use a .007” shim on each end of the</div>
+<div id="tv_35" class="t s4_35">bar so the plug protrudes.</div>
+<div id="tw_35" class="t s4_35">You are now ready to braze.</div>
+<div id="tx_35" class="t s3_35">Brazing the Parts:</div>
+<div id="ty_35" class="t s4_35">1. Turn on the vapor hood.</div>
+<div id="tz_35" class="t s4_35">2. </div>
+<div id="t10_35" class="t s4_35">Cut pieces of braze material to desired length.</div>
+<div id="t11_35" class="t s4_35">3. </div>
+<div id="t12_35" class="t s4_35">Heat the part with an oxygen/acetylene torch making sure to heat the part evenly</div>
+<div id="t13_35" class="t s4_35">all over. </div>
+<div id="t14_35" class="t s4_35">(Take care not to get the part super hot. </div>
+<div id="t15_35" class="t s4_35">The torch can reach</div>
+<div id="t16_35" class="t s4_35">temperatures up to 1600°F. </div>
+<div id="t17_35" class="t s4_35">If heat is not even, the part could crack).</div>
+<div id="t18_35" class="t s4_35">4. </div>
+<div id="t19_35" class="t s4_35">Feed the braze material into the gap between the carbide part and the INVAR plug. </div>
+<div id="t1a_35" class="t s4_35">Also,  </div>
+<div id="t1b_35" class="t s4_35">work the INVAR plug up and down and around to ensure good braze material ﬂow.</div>
+<div id="t1c_35" class="t s4_35">5. </div>
+<div id="t1d_35" class="t s4_35">When brazing carbide parts with counterbored through holes, turn the part over,</div>
+<div id="t1e_35" class="t s4_35">if possible, and feed the braze material from the bottom.</div>
+<div id="t1f_35" class="t s4_35">6. </div>
+<div id="t1g_35" class="t s4_35">Large mass carbide parts may need to be pre-heated in a furnace to about 1150°F and  </div>
+<div id="t1h_35" class="t s4_35">held there until the part is red/orange in color (approximately one hour per inch  </div>
+<div id="t1i_35" class="t s4_35">of wall thickness).</div>
+<div id="t1j_35" class="t s4_35">7. </div>
+<div id="t1k_35" class="t s4_35">When the carbide part is red/orange in color, remove the parts from the furnace</div>
+<div id="t1l_35" class="t s4_35">and place them on a pre-heated tray to braze.</div>
+<div id="t1m_35" class="t s4_35">8. </div>
+<div id="t1n_35" class="t s4_35">To prevent the brazed assembly from sticking to the tray when brazing, simply</div>
+<div id="t1o_35" class="t s4_35">tap it after the braze sets up but while the assembly is still hot.</div>
+<div id="t1p_35" class="t s4_35">9. </div>
+<div id="t1q_35" class="t s4_35">Finer grain grades of cemented carbides need to be staged and preheated to</div>
+<div id="t1r_35" class="t s4_35">400°F for about one hour. </div>
+<div id="t1s_35" class="t s4_35">When brazing is complete, put them back into the</div>
+<div id="t1t_35" class="t s4_35">preheated furnace at 900° - 1000°F.</div>
+<div id="t1u_35" class="t s4_35">10. </div>
+<div id="t1v_35" class="t s4_35">Turn furnace oﬀ and let the assembly cool in the furnace.</div>
+<div id="t1w_35" class="t s5_35">Cooling:</div>
+<div id="t1x_35" class="t s4_35">1. </div>
+<div id="t1y_35" class="t s4_35">Let the brazed assembly air cool.</div>
+<div id="t1z_35" class="t s4_35">2. </div>
+<div id="t20_35" class="t s4_35">Do not set the assembly on a cold surface or expose it to cold air or anything that would cool </div>
+<div id="t21_35" class="t s4_35">it rapidly.</div>
+<div id="t22_35" class="t s3_35">Clean-Up and Inspection:</div>
+<div id="t23_35" class="t s4_35">1. </div>
+<div id="t24_35" class="t s4_35">Grind oﬀ excessive braze material.</div>
+<div id="t25_35" class="t s4_35">2. </div>
+<div id="t26_35" class="t s4_35">Grit blast and inspect the assembly to ensure a good braze.</div>
+<div id="t27_35" class="t s5_35">Additional Notes:</div>
+<div id="t28_35" class="t s4_35">1. </div>
+<div id="t29_35" class="t s4_35">When brazing round parts it is extremely important to heat the entire part  </div>
+<div id="t2a_35" class="t s4_35">evenly to prevent cracking.</div>
+<div id="t2b_35" class="t s4_35">2. </div>
+<div id="t2c_35" class="t s4_35">Put a piece of steel or graphite inside the I.D. </div>
+<div id="t2d_35" class="t s4_35">of the part to help hold the heat.</div>
+<div id="t2e_35" class="t s4_35">Be sure this part has suﬃcient clearance from the I.D.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg35Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg35"><object width="605" height="935" data="35/35.svg" type="image/svg+xml" id="pdf35" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f35 = [['t2_35',626],['t3_35',1419],['t4_35',446],['t6_35',1053],['t7_35',789],['t8_35',1860],['t9_35',1407],['ta_35',535],['tb_35',1577],['td_35',1620],['tf_35',535],['th_35',1624],['ti_35',1838],['tk_35',581],['tm_35',1914],['tn_35',530],['to_35',1304],['tq_35',1819],['tr_35',357],['ts_35',1518],['tu_35',1687],['tv_35',562],['tw_35',598],['tx_35',395],['ty_35',586],['t10_35',994],['t12_35',1771],['t13_35',165],['t14_35',860],['t15_35',426],['t16_35',586],['t17_35',863],['t19_35',1793],['t1a_35',114],['t1b_35',1788],['t1d_35',1751],['t1e_35',1221],['t1g_35',1871],['t1h_35',1742],['t1i_35',383],['t1k_35',1726],['t1l_35',989],['t1n_35',1693],['t1o_35',1345],['t1q_35',1664],['t1r_35',552],['t1s_35',1084],['t1t_35',755],['t1v_35',1229],['t1y_35',705],['t20_35',2006],['t21_35',199],['t22_35',568],['t24_35',737],['t26_35',1279],['t27_35',392],['t29_35',1614],['t2a_35',585],['t2c_35',961],['t2d_35',707],['t2e_35',1142]];
+function load35(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f35);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 87;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_35");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

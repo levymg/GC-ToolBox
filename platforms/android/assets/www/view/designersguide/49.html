@@ -1,0 +1,343 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page49</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,49,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load49();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_49{left:545px;top:897px;}
+#t2_49{left:224px;top:901px;letter-spacing:4px;}
+#t3_49{left:125px;top:19px;letter-spacing:12px;}
+#t4_49{left:41px;top:425px;}
+#t5_49{left:41px;top:450px;}
+#t6_49{left:41px;top:465px;}
+#t7_49{left:41px;top:480px;}
+#t8_49{left:199px;top:480px;}
+#t9_49{left:41px;top:496px;}
+#ta_49{left:41px;top:511px;}
+#tb_49{left:179px;top:511px;}
+#tc_49{left:41px;top:526px;}
+#td_49{left:41px;top:542px;}
+#te_49{left:41px;top:557px;}
+#tf_49{left:131px;top:557px;}
+#tg_49{left:41px;top:572px;}
+#th_49{left:374px;top:572px;}
+#ti_49{left:41px;top:587px;}
+#tj_49{left:413px;top:587px;}
+#tk_49{left:41px;top:603px;}
+#tl_49{left:41px;top:618px;}
+#tm_49{left:41px;top:645px;}
+#tn_49{left:41px;top:670px;}
+#to_49{left:41px;top:685px;}
+#tp_49{left:41px;top:700px;}
+#tq_49{left:244px;top:700px;}
+#tr_49{left:41px;top:716px;}
+#ts_49{left:41px;top:731px;}
+#tt_49{left:186px;top:344px;}
+#tu_49{left:252px;top:344px;}
+#tv_49{left:202px;top:359px;}
+#tw_49{left:204px;top:375px;}
+
+#t4_49,#tm_49 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s5_49{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_249;
+	color: rgb(0,0,0);
+}
+
+.s1_49{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold49;
+	color: rgb(255,255,255);
+}
+
+.s2_49{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold49;
+	color: rgb(255,255,255);
+}
+
+.s3_49{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_249;
+	color: rgb(219,0,60);
+}
+
+.s4_49{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular49;
+	color: rgb(0,0,0);
+}
+
+.v1_49{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold49;
+	src :url("49/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular49;
+	src :url("49/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_249;
+	src :url("49/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_49" class="t s1_49">49</div>
+<div id="t2_49" class="t s2_49">www. generalcarbide.com</div>
+<div id="t3_49" class="t s2_49">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_49" class="t v1_49 s3_49">Grinding Factors</div>
+<div id="t5_49" class="t s4_49">It is apparent from the above ﬁgures that if the wheel is fed into the work piece deeper</div>
+<div id="t6_49" class="t s4_49">than the exposed diamond length (i.e., if DC &gt; DL), damage to either the grinding wheel</div>
+<div id="t7_49" class="t s4_49">or the work piece will result. </div>
+<div id="t8_49" class="t s4_49">In cases where DC = DL, a considerable amount of heat is</div>
+<div id="t9_49" class="t s4_49">going to be generated due to the rubbing that occurs between the work piece and the</div>
+<div id="ta_49" class="t s4_49">wheel bonding material. </div>
+<div id="tb_49" class="t s4_49">Coolant used for removing excessive heat will also not be very</div>
+<div id="tc_49" class="t s4_49">eﬀective due to the collapse of annular space between the wheel and work piece.</div>
+<div id="td_49" class="t s4_49">Therefore, the ideal situation is when DC = 1/2 DL and is maintained throughout the</div>
+<div id="te_49" class="t s4_49">grinding range. </div>
+<div id="tf_49" class="t s4_49">In almost all types of grinding (reciprocating, cylindrical, centerless,</div>
+<div id="tg_49" class="t s4_49">etc.), the feed rate is maintained at the depth of cut per pass. </div>
+<div id="th_49" class="t s4_49">The greater the DL, the</div>
+<div id="ti_49" class="t s4_49">greater the DC can be, resulting in a higher rate of material removal. </div>
+<div id="tj_49" class="t s4_49">The limiting factor,</div>
+<div id="tk_49" class="t s4_49">of course, comes from the fact that to increase the DL, coarser grit diamond particles</div>
+<div id="tl_49" class="t s4_49">must be used, which inﬂuences the surface ﬁnish of the part.</div>
+<div id="tm_49" class="t v1_49 s3_49">Surface Finishes</div>
+<div id="tn_49" class="t s4_49">An “as-sintered” piece of cemented carbide has a surface ﬁnish of approximately 50 to</div>
+<div id="to_49" class="t s4_49">60 microinches and may have surface irregularities several thousandths of an inch deep,</div>
+<div id="tp_49" class="t s4_49">as a result of the sintering operation. </div>
+<div id="tq_49" class="t s4_49">This “as-sintered” surface can be improved and</div>
+<div id="tr_49" class="t s4_49">the part brought to correct size by proper grinding techniques and the appropriate</div>
+<div id="ts_49" class="t s4_49">diamond wheel.</div>
+<div id="tt_49" class="t s5_49">Figure V-2.</div>
+<div id="tu_49" class="t s4_49">A typical diamond wheel</div>
+<div id="tv_49" class="t s4_49">contains uniform but randomly</div>
+<div id="tw_49" class="t s4_49">distributed diamond particles.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg49Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg49"><object width="605" height="935" data="49/49.svg" type="image/svg+xml" id="pdf49" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f49 = [['t2_49',626],['t3_49',1419],['t4_49',457],['t5_49',1873],['t6_49',1902],['t7_49',607],['t8_49',1234],['t9_49',1877],['ta_49',530],['tb_49',1344],['tc_49',1763],['td_49',1818],['te_49',334],['tf_49',1454],['tg_49',1310],['th_49',497],['ti_49',1467],['tj_49',406],['tk_49',1827],['tl_49',1313],['tm_49',444],['tn_49',1849],['to_49',1904],['tp_49',792],['tq_49',1005],['tr_49',1799],['ts_49',351],['tt_49',239],['tu_49',540],['tv_49',677],['tw_49',655]];
+function load49(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f49);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 33;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_49");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

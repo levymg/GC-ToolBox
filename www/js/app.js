@@ -132,28 +132,45 @@ $(function(){
         $("#main-view").html("<div class='col-xs-12 text-center'><p class='white'><i class='fa fa-spinner fa-spin'></i><br /> Loading...</p></div>");
         
         var view = $(this).attr("href");
-        // if this is a navbar element, we're gonna close the navbar since it'll be open
-        if($('.navbar-collapse').css('display') !== 'none'){
-            
-            $(".navbar-toggle").trigger( "click" );
-            
+        // ugly, but this thing is cumbersome
+        // so we had to dump it in it's own container and what not
+        if(view === "designersguide/index.html")
+        {
+          // fair warning to all, if you go into the designersguide dir you're going to be confused
+          // the PDF flipbook was built from J2PDF for HTML5
+          // only a few tweaks were made to the interface, but it's still a jumbled mess
+          // would like to eventually call the files from the api
+          window.location.replace('view/'+view);
+          
         }
-        
-        $("#main-view").load("view/"+view, function() {
-               
-                // Ugly hack to load up the gcgs
-                if(view === "gradeselector.html")
-                {
-                   // grab our data for the gradeselector
-                   displayData(view);
-                     
+        else
+        {
+                // if this is a navbar element, we're gonna close the navbar since it'll be open
+                if($('.navbar-collapse').css('display') !== 'none'){
+
+                    $(".navbar-toggle").trigger( "click" );
+
                 }
-              
-        });
+
+                $("#main-view").load("view/"+view, function() {
+
+                        // Ugly hack to load up the gcgs
+                        if(view === "gradeselector.html" || "qa.html")
+                        {
+                           // grab our data for the gradeselector
+                           
+                           displayData(view);
+
+                        }
+
+                });
+                
+        }
         
         return false;
         
     });
+    
 });
 
 $(function(){
@@ -407,15 +424,11 @@ $(function(){
                                                     
                                                     var key = "Impact Resistance";
                                                     
-                                                    var rest = "ir";
-                                                    
                                                     break;
                                                 // get corrosion resistance and set the key   
                                                 case "cr" :
                                                     
                                                     var key = "Corrosion Resistance";
-                                                    
-                                                    var rest = "cr";
                                                     
                                                     break;
                                                 // get gall/adhesive resistance and sent the key
@@ -423,15 +436,11 @@ $(function(){
                                                     
                                                     var key = "Gall/Adheisve Resistance";
                                                     
-                                                    var rest = "gr";
-                                                    
                                                     break;
                                                     
                                                 case "edm" :
-                                                    
+                                                    // gatekeeper key
                                                     var key = "EDM/WEDM:";
-                                                    
-                                                    var rest = "edm";
                                                     
                                                     break;
                                             }
@@ -463,7 +472,7 @@ $(function(){
                                                     break;
                                                     
                                                 case "4":
-                                                    
+                                                    // this is the positive value for the wire/edm gatekeeper
                                                     var value = "<span class='pull-right red'><i class='fa fa-check'></i></span><span class='pull-left'>Yes</span><span class='clearfix'></span>"
                                                  
                                                     var int = 4;
@@ -471,7 +480,7 @@ $(function(){
                                                     break;
                                                     
                                                 case "5":
-                                                    
+                                                    // this is the negative value for the wire/edm gatekeeper
                                                     var value = "<span class='pull-right red'><i class='fa fa-remove'></i></span><span class='pull-left'>No</span><span class='clearfix'></span>"
                                             
                                                     var int = 5;
@@ -812,6 +821,7 @@ function postData(formData, form)
             break;
                 
     }
+    
 }
 
 function getData(request, formData)
@@ -840,6 +850,20 @@ function getData(request, formData)
             sessionStorage.clear();
             
             sessionStorage.setItem("resource_id", formData);
+            
+            break;
+            
+        case("question") :
+            
+            var resource = "gcqa/question/";
+            
+            var callback = request;
+            
+            var request = "resource_id";
+            
+            var uri = api + resource + request;
+            
+            alert(uri + "/" + formData);
             
             break;
 
@@ -873,14 +897,14 @@ function createUser(request, formData)
     })
     
         .done(function(data, textStatus, xhr) {
-            
+            // FOR DEBUG
             if(xhr.status === 200)
             {
                 
                 $("#main-view").load("view/splash.html", function() {
-                    
+                    // calback
                     $("#splash-main").load(data.callback, function(){
-                        
+                        // scroll to sign in form
                         $('html,body').animate({
                             
                             scrollTop: $(data.focus).offset().topscroll
@@ -895,9 +919,11 @@ function createUser(request, formData)
 
             }
             else {
-                
+                // debug remove for live please
                 alert(xhr.status);
-                
+                // DONT FORGET TO REMOVE FOR LIVE
+                // IMPORTANT
+                // GLOEGJEY$#($%
             }
                     
         })
@@ -1115,7 +1141,7 @@ function submitGcgs(request, formData)
       });
 
       formData = formData + gradesheets + selections;
-      
+      $(".wire").html("<span class='red'><i class='fa fa-spinner fa-spin'></i></span>")
         $.ajax({
 
             url: api + request,
@@ -1127,18 +1153,24 @@ function submitGcgs(request, formData)
     
         .done(function(jqXHR, textStatus, xhr){
 
-                   $("#notification").modal("hide");
-                   
-                   $(".append-message").html(jqXHR);
+                     $("#notification").modal("hide");
+             
+                     $('html, body').animate({ scrollTop: $('.wire').offset().top - 100 }, 'fast', function(){
+                         
+                         $(".wire").html(jqXHR);
+                         
+                     });
+
 
         })
 
         .fail(function(jqXHR, textStatus, xhr){
 
-                    var error = jqXHR.responseText;
+                 
+                    
+                   var error = jqXHR.responseText;
                     
                     $(".error-messages").html(error);
-                    
         });
     
 }
@@ -1165,14 +1197,11 @@ function wireEdm(request, formData)
                 // set a request for the industries page
                 // display the new data available
                 
-                $("#notification").modal("hide", function(){
-                    
-                    displayData(jqXHR);
-                    
-                });
+                $("#notification").modal("hide");
                 
-                $('html, body').animate({ scrollTop: $('#sidebar').offset().top - 25 }, 'fast');
+                $('html, body').animate({ scrollTop: $('#sidebar').offset().top - 100 }, 'fast');
                 
+                displayData(jqXHR);
         
             })
             
@@ -1229,195 +1258,254 @@ function displayData(data)
                             
                         });
     }
+    
+    if(data === "dynamic/qa.html")
+    {
+        
+                     $.ajax({
+                         type: "get",
+                         url: api + "gcqa/questions/format/json",
+                         format: 'json'
+                     })
+                     
+                        .done(function(jqXHR, responseText, xhr){
+                           
+                                    $.each(jqXHR, function(i, val) {
+                                        
+                                        $("ul#questions").append("<li class='list-group-item'><a href='#' class='red ui-element toggle-canvas' data-action='get' data-request='question' data-formData='" + val.resource_id + "'><i class='fa fa-chevron-right'></i> " + val.title + "</a></li>");
+                                        
+                                    });
+                                    
+                        })
+                        
+                        .fail(function(jqXHR, responseText, xhr){
+                           
+                                     $("ul#questions").append("<li class='list-group-item'>No questions found :-(</li>");
+                            
+                        });
+                        
+    }
     // otherwise, we know that the data is being returned
     // as an array, and as such can route it to the proper
     // displays
     else
     {
         
-   
-   $.each(data, function(i, val) {
-       // this is for the wire/EDM choice on the GCGS
-       // if the gatekeeper is present at a value of 1
-       // we'll load up a modal and have the user identify
-       // whether or not wire/edm will be a factor in their
-       // selection
-       
-       // first lets see if our data returned a flag
-       // to disable the filters
-       if(i == "resource_id")
-        {
-            $('html, body').animate({ scrollTop: $('#sidebar').offset().top - 25 }, 'fast');
-            // append a resource id to the data value
-            $(".resource_name").data("resource-id", val);
 
-        }
-        
-       if(i === "gatekeeper")
-       {
-           
-           switch(val)
-           {
-               
-               case "1":
-                   
-                   sessionStorage.setItem("gatekeeper", "1");
-                   
-                   if(!sessionStorage.getItem("edm"))
-                   {
-                       
-                       sessionStorage.setItem("protect", "true");
-                       
-                        $("#notification").load("view/static/wire.html", function(){
+        $.each(data, function(i, val) {
+            // this is for the wire/EDM choice on the GCGS
+            // if the gatekeeper is present at a value of 1
+            // we'll load up a modal and have the user identify
+            // whether or not wire/edm will be a factor in their
+            // selection
 
-                            $("#notification").modal("show");
-
-                        });
-                    
-                   }
-                    
-                   break;
-           }
-           
-       }
-      
-       if(i === "show_filter")
-       {
-           
-          if(val === 0)
-          {
-              
-              $(".filters").removeClass("show").addClass("hide");
-              
-          }
-          else
-          {
-              // set a session identifer for EDM
-              // for extra data in the user column
-              sessionStorage.setItem("edm", "5");
-              
-              $(".filters").removeClass("hide").addClass("show");
-              
-          }
-               
-       }
-       
-       // get the selections a user has made
-       if(i == "selections")
-       {
-           
-            // will return to each selection in the key pair value
-            val.forEach(function(selection) {
-                // append to 1, 2 or 3
-                $("div.selection-" + selection).removeClass("hide").addClass("show");
-
-            });
-         
-       }
-       
-      if(i == "gradesheets")
-      {
-              //clear the table first for any hanging data
-              // add our gradesheets to the table
-              $("table.gradesheet").find("tr").remove();
-              
-              $("table.gradesheet").append("<tr><th>Gradesheet</th><th><span class='pull-right'>Select</span><span class='clearfix'></span></th></tr>");
-              // build our table up
-               $.each(val, function(grade, gs) {
-                   
-                   $("table.gradesheet").append("<tr><td><strong>" + gs + "</strong></td><td><a class='red toggle-select' href='#'><i class='pull-right fa fa-2x fa-toggle-off' data-formData='" + gs + "'></i></a><span class='clearfix'></td></tr>");
-               
-               });
-               // append the submission button
-               $("table.gradesheet").append("<tr><td class='text-center' colspan='2'><button class='ui-element btn btn-primary btn-expand' data-action='modify' data-form='gcgs'>Download Gradesheets</button>")
-         
-      }
-      
-        if(i == "user_id")
-        {
-            // lets grab the user data based on the user id
-            // specified
-            // factors for the profile page
-            $.ajax({
-                
-                 url: api + "/gcnotifications/notifications/",
-                 type: "GET",
-                 data: { "user_id" : val, "format": "json" },
-                 dataType: "json"
-
-             })
-
-                 .done(function(jqXHR, textResponse, xhr ) {
-                     
-                     $("#account-notifications").find("ul").html("");
-
-                     $("#account-notifications").removeClass("hide").addClass("show");
-
-                     $.each(jqXHR.notifications, function(key, value) {
-
-                         $("#account-notifications").find("ul").append("<li class='list-group-item list-group-item-info'><small><strong>" + value.title + "</strong></small><span class='badge'><a href='#' class='dismiss' data-type='notification' data-resource_id='" + value.resource_id + "'><i class='fa fa-times'></i></a></span></li>");
-
-                         $('.level-up').tooltip('destroy');
-
-                         $(".level-up").data("tooltip-placement", "top");
-
-                         $(".level-up").attr("title", value.next);
-
-                     });
-
-                 })
-
-
-                 .fail(function(jqXHR, textResponse, xhr) {
-
-                        var data = JSON.parse(jqXHR.responseText);
-
-                        $("body").find(".level-up").removeAttr("title");
-
-                        $("body").find(".level-up").attr("title", data.next[0].next);
-
-
-                 });
-
-        }
-       
-        if($("." + i).parent("span").hasClass("badge"))
-        {
-
-             if(!val)
+            // first lets see if our data returned a flag
+            // to disable the filters
+            if(i == "resource_id")
              {
+                 // append a resource id to the data value
+                 $(".resource_name").data("resource-id", val);
 
-                 val = "&mdash;";
-
+                 $('html, body').animate({ scrollTop: $('#sidebar').offset().top - 100 }, 'fast');
              }
 
-             $("." + i).parent("span").addClass("badge-"+data.usage_level);
-
-             $("." + i).html(val);
-
-        }
-       
-        if($("." + i).hasClass("form-control"))
-        {
-
-            if(val !== "&mdash;")
+            if(i === "gatekeeper")
             {
 
-                 $("." + i).val(val);
+                switch(val)
+                {
+
+                    case "1":
+
+                        sessionStorage.setItem("gatekeeper", "1");
+
+                        if(!sessionStorage.getItem("edm"))
+                        {
+
+                            sessionStorage.setItem("protect", "true");
+
+                             $("#notification").load("view/static/wire.html", function(){
+
+                                 $("#notification").modal("show");
+
+                             });
+
+                        }
+
+                        break;
+                }
 
             }
 
-        }
+            if(i === "show_filter")
+            {
+
+               if(val === 0)
+               {
+
+                   $(".filters").removeClass("show").addClass("hide");
+
+               }
+               else
+               {
+                   // set a session identifer for EDM
+                   // for extra data in the user column
+                   sessionStorage.setItem("edm", "5");
+
+                   $(".filters").removeClass("hide").addClass("show");
+
+               }
+
+            }
+
+            // get the selections a user has made
+            if(i == "selections")
+            {
+
+                 // will return to each selection in the key pair value
+                 val.forEach(function(selection) {
+                     // append to 1, 2 or 3
+                     $("div.selection-" + selection).removeClass("hide").addClass("show");
+
+                 });
+
+            }
+
+           if(i == "gradesheets")
+           {
+
+                   //clear the table first for any hanging data
+                   // add our gradesheets to the table
+                   $("table.gradesheet").find("tr").remove();
+
+                   $("table.gradesheet").append("<tr><th>Gradesheet</th><th><span class='pull-right'>Select</span><span class='clearfix'></span></th></tr>");
+                   // build our table up
+                    $.each(val, function(grade, gs) {
+
+                        $("table.gradesheet").append("<tr><td><strong>" + gs + "</strong></td><td><a class='red toggle-select' href='#'><i class='pull-right fa fa-2x fa-toggle-off' data-formData='" + gs + "'></i></a><span class='clearfix'></td></tr>");
+
+                    });
+                    // append the submission button
+                    $("table.gradesheet").append("<tr><td class='text-center' colspan='2'><button class='ui-element btn btn-primary btn-expand' data-action='modify' data-form='gcgs'>Download Gradesheets</button>")
+
+           }
+
+           if(i == "my_gradesheets")
+           {
+
+                $("table.my_gradesheet").find("tr").remove();
+
+                $("table.my_gradesheet").append("<tr><th>Gradesheet</th><th><span class='pull-right'>Select</span><span class='clearfix'></span></th></tr>");
+                   // build our table up
+                    $.each(val, function(grade, gs) {
+
+                        if(!gs.gradesheets)
+                        {
+
+                             $("table.my_gradesheet").append("<tr><td><i class='red fa fa-alert'></i> N/A</td></tr>");
+
+                        }
+
+                        else
+                        {
+
+                            $("table.my_gradesheet").append("<tr><td><strong>" + gs.gradesheets + "</strong></td><td><a class='red toggle-select' href='#'><i class='pull-right fa fa-2x fa-toggle-off' data-formData='" + gs.gradesheets + "'></i></a><span class='clearfix'></td></tr>");
+
+                        }
+
+                    });
+
+                    // append the submission button
+                    $("table.my_gradesheet").append("<tr><td class='text-center' colspan='2'><button class='ui-element btn btn-primary btn-expand' data-action='modify' data-form='request-gs'>Request</button>");
 
 
-        else
-        {
+           }
 
-             $("." + i).html(val);
+             if(i == "user_id")
+             {
+                 // lets grab the user data based on the user id
+                 // specified
+                 // factors for the profile page
+                 $.ajax({
 
-        }
-    
-    });
+                      url: api + "/gcnotifications/notifications/",
+                      type: "GET",
+                      data: { "user_id" : val, "format": "json" },
+                      dataType: "json"
+
+                  })
+
+                      .done(function(jqXHR, textResponse, xhr ) {
+
+                          $("#account-notifications").find("ul").html("");
+
+                          $("#account-notifications").removeClass("hide").addClass("show");
+
+                          $.each(jqXHR.notifications, function(key, value) {
+
+                              $("#account-notifications").find("ul").append("<li class='list-group-item list-group-item-info'><small><strong>" + value.title + "</strong></small><span class='badge'><a href='#' class='dismiss' data-type='notification' data-resource_id='" + value.resource_id + "'><i class='fa fa-times'></i></a></span></li>");
+
+                              $('.level-up').tooltip('destroy');
+
+                              $(".level-up").data("tooltip-placement", "top");
+
+                              $(".level-up").attr("title", value.next);
+
+                          });
+
+                      })
+
+
+                      .fail(function(jqXHR, textResponse, xhr) {
+
+                             var data = JSON.parse(jqXHR.responseText);
+
+                             $("body").find(".level-up").removeAttr("title");
+
+                             $("body").find(".level-up").attr("title", data.next[0].next);
+
+
+                      });
+
+             }
+
+             if($("." + i).parent("span").hasClass("badge"))
+             {
+
+                  if(!val)
+                  {
+
+                      val = "&mdash;";
+
+                  }
+
+                  $("." + i).parent("span").addClass("badge-"+data.usage_level);
+
+                  $("." + i).html(val);
+
+             }
+
+             if($("." + i).hasClass("form-control"))
+             {
+
+                 if(val !== "&mdash;")
+                 {
+
+                      $("." + i).val(val);
+
+                 }
+
+             }
+
+
+             else
+             {
+
+                  $("." + i).html(val);
+
+             }
+
+         });
     
     }
 }

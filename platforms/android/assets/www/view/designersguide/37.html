@@ -1,0 +1,368 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page37</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,37,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load37();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_37{left:545px;top:897px;}
+#t2_37{left:224px;top:901px;letter-spacing:4px;}
+#t3_37{left:125px;top:19px;letter-spacing:12px;}
+#t4_37{left:41px;top:72px;}
+#t5_37{left:41px;top:87px;}
+#t6_37{left:41px;top:103px;}
+#t7_37{left:372px;top:103px;}
+#t8_37{left:41px;top:118px;}
+#t9_37{left:220px;top:118px;}
+#ta_37{left:41px;top:133px;}
+#tb_37{left:331px;top:133px;}
+#tc_37{left:41px;top:149px;}
+#td_37{left:41px;top:179px;}
+#te_37{left:63px;top:194px;}
+#tf_37{left:431px;top:194px;}
+#tg_37{left:75px;top:210px;}
+#th_37{left:75px;top:225px;}
+#ti_37{left:63px;top:240px;}
+#tj_37{left:75px;top:256px;}
+#tk_37{left:193px;top:256px;}
+#tl_37{left:75px;top:271px;}
+#tm_37{left:41px;top:301px;}
+#tn_37{left:41px;top:317px;}
+#to_37{left:365px;top:317px;}
+#tp_37{left:41px;top:332px;}
+#tq_37{left:41px;top:347px;}
+#tr_37{left:302px;top:347px;}
+#ts_37{left:41px;top:362px;}
+#tt_37{left:326px;top:362px;}
+#tu_37{left:41px;top:378px;}
+#tv_37{left:41px;top:393px;}
+#tw_37{left:41px;top:424px;}
+#tx_37{left:41px;top:439px;}
+#ty_37{left:41px;top:454px;}
+#tz_37{left:41px;top:469px;}
+#t10_37{left:41px;top:485px;}
+#t11_37{left:120px;top:485px;}
+#t12_37{left:41px;top:500px;}
+#t13_37{left:41px;top:515px;}
+#t14_37{left:154px;top:515px;}
+#t15_37{left:41px;top:531px;}
+#t16_37{left:41px;top:561px;}
+#t17_37{left:41px;top:576px;}
+#t18_37{left:78px;top:576px;}
+#t19_37{left:41px;top:607px;}
+#t1a_37{left:304px;top:607px;}
+#t1b_37{left:41px;top:622px;}
+#t1c_37{left:41px;top:653px;}
+#t1d_37{left:41px;top:668px;}
+
+.s1_37{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold37;
+	color: rgb(255,255,255);
+}
+
+.s4_37{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular37;
+	color: rgb(0,0,0);
+}
+
+.s5_37{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular_237;
+	color: rgb(0,0,0);
+}
+
+.s2_37{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold37;
+	color: rgb(255,255,255);
+}
+
+.s3_37{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_237;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold37;
+	src :url("37/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular37;
+	src :url("37/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular_237;
+	src :url("37/fonts/YJUJYE-MyriadPro-Regular_2.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_237;
+	src :url("37/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_37" class="t s1_37">37</div>
+<div id="t2_37" class="t s2_37">www. generalcarbide.com</div>
+<div id="t3_37" class="t s2_37">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t4_37" class="t s3_37">Thermal Cycling:</div>
+<div id="t5_37" class="t s4_37">When devices operate in environments that cycle between extremes of heat and/or</div>
+<div id="t6_37" class="t s4_37">humidity, they experience thermal cycling or thermal shock. </div>
+<div id="t7_37" class="t s4_37">All materials expand when</div>
+<div id="t8_37" class="t s4_37">heated and shrink when cooled. </div>
+<div id="t9_37" class="t s4_37">This rate of dimensional change is called the coeﬃcient</div>
+<div id="ta_37" class="t s4_37">of thermal expansion (CTE) as discussed in Chapter I. </div>
+<div id="tb_37" class="t s4_37">Diﬀerences in CTE produce</div>
+<div id="tc_37" class="t s4_37">stress on the bond joint.</div>
+<div id="td_37" class="t s4_37">Resistance to thermal cycling is generally achieved in two basic ways:</div>
+<div id="te_37" class="t s5_37">•  A very high strength, rigid adhesive may resist the applied stress. </div>
+<div id="tf_37" class="t s5_37">Classic rigid</div>
+<div id="tg_37" class="t s4_37">chemistries include acrylics and epoxies, but many urethane modiﬁed or  </div>
+<div id="th_37" class="t s4_37">elastomer modiﬁed formulations are available.</div>
+<div id="ti_37" class="t s5_37">•  A softer, more Fexible adhesive can absorb the applied stress by Fexing or moving </div>
+<div id="tj_37" class="t s4_37">rather than cracking. </div>
+<div id="tk_37" class="t s4_37">Silicones and urethanes are typical of these softer and</div>
+<div id="tl_37" class="t s4_37">more ﬂexible chemistries.</div>
+<div id="tm_37" class="t s3_37">Surface Preparation:</div>
+<div id="tn_37" class="t s4_37">Proper surface preparation is key to ensuring a good bond. </div>
+<div id="to_37" class="t s4_37">It can be as simple as</div>
+<div id="tp_37" class="t s4_37">cleaning the surfaces with a solvent to remove oils, greases, and other potential</div>
+<div id="tq_37" class="t s4_37">contaminants that could hinder bond strength. </div>
+<div id="tr_37" class="t s4_37">Other applications may require surface</div>
+<div id="ts_37" class="t s4_37">abrasion or grit blasting to enable proper adhesion. </div>
+<div id="tt_37" class="t s4_37">It is our experience that grit blasting</div>
+<div id="tu_37" class="t s4_37">alone does not ensure a good bond and chemical cleaning with an approved solvent is</div>
+<div id="tv_37" class="t s4_37">recommended.</div>
+<div id="tw_37" class="t s3_37">Adhesive Recommendations:</div>
+<div id="tx_37" class="t s4_37">The most frequent causes of adhesive joint failures do not involve adhesive strength.</div>
+<div id="ty_37" class="t s4_37">Typically, adhesive joint failure may be attributed to poor design, inadequate surface</div>
+<div id="tz_37" class="t s4_37">preparation, or improper adhesive selection for the substrate and the operational</div>
+<div id="t10_37" class="t s4_37">environment. </div>
+<div id="t11_37" class="t s4_37">A competent carbide application engineer, familiar with successful</div>
+<div id="t12_37" class="t s4_37">assembly techniques will be able to provide the optimum bonding technique for a</div>
+<div id="t13_37" class="t s4_37">speciﬁc application. </div>
+<div id="t14_37" class="t s4_37">Testing under load may be necessary to ensure success of an</div>
+<div id="t15_37" class="t s4_37">adhesive assembly.</div>
+<div id="t16_37" class="t s4_37">The joint should be from .003” to .006” in thickness to assure maximum strength in the</div>
+<div id="t17_37" class="t s4_37">bond. </div>
+<div id="t18_37" class="t s4_37">The facing surfaces must be clean and free from dirt, grease, and scale.</div>
+<div id="t19_37" class="t s4_37">Dozens of adhesives are available for use today. </div>
+<div id="t1a_37" class="t s4_37">General Carbide has had experience</div>
+<div id="t1b_37" class="t s4_37">with the products listed below which provide excellent bonding to cemented carbide:</div>
+<div id="t1c_37" class="t s5_37">• 3M - DP460, two-part epoxy</div>
+<div id="t1d_37" class="t s5_37">• LOCTITE 320 acrylic adhesive with LOCTITE 7075 Activator</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg37Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg37"><object width="605" height="935" data="37/37.svg" type="image/svg+xml" id="pdf37" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f37 = [['t2_37',626],['t3_37',1419],['t4_37',374],['t5_37',1808],['t6_37',1301],['t7_37',575],['t8_37',694],['t9_37',1198],['ta_37',1137],['tb_37',585],['tc_37',523],['td_37',1497],['te_37',1450],['tf_37',256],['tg_37',1580],['th_37',1007],['ti_37',1828],['tj_37',448],['tk_37',1166],['tl_37',554],['tm_37',459],['tn_37',1273],['to_37',455],['tp_37',1720],['tq_37',1022],['tr_37',842],['ts_37',1115],['tt_37',784],['tu_37',1879],['tw_37',655],['tx_37',1831],['ty_37',1831],['tz_37',1759],['t11_37',1440],['t12_37',1786],['t13_37',429],['t14_37',1311],['t15_37',416],['t16_37',1860],['t18_37',1524],['t19_37',1026],['t1a_37',782],['t1b_37',1862],['t1c_37',634],['t1d_37',1279]];
+function load37(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f37);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 50;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_37");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

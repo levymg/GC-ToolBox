@@ -1,0 +1,372 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page40</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,40,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load40();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_40{left:43px;top:898px;}
+#t2_40{left:125px;top:19px;letter-spacing:12px;}
+#t3_40{left:224px;top:901px;letter-spacing:4px;}
+#t4_40{left:41px;top:72px;}
+#t5_40{left:41px;top:87px;}
+#t6_40{left:79px;top:87px;}
+#t7_40{left:338px;top:87px;}
+#t8_40{left:41px;top:103px;}
+#t9_40{left:41px;top:118px;}
+#ta_40{left:41px;top:149px;}
+#tb_40{left:41px;top:164px;}
+#tc_40{left:350px;top:164px;}
+#td_40{left:520px;top:164px;}
+#te_40{left:41px;top:179px;}
+#tf_40{left:41px;top:194px;}
+#tg_40{left:316px;top:194px;}
+#th_40{left:41px;top:210px;}
+#ti_40{left:306px;top:210px;}
+#tj_40{left:41px;top:225px;}
+#tk_40{left:41px;top:240px;}
+#tl_40{left:127px;top:289px;}
+#tm_40{left:41px;top:650px;}
+#tn_40{left:41px;top:665px;}
+#to_40{left:41px;top:680px;}
+#tp_40{left:248px;top:680px;}
+#tq_40{left:41px;top:696px;}
+#tr_40{left:41px;top:711px;}
+#ts_40{left:144px;top:378px;}
+#tt_40{left:240px;top:378px;}
+#tu_40{left:144px;top:408px;}
+#tv_40{left:240px;top:408px;}
+#tw_40{left:144px;top:439px;}
+#tx_40{left:240px;top:439px;}
+#ty_40{left:144px;top:469px;}
+#tz_40{left:240px;top:469px;}
+#t10_40{left:144px;top:500px;}
+#t11_40{left:240px;top:500px;}
+#t12_40{left:144px;top:531px;}
+#t13_40{left:240px;top:531px;}
+#t14_40{left:144px;top:561px;}
+#t15_40{left:240px;top:561px;}
+#t16_40{left:144px;top:592px;}
+#t17_40{left:240px;top:592px;}
+#t18_40{left:136px;top:337px;}
+#t19_40{left:136px;top:353px;}
+#t1a_40{left:241px;top:323px;}
+#t1b_40{left:241px;top:338px;}
+#t1c_40{left:241px;top:354px;}
+
+.s1_40{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold40;
+	color: rgb(255,255,255);
+}
+
+.s3_40{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular40;
+	color: rgb(0,0,0);
+}
+
+.s5_40{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-It40;
+	color: rgb(0,0,0);
+}
+
+.s4_40{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold40;
+	color: rgb(0,0,0);
+}
+
+.s6_40{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_240;
+	color: rgb(0,0,0);
+}
+
+.s2_40{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_240;
+	color: rgb(255,255,255);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold40;
+	src :url("40/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-It40;
+	src :url("40/fonts/YJUJYE-MyriadPro-It.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular40;
+	src :url("40/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_240;
+	src :url("40/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_40" class="t s1_40">40</div>
+<div id="t2_40" class="t s2_40">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_40" class="t s2_40">www. generalcarbide.com</div>
+<div id="t4_40" class="t s3_40">The temperature needed to achieve the assembly ﬁts listed in column (1) of the table above is </div>
+<div id="t5_40" class="t s3_40">450°F. </div>
+<div id="t6_40" class="t s3_40">Heat both the carbide and steel parts together. </div>
+<div id="t7_40" class="t s3_40">The diﬀerence in CTE of the two materials </div>
+<div id="t8_40" class="t s3_40">will allow ample time to assemble the joint and to position the two components before  </div>
+<div id="t9_40" class="t s3_40">the joint sets.</div>
+<div id="ta_40" class="t s4_40">When assembling a heated steel part over a carbide part at room temperature, the steel part </div>
+<div id="tb_40" class="t s4_40">loses heat rapidly since the carbide acts as a heat sink.</div>
+<div id="tc_40" class="t s3_40">The assembly will set very fast. </div>
+<div id="td_40" class="t s3_40">As  </div>
+<div id="te_40" class="t s3_40">mentioned above, it is best to take advantage of the low CTE by sizing the joint for assembly </div>
+<div id="tf_40" class="t s3_40">with both parts heated to the shrink temperature. </div>
+<div id="tg_40" class="t s3_40">This will allow suﬃcient time to orient the </div>
+<div id="th_40" class="t s3_40">parts relative to each other before the joint sets. </div>
+<div id="ti_40" class="t s3_40">For medium diametral interferences as shown </div>
+<div id="tj_40" class="t s3_40">in column (2), it is best to heat only the steel part to achieve maximum clearance between  </div>
+<div id="tk_40" class="t s3_40">the two rings.</div>
+<div id="tl_40" class="t s5_40">Shrink Allowance Guidelines for PM Dies</div>
+<div id="tm_40" class="t s3_40">Generally speaking, caution must be taken not to impose maximum interferences in powder </div>
+<div id="tn_40" class="t s3_40">metal dies that have various geometries or case materials that range from softer heat-treated </div>
+<div id="to_40" class="t s3_40">steel to harder more brittle materials. </div>
+<div id="tp_40" class="t s3_40">Maximum interferences will often split harder cases, thus </div>
+<div id="tq_40" class="t s3_40">the guideline above recommends interference ﬁts that fall between the low and medium  </div>
+<div id="tr_40" class="t s3_40">recommendations in the general guidelines table.</div>
+<div id="ts_40" class="t s4_40">½”- 1” </div>
+<div id="tt_40" class="t s4_40">.0006 - .0015</div>
+<div id="tu_40" class="t s4_40">1” - 2” </div>
+<div id="tv_40" class="t s4_40">.0015 - .0025</div>
+<div id="tw_40" class="t s4_40">2” - 3” </div>
+<div id="tx_40" class="t s4_40">.0025 - .004</div>
+<div id="ty_40" class="t s4_40">3” - 4” </div>
+<div id="tz_40" class="t s4_40">.004 - .0055</div>
+<div id="t10_40" class="t s4_40">4”- 5” </div>
+<div id="t11_40" class="t s4_40">.0055 - .007</div>
+<div id="t12_40" class="t s4_40">5” - 6” </div>
+<div id="t13_40" class="t s4_40">.007 - .008</div>
+<div id="t14_40" class="t s4_40">6” - 7” </div>
+<div id="t15_40" class="t s4_40">.008 - .0095</div>
+<div id="t16_40" class="t s4_40">7” - 8” </div>
+<div id="t17_40" class="t s4_40">.0095 - .0105</div>
+<div id="t18_40" class="t s4_40">OD of </div>
+<div id="t19_40" class="t s6_40">Carbide</div>
+<div id="t1a_40" class="t s4_40">Shrink Fit </div>
+<div id="t1b_40" class="t s4_40">for Powder </div>
+<div id="t1c_40" class="t s4_40">Metal Dies</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg40Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg40"><object width="605" height="935" data="40/40.svg" type="image/svg+xml" id="pdf40" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f40 = [['t2_40',1419],['t3_40',626],['t4_40',2026],['t6_40',1016],['t7_40',901],['t8_40',1899],['t9_40',289],['ta_40',2071],['tb_40',1213],['tc_40',661],['td_40',63],['te_40',1994],['tf_40',1077],['tg_40',904],['th_40',1037],['ti_40',993],['tj_40',1955],['tk_40',297],['tl_40',830],['tm_40',1998],['tn_40',2011],['to_40',803],['tp_40',1232],['tq_40',1938],['tr_40',1080],['ts_40',135],['tt_40',286],['tu_40',128],['tv_40',286],['tw_40',128],['tx_40',258],['ty_40',128],['tz_40',258],['t10_40',122],['t11_40',258],['t12_40',128],['t13_40',230],['t14_40',128],['t15_40',258],['t16_40',128],['t17_40',286],['t18_40',129],['t1a_40',213],['t1b_40',246],['t1c_40',237]];
+function load40(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f40);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 49;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_40");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

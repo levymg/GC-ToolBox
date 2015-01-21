@@ -1,0 +1,410 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page28</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,28,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load28();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_28{left:43px;top:898px;}
+#t2_28{left:125px;top:19px;letter-spacing:12px;}
+#t3_28{left:224px;top:901px;letter-spacing:4px;}
+#t4_28{left:41px;top:71px;}
+#t5_28{left:41px;top:96px;}
+#t6_28{left:41px;top:111px;}
+#t7_28{left:41px;top:126px;}
+#t8_28{left:323px;top:126px;}
+#t9_28{left:41px;top:142px;}
+#ta_28{left:41px;top:157px;}
+#tb_28{left:209px;top:157px;}
+#tc_28{left:41px;top:172px;}
+#td_28{left:311px;top:173px;}
+#te_28{left:315px;top:172px;}
+#tf_28{left:352px;top:173px;}
+#tg_28{left:356px;top:172px;}
+#th_28{left:41px;top:188px;}
+#ti_28{left:41px;top:203px;}
+#tj_28{left:225px;top:204px;}
+#tk_28{left:230px;top:203px;}
+#tl_28{left:267px;top:204px;}
+#tm_28{left:271px;top:203px;}
+#tn_28{left:41px;top:233px;}
+#to_28{left:41px;top:249px;}
+#tp_28{left:41px;top:264px;}
+#tq_28{left:201px;top:264px;}
+#tr_28{left:41px;top:279px;}
+#ts_28{left:401px;top:279px;}
+#tt_28{left:41px;top:294px;}
+#tu_28{left:41px;top:310px;}
+#tv_28{left:41px;top:340px;}
+#tw_28{left:41px;top:356px;}
+#tx_28{left:41px;top:371px;}
+#ty_28{left:160px;top:371px;}
+#tz_28{left:41px;top:386px;}
+#t10_28{left:41px;top:401px;}
+#t11_28{left:222px;top:401px;}
+#t12_28{left:41px;top:417px;}
+#t13_28{left:434px;top:417px;}
+#t14_28{left:41px;top:432px;}
+#t15_28{left:41px;top:447px;}
+#t16_28{left:41px;top:475px;}
+#t17_28{left:41px;top:499px;}
+#t18_28{left:41px;top:514px;}
+#t19_28{left:275px;top:514px;}
+#t1a_28{left:41px;top:530px;}
+#t1b_28{left:41px;top:545px;}
+#t1c_28{left:332px;top:545px;}
+#t1d_28{left:41px;top:560px;}
+#t1e_28{left:358px;top:560px;}
+#t1f_28{left:41px;top:576px;}
+#t1g_28{left:41px;top:591px;}
+#t1h_28{left:173px;top:591px;}
+#t1i_28{left:402px;top:591px;}
+#t1j_28{left:41px;top:606px;}
+#t1k_28{left:249px;top:606px;}
+#t1l_28{left:269px;top:811px;}
+
+#t4_28,#t16_28 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s6_28{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_228;
+	color: rgb(0,0,0);
+}
+
+.s7_28{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-It28;
+	color: rgb(0,0,0);
+}
+
+.s1_28{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold28;
+	color: rgb(255,255,255);
+}
+
+.s5_28{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular28;
+	color: rgb(0,0,0);
+}
+
+.s2_28{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold28;
+	color: rgb(255,255,255);
+}
+
+.s3_28{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_228;
+	color: rgb(219,0,60);
+}
+
+.s4_28{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular28;
+	color: rgb(0,0,0);
+}
+
+.v1_28{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold28;
+	src :url("28/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-It28;
+	src :url("28/fonts/YJUJYE-MyriadPro-It.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular28;
+	src :url("28/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_228;
+	src :url("28/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_28" class="t s1_28">28</div>
+<div id="t2_28" class="t s2_28">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_28" class="t s2_28">www. generalcarbide.com</div>
+<div id="t4_28" class="t v1_28 s3_28">Brazing</div>
+<div id="t5_28" class="t s4_28">Brazing is a technique to provide a solid joint between two (or sometimes several)</div>
+<div id="t6_28" class="t s4_28">dissimilar materials, mainly metal-based materials where the interface is produced by</div>
+<div id="t7_28" class="t s4_28">heating of an assembly while utilizing a ﬁller metal. </div>
+<div id="t8_28" class="t s4_28">This ﬁller metal compound has a</div>
+<div id="t9_28" class="t s4_28">melting point (liquidus temperature) which is substantially below the solidus temperature</div>
+<div id="ta_28" class="t s4_28">of the base materials (metals). </div>
+<div id="tb_28" class="t s4_28">For metals, brazing is usually accomplished by using a</div>
+<div id="tc_28" class="t s4_28">ﬁller metal with a melting temperature above 450</div>
+<div id="td_28" class="t s5_28">o</div>
+<div id="te_28" class="t s4_28">C (840 </div>
+<div id="tf_28" class="t s5_28">o</div>
+<div id="tg_28" class="t s4_28">F) while another similar</div>
+<div id="th_28" class="t s4_28">process, known as a soldering, employs a ﬁller metal with a melting temperature</div>
+<div id="ti_28" class="t s4_28">(liquidus temperature) below 450 </div>
+<div id="tj_28" class="t s5_28">o</div>
+<div id="tk_28" class="t s4_28">C (840 </div>
+<div id="tl_28" class="t s5_28">o</div>
+<div id="tm_28" class="t s4_28">F).</div>
+<div id="tn_28" class="t s4_28">During both brazing and soldering, the molten ﬁller metal is distributed by capillary action</div>
+<div id="to_28" class="t s4_28">between the closely ﬁtted surfaces of the two materials to be joined, which then forms a</div>
+<div id="tp_28" class="t s4_28">solid interface upon cooling. </div>
+<div id="tq_28" class="t s4_28">Due to the physical nature of the brazing process, it is</div>
+<div id="tr_28" class="t s4_28">imperative that the ﬁller material has excellent wetting ability (i.e. </div>
+<div id="ts_28" class="t s4_28">dihedral angle to be</div>
+<div id="tt_28" class="t s4_28">close to zero), meaning that the braze material must adhere evenly and uniformly over</div>
+<div id="tu_28" class="t s4_28">the entire surface via capillary action.</div>
+<div id="tv_28" class="t s4_28">Presently, brazing is quite commonly used for cemented carbide in a wide variety of</div>
+<div id="tw_28" class="t s4_28">applications and in particular, it has been very successful for small surface areas and</div>
+<div id="tx_28" class="t s4_28">shorter length joints. </div>
+<div id="ty_28" class="t s6_28">Common industrial practices for brazing of cemented carbide are</div>
+<div id="tz_28" class="t s6_28">furnace brazing, including vacuum brazing and induction brazing, as well as torch</div>
+<div id="t10_28" class="t s6_28">brazing and resistance brazing.</div>
+<div id="t11_28" class="t s4_28">Through the use of certain design principles, brazing</div>
+<div id="t12_28" class="t s4_28">can also be accomplished satisfactorily on larger joints and long blades. </div>
+<div id="t13_28" class="t s4_28">Cemented</div>
+<div id="t14_28" class="t s4_28">carbides can be easily wetted with brazing alloys ranging from silver solder to pure</div>
+<div id="t15_28" class="t s4_28">copper, which is discussed below.</div>
+<div id="t16_28" class="t v1_28 s3_28">Bi-metal Thermal Expansion DiFerence</div>
+<div id="t17_28" class="t s4_28">The Figure IV-1 shows the bi-metal strip eﬀect involved when two dissimilar materials are</div>
+<div id="t18_28" class="t s4_28">bonded by fusion of a braze ﬁller material. </div>
+<div id="t19_28" class="t s4_28">As mentioned in Chapter III, the Coeﬃcient</div>
+<div id="t1a_28" class="t s4_28">of Thermal Expansion (CTE) for each material is signiﬁcantly diﬀerent, with steel having</div>
+<div id="t1b_28" class="t s4_28">having a CTE two to three times higher than carbide. </div>
+<div id="t1c_28" class="t s4_28">At the solidiﬁcation point of the</div>
+<div id="t1d_28" class="t s4_28">braze material, the two strips remain straight and parallel. </div>
+<div id="t1e_28" class="t s4_28">However, as the bonded</div>
+<div id="t1f_28" class="t s4_28">strips cool, the steel contracts about twice as much as the carbide, causing the bimetal</div>
+<div id="t1g_28" class="t s4_28">strip to bend as shown. </div>
+<div id="t1h_28" class="t s7_28">(Note: curvature may not be representative. </div>
+<div id="t1i_28" class="t s7_28">When the carbide</div>
+<div id="t1j_28" class="t s7_28">passes its elastic stress limit, it will crack)</div>
+<div id="t1k_28" class="t s4_28">.</div>
+<div id="t1l_28" class="t s6_28">±igure IV-1</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg28Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg28"><object width="605" height="935" data="28/28.svg" type="image/svg+xml" id="pdf28" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f28 = [['t2_28',1419],['t3_28',626],['t5_28',1771],['t6_28',1844],['t7_28',1106],['t8_28',703],['t9_28',1947],['ta_28',647],['tb_28',1166],['tc_28',1077],['te_28',136],['tg_28',507],['th_28',1740],['ti_28',725],['tk_28',136],['tn_28',1959],['to_28',1909],['tp_28',618],['tq_28',1157],['tr_28',1416],['ts_28',437],['tt_28',1870],['tu_28',806],['tv_28',1811],['tw_28',1810],['tx_28',452],['ty_28',1462],['tz_28',1836],['t10_28',701],['t11_28',1141],['t12_28',1548],['t14_28',1790],['t15_28',727],['t16_28',1067],['t17_28',1924],['t18_28',912],['t19_28',931],['t1a_28',1874],['t1b_28',1139],['t1c_28',688],['t1d_28',1246],['t1e_28',526],['t1f_28',1870],['t1g_28',503],['t1h_28',897],['t1i_28',365],['t1j_28',831],['t1l_28',243]];
+function load28(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f28);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 58;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_28");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

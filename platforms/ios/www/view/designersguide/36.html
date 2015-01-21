@@ -1,0 +1,395 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Designer_Guide Page36</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css"> <link href="assets/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200);
+	IDRViewer.makeNavBar(60,36,605,935,0,heights,'.png');
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left">
+<div id="leftNav">
+	<div id="btnThumbnails" onclick="IDRViewer.toggleOutlines(false)" title="Thumbnails" class="navBtn"></div>
+	<div id="btnOutlines" onclick="IDRViewer.toggleOutlines(true)" title="Bookmarks" class="navBtn"></div>
+</div>
+<div id="leftContent">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel"></div>
+</div>
+</div>
+
+<div id="main">
+
+<div id="mainNav">
+	 <div id="btnSideToggle" onclick="location.replace('../../index.html');" class="navBtn"><i class="fa fa-briefcase"></i></div>
+	
+	<div id="btnPrev" title="Previous Page" onclick="IDRViewer.prev()" class="navBtn"><i class="fa fa-angle-left"></i></div>
+	<select id="goBtn" onchange="IDRViewer.goToPage(0)">
+
+	</select>
+	<span id="pgCount"></span>
+	<div id="btnNext" title="Next Page" onclick="IDRViewer.next()" class="navBtn"><i class="fa fa-angle-right"></i></div>
+	
+	<div id="btnSelect" title="Select" onclick="IDRViewer.setSelectMode(0)" class="navBtn"></div>
+	<div id="btnMove" title="Pan" onclick="IDRViewer.setSelectMode(1)" class="navBtn"></div>
+
+	<div id="btnZoomOut" title="Zoom Out" onclick="IDRViewer.zoomOut()" class="navBtn"></div>
+	<select id="zoomBtn" onchange="IDRViewer.zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">Actual Size</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+		<option value="5">Automatic</option>
+
+	</select>
+	<div id="btnZoomIn" title="Zoom In" onclick="IDRViewer.zoomIn()" class="navBtn"></div>
+	<div id="btnFullscreen" title="Fullscreen" onclick="IDRViewer.toggleFullScreen();" class="navBtn closed"></div>
+</div>
+
+<div id="mainContent">
+
+<div id="contentContainer">
+
+
+
+<div id="jpedal" style="position:relative; width: 605px; height: 935px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 2;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load36();});
+
+function adjustWordSpacing(widths) {
+    var i, allLinesDone = false;
+    var isDone = [];
+    var currentSpacing = [];
+    var elements = [];
+    
+    // Initialise arrays
+    for (i = 0; i < widths.length; i++) {
+        elements[i] = document.getElementById(widths[i][0]);
+        if (isIE) widths[i][1] = widths[i][1] * 4;
+        if (elements[i].offsetWidth < widths[i][1]) {
+            currentSpacing[i] = Math.floor((widths[i][1] - elements[i].offsetWidth) / elements[i].innerHTML.match(/\s.|&nbsp;./g).length);//min
+            if (isIE) currentSpacing[i] = Math.floor(currentSpacing[i] / 4);
+            isDone[i] = false;
+        } else {
+            currentSpacing[i] = 1;//too long
+            isDone[i] = true;
+        }
+    }
+    
+    while (!allLinesDone) {
+        // Add each adjustment to the render queue without forcing a render
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i]) {
+                elements[i].style.wordSpacing = currentSpacing[i] + 'px';
+            }            
+        }
+        
+        allLinesDone = true;
+        // If elements still need to be wider, add 1 to the word spacing
+        for (i = 0; i < widths.length; i++) {
+            if (!isDone[i] && currentSpacing[i] < 160) {
+                if (elements[i].offsetWidth >= widths[i][1]) {
+                    isDone[i] = true;
+                } else {
+                    currentSpacing[i]++;
+                    allLinesDone = false;
+                }
+            }
+        }
+    }
+    
+    for (i = 0; i < widths.length; i++) {
+        elements[i].style.wordSpacing = (currentSpacing[i] - 1) + 'px';
+    }
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_36{left:43px;top:898px;}
+#t2_36{left:125px;top:19px;letter-spacing:12px;}
+#t3_36{left:224px;top:901px;letter-spacing:4px;}
+#t4_36{left:41px;top:71px;}
+#t5_36{left:41px;top:96px;}
+#t6_36{left:41px;top:111px;}
+#t7_36{left:162px;top:111px;}
+#t8_36{left:41px;top:126px;}
+#t9_36{left:402px;top:126px;}
+#ta_36{left:41px;top:142px;}
+#tb_36{left:237px;top:143px;}
+#tc_36{left:241px;top:142px;}
+#td_36{left:456px;top:143px;}
+#te_36{left:463px;top:142px;}
+#tf_36{left:41px;top:157px;}
+#tg_36{left:41px;top:172px;}
+#th_36{left:41px;top:188px;}
+#ti_36{left:194px;top:188px;}
+#tj_36{left:41px;top:203px;}
+#tk_36{left:117px;top:203px;}
+#tl_36{left:41px;top:218px;}
+#tm_36{left:41px;top:233px;}
+#tn_36{left:41px;top:264px;}
+#to_36{left:41px;top:279px;}
+#tp_36{left:218px;top:279px;}
+#tq_36{left:41px;top:294px;}
+#tr_36{left:41px;top:325px;}
+#ts_36{left:41px;top:340px;}
+#tt_36{left:41px;top:371px;}
+#tu_36{left:41px;top:386px;}
+#tv_36{left:172px;top:386px;}
+#tw_36{left:41px;top:401px;}
+#tx_36{left:41px;top:417px;}
+#ty_36{left:99px;top:417px;}
+#tz_36{left:41px;top:432px;}
+#t10_36{left:41px;top:463px;}
+#t11_36{left:41px;top:478px;}
+#t12_36{left:111px;top:478px;}
+#t13_36{left:356px;top:478px;}
+#t14_36{left:41px;top:493px;}
+#t15_36{left:365px;top:493px;}
+#t16_36{left:41px;top:508px;}
+#t17_36{left:289px;top:508px;}
+#t18_36{left:41px;top:524px;}
+#t19_36{left:117px;top:524px;}
+#t1a_36{left:41px;top:539px;}
+#t1b_36{left:41px;top:569px;}
+#t1c_36{left:41px;top:585px;}
+#t1d_36{left:373px;top:585px;}
+#t1e_36{left:41px;top:600px;}
+#t1f_36{left:488px;top:600px;}
+#t1g_36{left:41px;top:615px;}
+#t1h_36{left:41px;top:631px;}
+#t1i_36{left:363px;top:631px;}
+#t1j_36{left:41px;top:646px;}
+
+#t4_36 {
+	-webkit-transform-origin: left top;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-o-transform-origin: left top;
+}
+
+.s6_36{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_236;
+	color: rgb(0,0,0);
+}
+
+.s1_36{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold36;
+	color: rgb(255,255,255);
+}
+
+.s5_36{
+	FONT-SIZE: 30px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular36;
+	color: rgb(0,0,0);
+}
+
+.s2_36{
+	FONT-SIZE: 46px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold36;
+	color: rgb(255,255,255);
+}
+
+.s3_36{
+	FONT-SIZE: 63px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Semibold_236;
+	color: rgb(219,0,60);
+}
+
+.s4_36{
+	FONT-SIZE: 52px;
+	FONT-FAMILY: YJUJYE-MyriadPro-Regular36;
+	color: rgb(0,0,0);
+}
+
+.v1_36{
+-webkit-transform: scale(0.25, 0.26);
+-ms-transform: scale(0.25, 0.26);
+-moz-transform: scale(0.25, 0.26);
+-o-transform: scale(0.25, 0.26);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold36;
+	src :url("36/fonts/YJUJYE-MyriadPro-Semibold.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Regular36;
+	src :url("36/fonts/YJUJYE-MyriadPro-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: YJUJYE-MyriadPro-Semibold_236;
+	src :url("36/fonts/YJUJYE-MyriadPro-Semibold_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_36" class="t s1_36">36</div>
+<div id="t2_36" class="t s2_36">THE DESIGNER’S GUIDE TO TUNGSTEN CARBIDE</div>
+<div id="t3_36" class="t s2_36">www. generalcarbide.com</div>
+<div id="t4_36" class="t v1_36 s3_36">Industrial Adhesives</div>
+<div id="t5_36" class="t s4_36">Structural adhesives fall into four broad polymer families: epoxies, cyanoacrylates,</div>
+<div id="t6_36" class="t s4_36">silicones and acrylics. </div>
+<div id="t7_36" class="t s4_36">With the exception of silicones, these polymers have bond</div>
+<div id="t8_36" class="t s4_36">strengths on the order of 2,500 to 7,500 psi in tensile-shear mode. </div>
+<div id="t9_36" class="t s4_36">They also tolerate</div>
+<div id="ta_36" class="t s4_36">temperature swings as wide as 3500</div>
+<div id="tb_36" class="t s5_36">o</div>
+<div id="tc_36" class="t s4_36">F and endure impact loads of 10 ft-lb/in</div>
+<div id="td_36" class="t s5_36">2</div>
+<div id="te_36" class="t s4_36">or greater,</div>
+<div id="tf_36" class="t s4_36">which demonstrate the advancements that this industry has made in the last 20 years.</div>
+<div id="tg_36" class="t s4_36">Industrial adhesives have several major beneﬁts over other joining methods like brazing</div>
+<div id="th_36" class="t s4_36">and mechanical fastenings. </div>
+<div id="ti_36" class="t s4_36">Joint stress is reduced by evenly distributing the load over  </div>
+<div id="tj_36" class="t s4_36">a broad area. </div>
+<div id="tk_36" class="t s4_36">Adhesives are invisible because they are applied inside the joint, and  </div>
+<div id="tl_36" class="t s4_36">they resist ﬂex and vibration stresses by forming a seal that can protect the joint  </div>
+<div id="tm_36" class="t s4_36">from corrosion.</div>
+<div id="tn_36" class="t s6_36">Adhesives are also a perfect choice for joining irregularly shaped surfaces, which may</div>
+<div id="to_36" class="t s6_36">prove problematic for brazing.</div>
+<div id="tp_36" class="t s4_36">Minimal weight is added to an assembly and there is</div>
+<div id="tq_36" class="t s4_36">virtually no change in part dimensions or shape.</div>
+<div id="tr_36" class="t s4_36">Some adhesive limitations include a potential need to disassemble the joint, curing time,</div>
+<div id="ts_36" class="t s4_36">and surface prep requirements.</div>
+<div id="tt_36" class="t s6_36">Adhesives and mechanical fasteners, when used together, form a stronger bond than</div>
+<div id="tu_36" class="t s6_36">when used separately.</div>
+<div id="tv_36" class="t s4_36">For example, a bolt that is tightened to the correct torque setting</div>
+<div id="tw_36" class="t s4_36">and has a thread-locking adhesive applied to the threads will improve the strength of the</div>
+<div id="tx_36" class="t s4_36">assembly. </div>
+<div id="ty_36" class="t s4_36">The thread-locking adhesive ensures the assembly will not loosen and</div>
+<div id="tz_36" class="t s4_36">corrosion will also be minimized.</div>
+<div id="t10_36" class="t s4_36">Some adhesives require the addition of a hardening agent, often referred to as a catalyst</div>
+<div id="t11_36" class="t s4_36">or activator. </div>
+<div id="t12_36" class="t s4_36">Others require only heat to obtain the bond. </div>
+<div id="t13_36" class="t s4_36">When a catalyst is required, a</div>
+<div id="t14_36" class="t s4_36">variable is introduced into the completeness of the mixing. </div>
+<div id="t15_36" class="t s4_36">There is a limited pot life, or</div>
+<div id="t16_36" class="t s4_36">time during which the epoxy can be applied. </div>
+<div id="t17_36" class="t s4_36">In some cases, this can be extended by</div>
+<div id="t18_36" class="t s4_36">refrigeration. </div>
+<div id="t19_36" class="t s4_36">Most adhesives requiring hardeners have a speciﬁed shelf life and the</div>
+<div id="t1a_36" class="t s4_36">manufacturer should be consulted on their recommendations.</div>
+<div id="t1b_36" class="t s4_36">Heat and humidity usually have the most damaging eﬀects on bonded joints, although</div>
+<div id="t1c_36" class="t s4_36">exposure to solvents and ultraviolet light can also take a toll. </div>
+<div id="t1d_36" class="t s4_36">Operating temperature is</div>
+<div id="t1e_36" class="t s4_36">the most important variable that qualiﬁes an adhesive for a particular application. </div>
+<div id="t1f_36" class="t s4_36">While</div>
+<div id="t1g_36" class="t s4_36">a device mounted outside is exposed to cold, wet, sunlight, and other conditions, the</div>
+<div id="t1h_36" class="t s4_36">maximum temperature is not likely to exceed 60°C (140°F). </div>
+<div id="t1i_36" class="t s4_36">Therefore, an outdoor environment </div>
+<div id="t1j_36" class="t s4_36">does not eliminate any of the potential adhesive chemistries described above.</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg36Overlay" style="width:100%; height:100%; position:absolute; z-index:1; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg36"><object width="605" height="935" data="36/36.svg" type="image/svg+xml" id="pdf36" style="width:605px; height:935px; background-color:white; -moz-transform:scale(1); z-index: 0;"></object></div>
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f36 = [['t2_36',1419],['t3_36',626],['t4_36',557],['t5_36',1770],['t6_36',461],['t7_36',1261],['t8_36',1422],['t9_36',383],['ta_36',784],['tc_36',858],['te_36',221],['tf_36',1861],['tg_36',1903],['th_36',589],['ti_36',1268],['tj_36',280],['tk_36',1495],['tl_36',1739],['tm_36',330],['tn_36',1913],['to_36',685],['tp_36',1135],['tq_36',1043],['tr_36',1921],['ts_36',679],['tt_36',1907],['tu_36',501],['tv_36',1408],['tw_36',1930],['ty_36',1517],['tz_36',708],['t10_36',1909],['t11_36',256],['t12_36',960],['t13_36',627],['t14_36',1274],['t15_36',598],['t16_36',969],['t17_36',839],['t19_36',1504],['t1a_36',1352],['t1b_36',1884],['t1c_36',1305],['t1d_36',549],['t1e_36',1767],['t1g_36',1840],['t1h_36',1266],['t1i_36',767],['t1j_36',1687]];
+function load36(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(function() {adjustWordSpacing(f36);},timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 56;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_36");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+<div id="brand" style="margin:0 auto; width:94px; padding:5px; clear: both;">
+<a href="http://www.idrsolutions.com/pdf-to-html5-svg-converter" target="_blank">
+<img title="PDF to HTML5 Conversion by IDRsolutions" alt="PDF to HTML5 Conversion by IDRsolutions" style="border:0;" src="icons/logo.png" />
+</a>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>
