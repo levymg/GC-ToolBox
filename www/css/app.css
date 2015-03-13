@@ -249,6 +249,7 @@ li.btn-danger[disabled] {
   background-image: none;
 }
 
+
 @media screen and (max-width: 767px) {
   .row-offcanvas {
     position: relative;

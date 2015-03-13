@@ -1,59 +1,74 @@
 <div class="col-xs-12">
-    <div class="well">
-        <h4>Conversion Calculator</h4>
-        
-        <p><strong>Units</strong></p>
-        <small>Please choose a conversion method.</small>
-        
-        <div class="col-xs-12">
-            <textarea class="calculator-output form-control"></textarea>
+       <div class="col-xs-12">
+            <ul class="list-group">
+                  <li class="list-group-item list-group-item-danger">
+                      <h4 class="white"><i class="fa fa-calculator"></i> Conversion Calculator</h4>
+                      <p class="white">Please select a unit of measurement to convert.</p>
+                  </li>
+                  <li class="list-group-item">
+                      <div class="col-xs-12">
+                            <form name="conversions" id="conversions">
+                                <div class="col-xs-12">
+                                    <select class="form-control categories" name="categories">
+                                        <option value="0">Select a category</option>
+                                    </select>
+                                    <div class="clearfix">&nbsp;<!-- hacked by ep0c --></div>
+                                </div>
+                                <div class="col-xs-12 hide">
+                                    <select class="form-control units" name="units">
+                                        <option value="0">Select a measurement</option>
+                                    </select>
+                                </div>
+                            </form>
+                      </div>
+                      <div class="clearfix">&nbsp;<!-- hacked by ep0c --></div>
+                  </li>
+         </div>
+        <div class="calculator-interface hide">
+            <div class="col-xs-12">
+                <h4 class="white converting-units"></h4>
+                <div class="form-group">
+                    <textarea class="calculator-output form-control" rows="1"></textarea>
+                </div>
+            </div>
+            <div class="col-xs-12 text-center calculator">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <ul class="list-inline transparent">
+                            <li class="calc btn btn-danger" data-key="num" data-value="9">9</li>
+                            <li class="calc btn btn-danger" data-key="num" data-value="8">8</li>
+                            <li class="calc btn btn-danger" data-key="num" data-value="7">7</li>
+                            <li class="calc btn btn-danger" data-value="c">C</li>
+                        </ul>
+                    </div>
+                    <div class="row">
+                        <ul class="list-inline transparent">
+                            <li class="calc btn btn-danger" data-key="num" data-value="6">6</li>
+                            <li class="calc btn btn-danger" data-key="num" data-value="5">5</li>
+                            <li class="calc btn btn-danger" data-key="num" data-value="4">4</li>
+                            <li class="calc btn btn-danger" data-value="d">.</li>
+                        </ul>
+                    </div>
+                    <div class="row">
+                        <ul class="list-inline transparent">
+                            <li class="calc btn btn-danger" data-key="num" data-value="3">3</li>
+                            <li class="calc btn btn-danger" data-key="num" data-value="2">2</li>
+                            <li class="calc btn btn-danger" data-key="num" data-value="1">1</li>
+                            <li class="calc btn btn-danger" data-value="e">=</li>
+                        </ul>
+                    </div>
+                    <div class="row">
+                        <ul class="list-inline transparent">
+                            <li></li>
+                            <li class="calc btn btn-danger" data-key="num" data-value="0">0</li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
-        
-        <div class="col-xs-12 text-center calculator">
-                <div class="row">
-                    <ul class="list-inline transparent">
-                        <li class="btn btn-danger">+</li>
-                        <li class="btn btn-danger">-</li>
-                        <li class="btn btn-danger">x</li>
-                        <li class="btn btn-danger">&divide;</li>
-                    </ul>
-                </div>
-                <div class="row">
-                    <ul class="list-inline transparent">
-                        <li class="btn btn-danger">9</li>
-                        <li class="btn btn-danger">8</li>
-                        <li class="btn btn-danger">7</li>
-                        <li class="btn btn-danger">C</li>
-                    </ul>
-                </div>
-                <div class="row">
-                    <ul class="list-inline transparent">
-                        <li class="btn btn-danger">6</li>
-                        <li class="btn btn-danger">5</li>
-                        <li class="btn btn-danger">4</li>
-                        <li class="btn btn-danger">.</li>
-                    </ul>
-                </div>
-                <div class="row">
-                    <ul class="list-inline transparent">
-                        <li class="btn btn-danger">3</li>
-                        <li class="btn btn-danger">2</li>
-                        <li class="btn btn-danger">1</li>
-                        <li class="btn btn-danger">=</li>
-                    </ul>
-                </div>
-            <div class="row">
-                    <ul class="list-inline transparent">
-                        <li class="btn btn-danger">0</li>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                    </ul>
-                </div>
-        </div>
-        
-        
         <div class="clearfix"></div>
-       
+        </div>
     </div>
-</div>
